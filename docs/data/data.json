@@ -55,12 +55,12 @@
         {"FR": "Corvus corone est un oiseau très social, vivant souvent en groupes soudés où jeu et vigilance mutuelle renforcent la cohésion du groupe."},
         {"US": "Corvus corone is a highly social bird, often living in tight-knit groups where play and mutual vigilance strengthen the flock’s cohesion."}
       ],
-      "liensSon": ["https://example.com/son-fauvette"],
+      "liensSon": ["https://www.chant-oiseaux.fr/corneille-noire/?type=cris-1432"],
       "fichierSon": "none"
     },
     {
       "name": [
-        {"FR": "Geais"},
+        {"FR": "Geai des chênes"},
         {"US": "Common starling"},
         {"SC": "Sturnus vulgaris"}
       ],
@@ -80,7 +80,7 @@
         {"FR": "Sturnus vulgaris se nourrit surtout au sol, fouillant l’herbe et la litière à la recherche de vers, d’insectes et de graines."},
         {"US": "Sturnus vulgaris feeds mainly on the ground, probing grass and leaf litter for worms, insects and seeds."}
       ],
-      "liensSon": ["https://example.com/son-fauvette"],
+      "liensSon": ["https://www.chant-oiseaux.fr/geai-des-chenes/?type=cris-1547"],
       "fichierSon": "none"
     },
     {
@@ -105,7 +105,7 @@
         {"FR": "Sturnus vulgaris se nourrit surtout au sol, fouillant l’herbe et la litière à la recherche de vers, d’insectes et de graines."},
         {"US": "Sturnus vulgaris feeds mainly on the ground, probing grass and leaf litter for worms, insects and seeds."}
       ],
-      "liensSon": ["https://example.com/son-fauvette"],
+      "liensSon": ["https://www.chant-oiseaux.fr/etourneau-sansonnet/?type=chant-788"],
       "fichierSon": "none"
     },
     {
@@ -130,7 +130,7 @@
         {"FR": "Erithacus rubecula fréquente les jardins et les lisières, identifiable à sa poitrine orange et sa posture alerte."},
         {"US": "Erithacus rubecula frequents gardens and woodland edges, identifiable by its orange breast and alert posture."}
       ],
-      "liensSon": ["https://example.com/son-fauvette"],
+      "liensSon": ["https://www.chant-oiseaux.fr/rougegorge-familier/?type=chant-644"],
       "fichierSon": "none"
     },
     {
@@ -172,7 +172,7 @@
         {"FR": "Sylvia atricapilla fréquente les bois et les lisières, reconnaissable à sa calotte sombre, c'est aussi une grande voyageuse."},
         {"US": "Sylvia atricapilla frequents woods and edges, identifiable by its dark cap, and is also a great traveler."}
       ],
-      "liensSon": ["https://example.com/son-fauvette"],
+      "liensSon": ["https://www.chant-oiseaux.fr/fauvette-a-tete-noire/?type=chant-1497"],
       "fichierSon": "sample1.mp3"
     },
     {
@@ -196,7 +196,7 @@
         {"FR": "Phylloscopus collybita est un petit migrateur qui habite friches et bosquets."},
         {"US": "Phylloscopus collybita is a small migrant that inhabits scrub and groves."}
       ],
-      "liensSon": ["https://example.com/son-pouillot"],
+      "liensSon": ["https://www.chant-oiseaux.fr/pouillot-veloce/?type=chant-769"],
       "fichierSon": "sample2.mp3"
     },
     {
@@ -220,7 +220,7 @@
         {"FR": "Sciurus vulgaris se déplace avec vigueur dans les branches, agile et alerte."},
         {"US": "Sciurus vulgaris moves with vigor through the branches, agile and alert."}
       ],
-      "liensSon": ["https://example.com/son-ecureuil"],
+      "liensSon": [],
       "fichierSon": "sample3.mp3"
     }
   ]

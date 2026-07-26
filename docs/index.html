@@ -333,6 +333,80 @@
     text-decoration: underline;
   }
 
+  .audio-control {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 40;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--text);
+    box-shadow: 0 18px 40px rgba(21, 30, 18, 0.14);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(82, 106, 74, 0.12);
+    font-size: 0.88rem;
+    pointer-events: auto;
+  }
+
+  .audio-control button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 999px;
+    background: #fcfdf7;
+    color: #54724d;
+    cursor: pointer;
+    transition: background 180ms ease, transform 180ms ease;
+  }
+
+  .audio-control button:hover,
+  .audio-control button:focus-visible {
+    background: #eef4e0;
+  }
+
+  .audio-control button.active {
+    background: #e8f1d8;
+  }
+
+  .audio-control svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    pointer-events: none;
+  }
+
+  .audio-volume {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 180ms ease, visibility 180ms ease;
+  }
+
+  .audio-volume.hidden {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    overflow: hidden;
+  }
+
+  .audio-volume input[type="range"] {
+    width: 110px;
+    accent-color: #54724d;
+    cursor: pointer;
+    background: transparent;
+  }
+
+  #backgroundAudio {
+    display: none;
+  }
+
   .map-controls {
     position: absolute;
     right: 18px;
@@ -768,6 +842,80 @@
       transform: translateX(-50%) translateY(0) scale(1);
     }
   }
+
+  .audio-control {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 40;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--text);
+    box-shadow: 0 18px 40px rgba(21, 30, 18, 0.14);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(82, 106, 74, 0.12);
+    font-size: 0.88rem;
+    pointer-events: auto;
+  }
+
+  .audio-control button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 999px;
+    background: #fcfdf7;
+    color: #54724d;
+    cursor: pointer;
+    transition: background 180ms ease, transform 180ms ease;
+  }
+
+  .audio-control button:hover,
+  .audio-control button:focus-visible {
+    background: #eef4e0;
+  }
+
+  .audio-control button.active {
+    background: #e8f1d8;
+  }
+
+  .audio-control svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    pointer-events: none;
+  }
+
+  .audio-volume {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 180ms ease, visibility 180ms ease;
+  }
+
+  .audio-volume.hidden {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    overflow: hidden;
+  }
+
+  .audio-volume input[type="range"] {
+    width: 110px;
+    accent-color: #54724d;
+    cursor: pointer;
+    background: transparent;
+  }
+
+  #backgroundAudio {
+    display: none;
+  }
 </style>
 </head>
 <body>
@@ -844,6 +992,19 @@
     </main>
   </div>
 
+  <div class="audio-control" aria-label="Contrôle du son de fond" role="region">
+    <button id="audioToggleBtn" type="button" aria-pressed="false" aria-label="Activer le son de fond">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 9v6h4l5 5V4L7 9H3z" />
+        <path d="M16.5 12c0-1.77-.77-3.37-2-4.47v8.94c1.23-1.1 2-2.7 2-4.47z" />
+      </svg>
+    </button>
+    <div id="audioVolumeControl" class="audio-volume hidden" aria-hidden="true">
+      <input id="audioVolumeRange" type="range" min="0" max="1" step="0.01" value="0.55" aria-label="Volume du son de fond" />
+    </div>
+    <audio id="backgroundAudio" loop preload="none" src="song/fond.m4a"></audio>
+  </div>
+
   <div id="viewer" aria-hidden="true">
     <div id="closeZone"></div>
     <div id="backdrop"></div>
@@ -896,6 +1057,10 @@
   const variantPositionLabel = document.getElementById('variantPositionLabel');
   const poiTooltip = document.getElementById('poiTooltip');
   const poiLayer = document.getElementById('poiLayer');
+  const audioToggleBtn = document.getElementById('audioToggleBtn');
+  const audioVolumeControl = document.getElementById('audioVolumeControl');
+  const audioVolumeRange = document.getElementById('audioVolumeRange');
+  const backgroundAudio = document.getElementById('backgroundAudio');
   const poiMediaPathPrefix = 'data/';
   const pointVariants = new WeakMap();
   const langFrBtn = document.getElementById('langFrBtn');
@@ -2241,9 +2406,86 @@
     }
   });
 
+  function getSavedAudioVolume() {
+    const saved = localStorage.getItem('siteBaladeChampvertAudioVolume');
+    const parsed = parseFloat(saved);
+    return Number.isFinite(parsed) && parsed >= 0 && parsed <= 1 ? parsed : 0.55;
+  }
+
+  function saveAudioVolume(value) {
+    localStorage.setItem('siteBaladeChampvertAudioVolume', String(value));
+  }
+
+  function updateAudioToggleState() {
+    const isActive = !!audioToggleBtn && audioToggleBtn.classList.contains('active');
+    if (!audioToggleBtn || !audioVolumeControl) return;
+
+    audioToggleBtn.classList.toggle('active', isActive);
+    audioToggleBtn.setAttribute('aria-pressed', String(isActive));
+    audioToggleBtn.setAttribute('aria-label', isActive ? 'Désactiver le son de fond' : 'Activer le son de fond');
+    audioVolumeControl.classList.toggle('hidden', !isActive);
+    audioVolumeControl.setAttribute('aria-hidden', String(!isActive));
+  }
+
+  function setBackgroundAudioVolume(value) {
+    const normalized = Math.min(1, Math.max(0, Number(value)));
+    if (backgroundAudio) {
+      backgroundAudio.volume = normalized;
+    }
+    if (audioVolumeRange) {
+      audioVolumeRange.value = String(normalized);
+    }
+    saveAudioVolume(normalized);
+  }
+
+  function toggleBackgroundAudio() {
+    if (!audioToggleBtn || !audioVolumeControl || !audioVolumeRange || !backgroundAudio) return;
+
+    const isActive = !audioToggleBtn.classList.contains('active');
+    audioToggleBtn.classList.toggle('active', isActive);
+    audioToggleBtn.setAttribute('aria-pressed', String(isActive));
+    audioToggleBtn.setAttribute('aria-label', isActive ? 'Désactiver le son de fond' : 'Activer le son de fond');
+    audioVolumeControl.classList.toggle('hidden', !isActive);
+    audioVolumeControl.setAttribute('aria-hidden', String(!isActive));
+
+    if (isActive) {
+      backgroundAudio.volume = Number(audioVolumeRange.value) || getSavedAudioVolume();
+      backgroundAudio.play().catch((error) => {
+        console.warn('Impossible de démarrer le son de fond :', error);
+      });
+    } else {
+      backgroundAudio.pause();
+    }
+  }
+
+  function initializeBackgroundAudioControls() {
+    if (!audioToggleBtn || !audioVolumeControl || !audioVolumeRange || !backgroundAudio) return;
+
+    const startingVolume = getSavedAudioVolume();
+    audioVolumeRange.value = String(startingVolume);
+    backgroundAudio.volume = startingVolume;
+    audioToggleBtn.classList.remove('active');
+    audioToggleBtn.setAttribute('aria-pressed', 'false');
+    audioToggleBtn.setAttribute('aria-label', 'Activer le son de fond');
+    audioVolumeControl.classList.add('hidden');
+    audioVolumeControl.setAttribute('aria-hidden', 'true');
+
+    audioToggleBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      toggleBackgroundAudio();
+    });
+
+    audioVolumeRange.addEventListener('input', (event) => {
+      const target = /** @type {HTMLInputElement} */ (event.target);
+      if (!target) return;
+      setBackgroundAudioVolume(target.value);
+    });
+  }
+
   updateMapToggleText();
   applyMapTransform();
   loadPoiData();
+  initializeBackgroundAudioControls();
   runIntro();
 </script>
 </body>
