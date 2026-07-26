@@ -1,0 +1,227 @@
+{
+  "_comment": "Structure des images sources. Tous les champs sont facultatifs. La convention est : '_' signifie non renseigné, et l'absence du champ est traitée de la même façon.",
+  "images": [
+    {
+      "name": [
+        {"FR": "Corneille"},
+        {"US": "Carrion crow"},
+        {"SC": "Corvus corone"}
+      ],
+      "latitude": "45.76293888888889",
+      "longitude": "4.797236111111111",
+      "date": "2026-03-08",
+      "category": "oiseau",
+      "webm": "corneille.webm",
+      "jpeg": "corneille.png",
+      "game": "",
+      "otherImage": [
+        {
+          "latitude": "45.760469444444446",
+          "longitude": "4.804311111111111",
+          "date": "2026-05-23",
+          "webm": "corneille2.webm",
+          "jpeg": "corneille2.png",
+          "game": "filou",
+          "poeticText": [
+            {"FR": "Elle claque et bruisse autour de ses compagnes, chaque appel vibrant comme un signal puissant qui affirme sa place dans le groupe."},
+            {"US": "It snaps and rustles amid its companions, each call vibrating like a strong signal that asserts its place in the group."}
+          ],
+          "scientificText": [
+            {"FR": "Corvus corone communique par une riche palette de sons, utilisant cris, claquements et postures pour maintenir sa domination et structurer les relations sociales."},
+            {"US": "Corvus corone communicates through a rich palette of sounds, using calls, clacks and body language to maintain dominance and structure social relationships."}
+          ]
+        },
+        {
+          "latitude": "45.760469444444446",
+          "longitude": "4.804311111111111",
+          "date": "2026-05-23",
+          "jpeg": "corneille3.jpg",
+          "game": "filou",
+          "poeticText": [
+            {"FR": "Elle claque et bruisse autour de ses compagnes, chaque appel vibrant comme un signal puissant qui affirme sa place dans le groupe."},
+            {"US": "It snaps and rustles amid its companions, each call vibrating like a strong signal that asserts its place in the group."}
+          ],
+          "scientificText": [
+            {"FR": "Corvus corone communique par une riche palette de sons, utilisant cris, claquements et postures pour maintenir sa domination et structurer les relations sociales."},
+            {"US": "Corvus corone communicates through a rich palette of sounds, using calls, clacks and body language to maintain dominance and structure social relationships."}
+          ]
+        }
+      ],
+      "poeticText": [
+        {"FR": "Jouant avec une plume ou une brindille, elle s’égaye en compagnie, ses éclats de vol et ses jeux tissant des liens invisibles dans la bande."},
+        {"US": "Playing with a feather or twig, it delights in company, its bursts of flight and playful games weaving invisible bonds through the flock."}
+      ],
+      "scientificText": [
+        {"FR": "Corvus corone est un oiseau très social, vivant souvent en groupes soudés où jeu et vigilance mutuelle renforcent la cohésion du groupe."},
+        {"US": "Corvus corone is a highly social bird, often living in tight-knit groups where play and mutual vigilance strengthen the flock’s cohesion."}
+      ],
+      "liensSon": ["https://example.com/son-fauvette"],
+      "fichierSon": "none"
+    },
+    {
+      "name": [
+        {"FR": "Geais"},
+        {"US": "Common starling"},
+        {"SC": "Sturnus vulgaris"}
+      ],
+      "latitude": "45.76170555555556",
+      "longitude": "4.789488888888889",
+      "date": "2026-03-08",
+      "category": "oiseau",
+      "webm": "geais.webm",
+      "jpeg": "geais.png",
+      "game": "",
+ 
+      "poeticText": [
+        {"FR": "Il toilette soigneusement sa patte, la frotte contre son bec, comme pour dégager la terre et les brindilles collées sous ses doigts."},
+        {"US": "It lifts its foot carefully, rubs it against its beak, as if clearing earth and twigs stuck beneath its toes."}
+      ],
+      "scientificText": [
+        {"FR": "Sturnus vulgaris se nourrit surtout au sol, fouillant l’herbe et la litière à la recherche de vers, d’insectes et de graines."},
+        {"US": "Sturnus vulgaris feeds mainly on the ground, probing grass and leaf litter for worms, insects and seeds."}
+      ],
+      "liensSon": ["https://example.com/son-fauvette"],
+      "fichierSon": "none"
+    },
+    {
+      "name": [
+        {"FR": "Etourneau sansonnet"},
+        {"US": "Common starling"},
+        {"SC": "Sturnus vulgaris"}
+      ],
+      "latitude": "45.756875",
+      "longitude": "4.802416666666667",
+      "date": "2026-05-30",
+      "category": "oiseau",
+      "webm": "etourneau.webm",
+      "jpeg": "etourneau.png",
+      "game": "",
+ 
+      "poeticText": [
+        {"FR": "Sur la terre humide, il gratte et picore en bande, transformant chaque grain en petit trésor sous ses pattes vives."},
+        {"US": "On damp ground it scratches and pecks in a flock, turning every seed into a small treasure beneath its lively feet."}
+      ],
+      "scientificText": [
+        {"FR": "Sturnus vulgaris se nourrit surtout au sol, fouillant l’herbe et la litière à la recherche de vers, d’insectes et de graines."},
+        {"US": "Sturnus vulgaris feeds mainly on the ground, probing grass and leaf litter for worms, insects and seeds."}
+      ],
+      "liensSon": ["https://example.com/son-fauvette"],
+      "fichierSon": "none"
+    },
+    {
+      "name": [
+        {"FR": "Rouge Gorges familier"},
+        {"US": "European robin"},
+        {"SC": "Erithacus rubecula"}
+      ],
+      "latitude": "45.762702777777776",
+      "longitude": "4.788147222222222",
+      "date": "2026-03-21",
+      "category": "oiseau",
+      "webm": "rougeGorgesFamilier.webm",
+      "jpeg": "rougeGorgesFamilier.png",
+      "game": "",
+ 
+      "poeticText": [
+        {"FR": "Un petit soleil roux chante au cœur du sous-bois, ses notes vives sont comme des perles d’or sur l’air du matin."},
+        {"US": "A little russet sun sings in the heart of the undergrowth, its bright notes like golden beads on the morning air."}
+      ],
+      "scientificText": [
+        {"FR": "Erithacus rubecula fréquente les jardins et les lisières, identifiable à sa poitrine orange et sa posture alerte."},
+        {"US": "Erithacus rubecula frequents gardens and woodland edges, identifiable by its orange breast and alert posture."}
+      ],
+      "liensSon": ["https://example.com/son-fauvette"],
+      "fichierSon": "none"
+    },
+    {
+      "name": [
+        {"FR": "Fauvette à tête noire"},
+        {"US": "Eurasian blackcap"},
+        {"SC": "Sylvia atricapilla"}
+      ],
+      "latitude": "45.759908333333335",
+      "longitude": "4.790691666666667",
+      "date": "2026-07-19",
+      "category": "oiseau",
+      "webm": "fauvetteATeteNoire.webm",
+      "jpeg": "fauvetteATeteNoire.png",
+      "game": "cachecache",
+      "otherImage": [
+        {
+          "latitude": "45.760469444444446",
+          "longitude": "4.804311111111111",
+          "date": "2026-05-23",
+          "webm": "fauvette2.webm",
+          "jpeg": "fauvette2.png",
+          "game": "filou",
+          "poeticText": [
+            {"FR": "La femelle à tête brune gonfle doucement son plumage, laissant circuler l'air, puis fuse comme un éclair au travers du buisson."},
+            {"US": "The brown-headed female spreads her feathers softly, letting air flow beneath her throat and tracing a light silhouette through the undergrowth."}
+          ],
+          "scientificText": [
+            {"FR": "Très étudiée pour ses migrations impressionnantes, elle franchit souvent montagnes et étendues d'eau lors de ses longs trajets."},
+            {"US": "Highly studied for its impressive migrations, it often crosses mountain ranges and open water during its long journeys."}
+          ]
+        }
+      ],
+      "poeticText": [
+        {"FR": "Un petit sifflet de raliement claironné toute direction : je suis là, je suis vaillant, je suis libre, rejoignez moi."},
+        {"US": "A small rallying whistle sounded in every direction: I am here, I am brave, I am free, join me."}
+      ],
+      "scientificText": [
+        {"FR": "Sylvia atricapilla fréquente les bois et les lisières, reconnaissable à sa calotte sombre, c'est aussi une grande voyageuse."},
+        {"US": "Sylvia atricapilla frequents woods and edges, identifiable by its dark cap, and is also a great traveler."}
+      ],
+      "liensSon": ["https://example.com/son-fauvette"],
+      "fichierSon": "sample1.mp3"
+    },
+    {
+      "name": [
+        {"FR": "Pouillot véloce"},
+        {"US": "Common chiffchaff"},
+        {"SC": "Phylloscopus collybita"}
+      ],
+      "latitude": "_",
+      "longitude": "_",
+      "date": "_",
+      "category": "oiseau",
+      "webm": "pouillotVeloce.webm",
+      "jpeg": "pouillotVeloce.png",
+      "game": "chant",
+     "poeticText": [
+        {"FR": "Un chant vif coud le matin à la lisière, invisible et pourtant présent."},
+        {"US": "A bright song stitches the morning at the edge, invisible yet present."}
+      ],
+      "scientificText": [
+        {"FR": "Phylloscopus collybita est un petit migrateur qui habite friches et bosquets."},
+        {"US": "Phylloscopus collybita is a small migrant that inhabits scrub and groves."}
+      ],
+      "liensSon": ["https://example.com/son-pouillot"],
+      "fichierSon": "sample2.mp3"
+    },
+    {
+      "name": [
+        {"FR": "Écureuil roux"},
+        {"US": "Red squirrel"},
+        {"SC": "Sciurus vulgaris"}
+      ],
+      "latitude": "_",
+      "longitude": "_",
+      "date": "_",
+      "category": "mammifère",
+      "webm": "ecureuil.webm",
+      "jpeg": "ecureuil.png",
+      "game": "filou",
+      "poeticText": [
+        {"FR": "Une étincelle rousse bondit, comme une note vive au milieu du vert."},
+        {"US": "A russet spark leaps, like a bright note amid the green."}
+      ],
+      "scientificText": [
+        {"FR": "Sciurus vulgaris se déplace avec vigueur dans les branches, agile et alerte."},
+        {"US": "Sciurus vulgaris moves with vigor through the branches, agile and alert."}
+      ],
+      "liensSon": ["https://example.com/son-ecureuil"],
+      "fichierSon": "sample3.mp3"
+    }
+  ]
+}
