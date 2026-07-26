@@ -482,6 +482,67 @@
     pointer-events: none;
   }
 
+  .site-info-button {
+    position: fixed;
+    left: 18px;
+    bottom: 18px;
+    z-index: 40;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 999px;
+    background: #1d4ed8;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 18px 36px rgba(29, 78, 216, 0.16);
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  }
+
+  .site-info-button:hover,
+  .site-info-button:focus-visible {
+    transform: translateY(-1px);
+    box-shadow: 0 22px 40px rgba(29, 78, 216, 0.24);
+    background: #2563eb;
+  }
+
+  .site-info-tooltip {
+    position: fixed;
+    left: 18px;
+    bottom: 80px;
+    z-index: 41;
+    max-width: min(360px, calc(100vw - 36px));
+    padding: 16px 18px;
+    border-radius: 18px;
+    background: rgba(20, 25, 44, 0.96);
+    color: #ffffff;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    box-shadow: 0 22px 48px rgba(9, 12, 29, 0.28);
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+
+  .site-info-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .site-info-tooltip p {
+    margin: 0 0 0.9em;
+  }
+
+  .site-info-tooltip p:last-child {
+    margin-bottom: 0;
+  }
+
   #viewer {
     position: fixed;
     inset: 0;
@@ -1005,6 +1066,9 @@
     <audio id="backgroundAudio" loop preload="none" src="song/fond.m4a"></audio>
   </div>
 
+  <button id="siteInfoButton" class="site-info-button" type="button" aria-label="Afficher les informations du site">I</button>
+  <div id="siteInfoTooltip" class="site-info-tooltip" role="tooltip" aria-hidden="true"></div>
+
   <div id="viewer" aria-hidden="true">
     <div id="closeZone"></div>
     <div id="backdrop"></div>
@@ -1057,6 +1121,8 @@
   const variantPositionLabel = document.getElementById('variantPositionLabel');
   const poiTooltip = document.getElementById('poiTooltip');
   const poiLayer = document.getElementById('poiLayer');
+  const infoToggleBtn = document.getElementById('siteInfoButton');
+  const infoTooltip = document.getElementById('siteInfoTooltip');
   const audioToggleBtn = document.getElementById('audioToggleBtn');
   const audioVolumeControl = document.getElementById('audioVolumeControl');
   const audioVolumeRange = document.getElementById('audioVolumeRange');
@@ -1084,14 +1150,18 @@
       toggleSubtitle: 'La carte est affichée par défaut',
       mapToggleAria: 'Afficher la superposition avec la carte OpenStreetMap',
       mapToggleTitle: 'Survolez pour afficher la carte réelle',
-      learnMoreLabel: 'Pour aller plus loin :'
+      learnMoreLabel: 'Pour aller plus loin :',
+      infoButtonLabel: 'Info',
+      infoTooltipText: 'Bienvenu dans cette découverte originale de la nature qui vous entoure. L\'homme y cohabite, mais elle est bien là, résiliente, adaptée, menant sa propre vie.\n\nLe lieu représente une petite jungle apprivoisée d\'un petit quartier de Lyon, entouré de bois, suffisamment pour y faire des rencontres régalantes et ressourçantes.\n\nToutes les images et sons sont originales et natives de l\'endroit. Malgré une frontière proche des habitats, il suffit d\'ouvrir les yeux et les oreilles, pour accéder à un monde parallèle lent, calme, différent et énergisant.\n\nSoyez curieux, n\'ayez pas peur de cliquer, d\'utiliser la molette, d\'essayer, rien n\'est expliqué, c\'est voulu, à vous de découvrir.\n\nIl n\'est ici aucunement question de commerce, aucun cookie de suivi. Aucune publicité. Aucune collecte de données personnelles, mais une obséssion dans l\'éco conception, avec des affichages légers comme les stars à l\'honneur ici, et un ressenti que nous espérons naturel et fluide.\n\ncontact Webmaster : albouille69@gmail.com'
     },
     US: {
       toggleTitle: 'View map',
       toggleSubtitle: 'The map is shown by default',
       mapToggleAria: 'Show the overlay with the OpenStreetMap map',
       mapToggleTitle: 'Hover to show the real map',
-      learnMoreLabel: 'To go further:'
+      learnMoreLabel: 'To go further:',
+      infoButtonLabel: 'Info',
+      infoTooltipText: 'Welcome to this original discovery of the nature around you. Humans live here too, but nature is present, resilient, adapted, and leading its own life.\n\nThis place represents a small tamed jungle in a small Lyon neighborhood, surrounded by woods, enough to offer rich and refreshing encounters.\n\nAll images and sounds are original and native to the place. Despite a nearby border of inhabited areas, simply open your eyes and ears to access a parallel world that is slow, calm, different and energizing.\n\nBe curious, don\'t be afraid to click, use the wheel, try things; nothing is explained, it is intentional, for you to discover.\n\nThis is not about commerce, no tracking cookies. No advertising. No personal data collection, but an obsession with eco-design, with lightweight displays like the stars honored here, and a feeling we hope is natural and fluid.\n\ncontact Webmaster: albouille69@gmail.com'
     }
   };
 
@@ -2482,10 +2552,64 @@
     });
   }
 
+  function getSiteInfoText() {
+    const strings = localeStrings[currentLocale] || localeStrings.FR;
+    return strings.infoTooltipText || '';
+  }
+
+  function renderSiteInfoText() {
+    const text = getSiteInfoText();
+    if (!infoTooltip) return;
+    const paragraphs = text
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => `<p>${escapeHtml(line)}</p>`)
+      .join('');
+    infoTooltip.innerHTML = paragraphs;
+  }
+
+  function showSiteInfoTooltip() {
+    if (!infoTooltip) return;
+    renderSiteInfoText();
+    infoTooltip.classList.add('visible');
+    infoTooltip.setAttribute('aria-hidden', 'false');
+  }
+
+  function hideSiteInfoTooltip() {
+    if (!infoTooltip) return;
+    infoTooltip.classList.remove('visible');
+    infoTooltip.setAttribute('aria-hidden', 'true');
+  }
+
+  function initializeSiteInfoControls() {
+    if (!infoToggleBtn || !infoTooltip) return;
+
+    infoToggleBtn.addEventListener('mouseenter', () => showSiteInfoTooltip());
+    infoToggleBtn.addEventListener('focus', () => showSiteInfoTooltip());
+    infoToggleBtn.addEventListener('mouseleave', () => {
+      window.setTimeout(() => {
+        if (!infoToggleBtn.matches(':hover') && !infoTooltip.matches(':hover')) {
+          hideSiteInfoTooltip();
+        }
+      }, 100);
+    });
+
+    infoTooltip.addEventListener('mouseenter', () => showSiteInfoTooltip());
+    infoTooltip.addEventListener('mouseleave', () => {
+      window.setTimeout(() => {
+        if (!infoToggleBtn.matches(':hover') && !infoTooltip.matches(':hover')) {
+          hideSiteInfoTooltip();
+        }
+      }, 100);
+    });
+  }
+
   updateMapToggleText();
   applyMapTransform();
   loadPoiData();
   initializeBackgroundAudioControls();
+  initializeSiteInfoControls();
   runIntro();
 </script>
 </body>
