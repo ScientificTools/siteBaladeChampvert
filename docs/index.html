@@ -271,6 +271,15 @@
     transition: transform 0.25s ease, fill 0.25s ease, opacity 0.25s ease, stroke 0.25s ease;
   }
 
+  .poi-item {
+    will-change: transform;
+  }
+
+  .poi-item.is-moving .point-pulse {
+    animation-play-state: paused;
+    opacity: 0.16;
+  }
+
   .point:hover {
     fill: #ffffff;
     stroke: #6f925f;
@@ -1309,6 +1318,7 @@
   const sessionHighlightPrefix = 'siteBaladeChampvertHighlight:';
   const poiMediaPathPrefix = 'data/';
   const pointVariants = new WeakMap();
+  const pointMotionStates = new WeakMap();
   const langFrBtn = document.getElementById('langFrBtn');
   const langEnBtn = document.getElementById('langEnBtn');
   if (video) {
@@ -1366,7 +1376,13 @@
   let lastActivatedPoint = null;
   let activeVariants = [];
   let activeVariantIndex = 0;
+  let poiMotionSchedulerId = null;
+  let poiMotionRafId = null;
+  let poiMotionPaused = false;
+  let poiMotionPauseStartedAt = 0;
   const poiIdleHighlightDelay = 20000;
+  const poiMotionRestMs = 6000;
+  const poiMotionBaseTravelMs = 4000;
   const minScale = 1;
   const maxScale = 4;
   const zoomStep = 0.2;
@@ -1386,6 +1402,17 @@
   ];
   const zonePathD = `${zonePolygonPoints.map(([x, y], index) => `${index === 0 ? 'M' : 'L'} ${x} ${y}`).join(' ')} Z`;
   const zoneCentroid = computePolygonCentroid(zonePolygonPoints);
+  const zoneBounds = zonePolygonPoints.reduce((bounds, [x, y]) => ({
+    minX: Math.min(bounds.minX, x),
+    maxX: Math.max(bounds.maxX, x),
+    minY: Math.min(bounds.minY, y),
+    maxY: Math.max(bounds.maxY, y)
+  }), {
+    minX: Number.POSITIVE_INFINITY,
+    maxX: Number.NEGATIVE_INFINITY,
+    minY: Number.POSITIVE_INFINITY,
+    maxY: Number.NEGATIVE_INFINITY
+  });
 
   function computePolygonCentroid(points) {
     let twiceArea = 0;
@@ -1700,6 +1727,7 @@
   }
 
   function refreshPoiLayer() {
+    stopPoiMotionEngine();
     poiLayer.innerHTML = '';
     points = [];
     const existingPositions = [];
@@ -1709,27 +1737,32 @@
     });
 
     points.forEach((point) => {
-      point.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openVideo(point, e);
-      });
-
-      point.addEventListener('mouseenter', (e) => {
-        e.stopPropagation();
-        showPoiTooltip(point, e);
-      });
-
-      point.addEventListener('mousemove', (e) => {
-        e.stopPropagation();
-        movePoiTooltip(e);
-      });
-
-      point.addEventListener('mouseleave', () => {
-        hidePoiTooltip();
-      });
+      bindPoiInteractions(point);
     });
 
     attemptIdlePoiHighlight();
+    syncPoiMotionLifecycle();
+  }
+
+  function bindPoiInteractions(point) {
+    point.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openVideo(point, e);
+    });
+
+    point.addEventListener('mouseenter', (e) => {
+      e.stopPropagation();
+      showPoiTooltip(point, e);
+    });
+
+    point.addEventListener('mousemove', (e) => {
+      e.stopPropagation();
+      movePoiTooltip(e);
+    });
+
+    point.addEventListener('mouseleave', () => {
+      hidePoiTooltip();
+    });
   }
 
   function showPoiTooltip(point, event) {
@@ -1804,12 +1837,326 @@
     return null;
   }
 
+  function getPoiAnchorElement(pointEl) {
+    if (!pointEl) return null;
+    if (pointEl instanceof SVGGElement) {
+      return pointEl.querySelector('.point');
+    }
+    return pointEl;
+  }
+
+  function getPoiMotionState(pointEl) {
+    return pointMotionStates.get(pointEl) || null;
+  }
+
+  function setPoiMotionPosition(pointEl, nextX, nextY) {
+    const motionState = getPoiMotionState(pointEl);
+    if (!motionState) return;
+
+    motionState.currentX = nextX;
+    motionState.currentY = nextY;
+    pointEl.setAttribute('transform', `translate(${(nextX - motionState.baseX).toFixed(3)} ${(nextY - motionState.baseY).toFixed(3)})`);
+  }
+
+  function getPoiMotionBaseDistance() {
+    const viewportRect = mapViewport.getBoundingClientRect();
+    return Math.min(viewportRect.width, viewportRect.height) / 10 / Math.max(mapState.scale, 0.001);
+  }
+
+  function isPoiMotionOutsideSoftBounds(candidateX, candidateY) {
+    const margin = getPoiMotionBaseDistance() * 1.2;
+    return candidateX < zoneBounds.minX - margin
+      || candidateX > zoneBounds.maxX + margin
+      || candidateY < zoneBounds.minY - margin
+      || candidateY > zoneBounds.maxY + margin;
+  }
+
+  function clampPoiMotionDistance(originX, originY, candidateX, candidateY, maxDistance) {
+    const deltaX = candidateX - originX;
+    const deltaY = candidateY - originY;
+    const distance = Math.hypot(deltaX, deltaY);
+    if (!distance || distance <= maxDistance) {
+      return { x: candidateX, y: candidateY };
+    }
+
+    const ratio = maxDistance / distance;
+    return {
+      x: originX + (deltaX * ratio),
+      y: originY + (deltaY * ratio)
+    };
+  }
+
+  function getPoiMotionControlPoint(startX, startY, endX, endY) {
+    const deltaX = endX - startX;
+    const deltaY = endY - startY;
+    const distance = Math.hypot(deltaX, deltaY);
+    if (!distance || Math.random() < 0.45) {
+      return null;
+    }
+
+    const midX = startX + (deltaX * 0.5);
+    const midY = startY + (deltaY * 0.5);
+    const normalX = -deltaY / distance;
+    const normalY = deltaX / distance;
+    const curveStrength = distance * randomBetween(0.12, 0.3) * (Math.random() < 0.5 ? -1 : 1);
+
+    return {
+      x: midX + (normalX * curveStrength),
+      y: midY + (normalY * curveStrength)
+    };
+  }
+
+  function getPoiMotionDestination(pointEl) {
+    const motionState = getPoiMotionState(pointEl);
+    if (!motionState) return null;
+
+    const startX = motionState.currentX;
+    const startY = motionState.currentY;
+    const maxDistance = getPoiMotionBaseDistance();
+    const currentlyInside = isPointInPolygon(startX, startY, zonePolygonPoints);
+    const preferInside = !currentlyInside || Math.random() < 0.84;
+
+    for (let attempt = 0; attempt < 28; attempt += 1) {
+      const angle = Math.random() * Math.PI * 2;
+      const distance = maxDistance * randomBetween(0.35, 1);
+      let candidateX = startX + (Math.cos(angle) * distance);
+      let candidateY = startY + (Math.sin(angle) * distance);
+
+      if (!preferInside && currentlyInside) {
+        const awayX = startX - zoneCentroid.x;
+        const awayY = startY - zoneCentroid.y;
+        const awayLength = Math.hypot(awayX, awayY) || 1;
+        const tangent = randomBetween(-0.22, 0.22) * maxDistance;
+        candidateX = startX + ((awayX / awayLength) * distance) - ((awayY / awayLength) * tangent);
+        candidateY = startY + ((awayY / awayLength) * distance) + ((awayX / awayLength) * tangent);
+      }
+
+      const inside = isPointInPolygon(candidateX, candidateY, zonePolygonPoints);
+      if (preferInside && inside) {
+        return clampPoiMotionDistance(startX, startY, candidateX, candidateY, maxDistance);
+      }
+      if (!preferInside && !inside && !isPoiMotionOutsideSoftBounds(candidateX, candidateY)) {
+        return clampPoiMotionDistance(startX, startY, candidateX, candidateY, maxDistance);
+      }
+    }
+
+    const fallbackInside = getRandomPointInPolygon(zonePolygonPoints, 80);
+    const blend = currentlyInside ? randomBetween(0.25, 0.45) : randomBetween(0.45, 0.68);
+    const candidateX = startX + ((fallbackInside.x - startX) * blend);
+    const candidateY = startY + ((fallbackInside.y - startY) * blend);
+    return clampPoiMotionDistance(startX, startY, candidateX, candidateY, maxDistance);
+  }
+
+  function getPoiMotionPosition(move, progress) {
+    if (!move.control) {
+      return {
+        x: move.startX + ((move.endX - move.startX) * progress),
+        y: move.startY + ((move.endY - move.startY) * progress)
+      };
+    }
+
+    const oneMinus = 1 - progress;
+    return {
+      x: (oneMinus * oneMinus * move.startX) + (2 * oneMinus * progress * move.control.x) + (progress * progress * move.endX),
+      y: (oneMinus * oneMinus * move.startY) + (2 * oneMinus * progress * move.control.y) + (progress * progress * move.endY)
+    };
+  }
+
+  function getPoiMotionMaxConcurrent() {
+    return window.innerWidth <= 700 ? 2 : 3;
+  }
+
+  function getPoiMotionTickDelay() {
+    return window.innerWidth <= 700 ? randomBetween(2600, 4200) : randomBetween(1700, 3200);
+  }
+
+  function canRunPoiMotion() {
+    return !poiMotionPaused && !isOpen && points.length > 0 && body.classList.contains('intro-complete');
+  }
+
+  function clearPoiMotionScheduler() {
+    if (!poiMotionSchedulerId) return;
+    window.clearTimeout(poiMotionSchedulerId);
+    poiMotionSchedulerId = null;
+  }
+
+  function stopPoiMotionEngine() {
+    clearPoiMotionScheduler();
+    if (poiMotionRafId) {
+      window.cancelAnimationFrame(poiMotionRafId);
+      poiMotionRafId = null;
+    }
+  }
+
+  function ensurePoiMotionFrame() {
+    if (poiMotionPaused || poiMotionRafId) return;
+    poiMotionRafId = window.requestAnimationFrame(stepPoiMotionFrame);
+  }
+
+  function schedulePoiMotionTick(delay = getPoiMotionTickDelay()) {
+    clearPoiMotionScheduler();
+    if (!canRunPoiMotion()) return;
+
+    poiMotionSchedulerId = window.setTimeout(() => {
+      poiMotionSchedulerId = null;
+      launchPoiMotionIfNeeded();
+      schedulePoiMotionTick();
+    }, delay);
+  }
+
+  function startPoiMotion(pointEl, now = performance.now()) {
+    const motionState = getPoiMotionState(pointEl);
+    if (!motionState || motionState.moving) return false;
+
+    const destination = getPoiMotionDestination(pointEl);
+    if (!destination) return false;
+
+    const distance = Math.hypot(destination.x - motionState.currentX, destination.y - motionState.currentY);
+    if (distance < 1) {
+      motionState.restUntil = now + poiMotionRestMs;
+      return false;
+    }
+
+    const baseDistance = getPoiMotionBaseDistance();
+    const duration = Math.max(2200, Math.min(11200, (distance / Math.max(baseDistance, 1)) * poiMotionBaseTravelMs));
+    motionState.moving = true;
+    motionState.move = {
+      startX: motionState.currentX,
+      startY: motionState.currentY,
+      endX: destination.x,
+      endY: destination.y,
+      control: getPoiMotionControlPoint(motionState.currentX, motionState.currentY, destination.x, destination.y),
+      startedAt: now,
+      duration
+    };
+    pointEl.classList.add('is-moving');
+    ensurePoiMotionFrame();
+    return true;
+  }
+
+  function stepPoiMotionFrame(now) {
+    poiMotionRafId = null;
+    let hasActiveMotion = false;
+
+    points.forEach((point) => {
+      const motionState = getPoiMotionState(point);
+      if (!motionState || !motionState.moving || !motionState.move) return;
+
+      hasActiveMotion = true;
+      const rawProgress = Math.min(1, (now - motionState.move.startedAt) / motionState.move.duration);
+      const easedProgress = easeInOutCubic(rawProgress);
+      const nextPosition = getPoiMotionPosition(motionState.move, easedProgress);
+      setPoiMotionPosition(point, nextPosition.x, nextPosition.y);
+
+      if (rawProgress >= 1) {
+        motionState.moving = false;
+        motionState.move = null;
+        motionState.restUntil = now + poiMotionRestMs + randomBetween(0, 2800);
+        point.classList.remove('is-moving');
+      }
+    });
+
+    if (hasActiveMotion && !poiMotionPaused) {
+      ensurePoiMotionFrame();
+    }
+  }
+
+  function launchPoiMotionIfNeeded() {
+    if (!canRunPoiMotion()) return;
+
+    const now = performance.now();
+    const movingCount = points.reduce((count, point) => {
+      const motionState = getPoiMotionState(point);
+      return count + (motionState?.moving ? 1 : 0);
+    }, 0);
+    const capacity = getPoiMotionMaxConcurrent() - movingCount;
+    if (capacity <= 0) return;
+
+    const eligible = points.filter((point) => {
+      const motionState = getPoiMotionState(point);
+      return motionState && !motionState.moving && motionState.restUntil <= now;
+    });
+    if (eligible.length === 0) return;
+
+    const shouldLaunch = Math.random() < (movingCount > 0 ? 0.46 : 0.34);
+    if (!shouldLaunch) return;
+
+    const maxLaunches = Math.min(capacity, eligible.length, movingCount > 0 ? 2 : 1);
+    const launchCount = maxLaunches > 1 && Math.random() < 0.24 ? 2 : 1;
+
+    for (let launched = 0; launched < Math.min(maxLaunches, launchCount); launched += 1) {
+      const candidateIndex = Math.floor(Math.random() * eligible.length);
+      const [candidate] = eligible.splice(candidateIndex, 1);
+      if (candidate) {
+        startPoiMotion(candidate, now + launched * 120);
+      }
+    }
+  }
+
+  function pausePoiMotion() {
+    if (poiMotionPaused) return;
+
+    poiMotionPaused = true;
+    poiMotionPauseStartedAt = performance.now();
+    clearPoiMotionScheduler();
+    if (poiMotionRafId) {
+      window.cancelAnimationFrame(poiMotionRafId);
+      poiMotionRafId = null;
+    }
+
+    points.forEach((point) => {
+      const motionState = getPoiMotionState(point);
+      if (motionState?.moving && motionState.move) {
+        motionState.move.pausedAt = poiMotionPauseStartedAt;
+      }
+    });
+  }
+
+  function resumePoiMotion() {
+    if (!poiMotionPaused) {
+      syncPoiMotionLifecycle();
+      return;
+    }
+
+    const now = performance.now();
+    const pauseDelta = poiMotionPauseStartedAt ? now - poiMotionPauseStartedAt : 0;
+    poiMotionPaused = false;
+    poiMotionPauseStartedAt = 0;
+
+    points.forEach((point) => {
+      const motionState = getPoiMotionState(point);
+      if (motionState?.moving && motionState.move) {
+        motionState.move.startedAt += pauseDelta;
+        delete motionState.move.pausedAt;
+      }
+    });
+
+    syncPoiMotionLifecycle();
+  }
+
+  function syncPoiMotionLifecycle() {
+    if (!canRunPoiMotion()) {
+      stopPoiMotionEngine();
+      return;
+    }
+
+    const hasActiveMotion = points.some((point) => getPoiMotionState(point)?.moving);
+    if (hasActiveMotion) {
+      ensurePoiMotionFrame();
+    }
+    schedulePoiMotionTick();
+  }
+
   function createPoiElement(image, index, occupiedPositions) {
+    const pointGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     const point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     const position = findNonOverlappingPoint(occupiedPositions, 42, 200);
     const cx = position ? position.x : zoneCentroid.x;
     const cy = position ? position.y : zoneCentroid.y;
+
+    pointGroup.setAttribute('class', 'poi-item');
+    pointGroup.setAttribute('transform', 'translate(0 0)');
 
     pulse.setAttribute('class', 'point-pulse');
     pulse.setAttribute('cx', String(cx));
@@ -1820,21 +2167,31 @@
     point.setAttribute('cx', String(cx));
     point.setAttribute('cy', String(cy));
     point.setAttribute('r', '11');
-    point.dataset.video = (image.webm && image.webm !== '_') ? `${poiMediaPathPrefix}${image.webm}` : '_';
-    point.dataset.jpeg = (image.jpeg && image.jpeg !== '_') ? `${poiMediaPathPrefix}${image.jpeg}` : '_';
-    point.dataset.title = getPreferredNameWithScientific(image.name, 'Observation');
-    point.dataset.poetic = getPreferredText(image.poeticText, '');
-    point.dataset.scientific = getPreferredText(image.scientificText, '');
-    point.dataset.text = getPreferredText(image.poeticText, getPreferredText(image.scientificText, 'Texte à venir.'));
-    point.dataset.links = JSON.stringify(Array.isArray(image.liensSon) ? image.liensSon.filter((link) => typeof link === 'string' && link && link !== '_') : []);
-    pointVariants.set(point, normalizeVariants(image));
-    point.dataset.regions = JSON.stringify([]);
+    pointGroup.dataset.video = (image.webm && image.webm !== '_') ? `${poiMediaPathPrefix}${image.webm}` : '_';
+    pointGroup.dataset.jpeg = (image.jpeg && image.jpeg !== '_') ? `${poiMediaPathPrefix}${image.jpeg}` : '_';
+    pointGroup.dataset.title = getPreferredNameWithScientific(image.name, 'Observation');
+    pointGroup.dataset.poetic = getPreferredText(image.poeticText, '');
+    pointGroup.dataset.scientific = getPreferredText(image.scientificText, '');
+    pointGroup.dataset.text = getPreferredText(image.poeticText, getPreferredText(image.scientificText, 'Texte à venir.'));
+    pointGroup.dataset.links = JSON.stringify(Array.isArray(image.liensSon) ? image.liensSon.filter((link) => typeof link === 'string' && link && link !== '_') : []);
+    pointGroup.dataset.regions = JSON.stringify([]);
+    pointVariants.set(pointGroup, normalizeVariants(image));
+    pointGroup.appendChild(pulse);
+    pointGroup.appendChild(point);
+    poiLayer.appendChild(pointGroup);
 
-    poiLayer.appendChild(pulse);
-    poiLayer.appendChild(point);
+    pointMotionStates.set(pointGroup, {
+      baseX: cx,
+      baseY: cy,
+      currentX: cx,
+      currentY: cy,
+      moving: false,
+      move: null,
+      restUntil: performance.now() + randomBetween(5000, 12000)
+    });
 
     occupiedPositions.push({ x: cx, y: cy });
-    return point;
+    return pointGroup;
   }
 
   async function loadPoiData() {
@@ -2017,7 +2374,7 @@
     const targetPoint = points[0] || null;
     if (!targetPoint) return false;
 
-    const played = playTemporaryHighlight(targetPoint, 'poi-idle-intro');
+    const played = playTemporaryHighlight(getPoiAnchorElement(targetPoint), 'poi-idle-intro');
     if (played) {
       poiIdleHighlightDue = false;
     }
@@ -2067,6 +2424,7 @@
       syncMapVisibility();
       playTemporaryHighlight(infoToggleBtn, 'discover-button-intro');
       playTemporaryHighlight(audioToggleBtn, 'audio-button-intro');
+      syncPoiMotionLifecycle();
     }, 4000);
   }
 
@@ -2224,7 +2582,8 @@
   });
 
   function pointToRect(pointEl) {
-    const r = pointEl.getBoundingClientRect();
+    const targetElement = getPoiAnchorElement(pointEl) || pointEl;
+    const r = targetElement.getBoundingClientRect();
     const size = Math.max(r.width, r.height);
     return {
       left: r.left,
@@ -2563,6 +2922,7 @@
     hasOpenedPoiVideo = true;
     poiIdleHighlightDue = false;
     clearPoiIdleHighlightTimer();
+    pausePoiMotion();
 
     try {
       activePointRect = pointToRect(pointEl);
@@ -2634,6 +2994,9 @@
       });
     } catch (error) {
       openingPoint = false;
+      if (!isOpen) {
+        resumePoiMotion();
+      }
       throw error;
     }
   }
@@ -2669,6 +3032,7 @@
       activePointData = null;
       activeRegion = null;
       activeZoneKey = null;
+      resumePoiMotion();
     }, 940);
   }
 
@@ -2743,6 +3107,7 @@
 
   window.addEventListener('resize', () => {
     setMapState(mapState);
+    syncPoiMotionLifecycle();
     if (!viewer.style.display || viewer.style.display === 'none') return;
     if (isOpen) {
       if (isFullscreenMode) {
@@ -2758,6 +3123,16 @@
           setBubblePosition(target, activeRegion, false);
         }
       }
+    }
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      pausePoiMotion();
+      return;
+    }
+    if (!isOpen) {
+      resumePoiMotion();
     }
   });
 
