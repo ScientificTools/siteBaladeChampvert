@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Carte sensible - Champvert</title>
+<meta name="description" content="Découvrez la biodiversité urbaine à Champvert, une balade interactive à Lyon 5 avec photos animées, sons et cartes." />
+<meta name="keywords" content="nature en ville, balade interactive, Champvert, Lyon 5, biodiversité urbaine, photos animées, motion picture" />
+<meta property="og:title" content="Nature en ville – Balade interactive à Champvert (Lyon 5)" />
+<meta property="og:description" content="Découvrez la biodiversité urbaine à Champvert, une balade interactive à Lyon 5 avec photos animées, sons et cartes." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://example.com/og-image.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Nature en ville – Balade interactive à Champvert (Lyon 5)" />
+<meta name="twitter:description" content="Découvrez la biodiversité urbaine à Champvert, une balade interactive à Lyon 5 avec photos animées, sons et cartes." />
+<title>Nature en ville – Balade interactive à Champvert (Lyon 5)</title>
 <style>
   :root {
     --bg: #edf1e7;
@@ -487,27 +496,74 @@
     left: 18px;
     bottom: 18px;
     z-index: 40;
-    width: 44px;
-    height: 44px;
-    border: none;
-    border-radius: 999px;
-    background: #1d4ed8;
-    color: #ffffff;
-    font-size: 1.1rem;
-    font-weight: 700;
+
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
+
+    min-height: 44px;
+    padding: 9px 15px 9px 11px;
+
+    border: 1px solid rgba(77, 106, 74, 0.22);
+    border-radius: 999px;
+
+    background: rgba(247, 250, 244, 0.88);
+    color: #354d32;
+
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+
+    box-shadow:
+      0 10px 28px rgba(34, 47, 28, 0.13),
+      inset 0 1px 0 rgba(255, 255, 255, 0.75);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
     cursor: pointer;
-    box-shadow: 0 18px 36px rgba(29, 78, 216, 0.16);
-    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    user-select: none;
+
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      background 180ms ease,
+      border-color 180ms ease;
+  }
+
+  .site-info-icon {
+    width: 22px;
+    height: 22px;
+    flex: 0 0 auto;
+    fill: #64845b;
+    transition: transform 350ms ease, fill 180ms ease;
   }
 
   .site-info-button:hover,
   .site-info-button:focus-visible {
-    transform: translateY(-1px);
-    box-shadow: 0 22px 40px rgba(29, 78, 216, 0.24);
-    background: #2563eb;
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.96);
+    border-color: rgba(77, 106, 74, 0.36);
+    box-shadow:
+      0 15px 34px rgba(34, 47, 28, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  .site-info-button:hover .site-info-icon,
+  .site-info-button:focus-visible .site-info-icon {
+    transform: rotate(-8deg) scale(1.08);
+    fill: #4e7147;
+  }
+
+  .site-info-button:focus-visible {
+    outline: 2px solid rgba(80, 118, 66, 0.35);
+    outline-offset: 3px;
+  }
+
+  .site-info-button[aria-expanded="true"] {
+    background: rgba(225, 235, 215, 0.96);
+    border-color: rgba(77, 106, 74, 0.42);
   }
 
   .site-info-tooltip {
@@ -518,11 +574,11 @@
     max-width: min(360px, calc(100vw - 36px));
     padding: 16px 18px;
     border-radius: 18px;
-    background: rgba(20, 25, 44, 0.96);
-    color: #ffffff;
+    background: rgba(245, 248, 240, 0.96);
+    color: #31462b;
     font-size: 0.9rem;
     line-height: 1.5;
-    box-shadow: 0 22px 48px rgba(9, 12, 29, 0.28);
+    box-shadow: 0 22px 48px rgba(9, 12, 29, 0.16);
     opacity: 0;
     transform: translateY(10px);
     pointer-events: none;
@@ -537,6 +593,10 @@
 
   .site-info-tooltip p {
     margin: 0 0 0.9em;
+  }
+
+  .site-info-tooltip p:last-child {
+    margin-bottom: 0;
   }
 
   .site-info-tooltip p:last-child {
@@ -1066,7 +1126,19 @@
     <audio id="backgroundAudio" loop preload="none" src="song/fond.m4a"></audio>
   </div>
 
-  <button id="siteInfoButton" class="site-info-button" type="button" aria-label="Afficher les informations du site">I</button>
+  <button
+    id="siteInfoButton"
+    class="site-info-button"
+    type="button"
+    aria-label="Découvrir l'esprit de cette balade"
+    aria-expanded="false"
+    aria-controls="siteInfoTooltip"
+  >
+    <svg class="site-info-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M19.8 3.7C13.3 3.8 7.2 6.3 5.1 11.1c-1.2 2.8-.4 5.4 1.4 7c2.1-4.7 5.8-7.7 9.8-9.7c-3.4 2.6-6.1 5.8-7.7 9.4c2.2.8 4.8.2 6.5-1.8c3.1-3.6 3.9-8.4 4.7-12.3Z" />
+    </svg>
+    <span class="site-info-button-text">Découvrir</span>
+  </button>
   <div id="siteInfoTooltip" class="site-info-tooltip" role="tooltip" aria-hidden="true"></div>
 
   <div id="viewer" aria-hidden="true">
@@ -1151,8 +1223,9 @@
       mapToggleAria: 'Afficher la superposition avec la carte OpenStreetMap',
       mapToggleTitle: 'Survolez pour afficher la carte réelle',
       learnMoreLabel: 'Pour aller plus loin :',
-      infoButtonLabel: 'Info',
-      infoTooltipText: 'Bienvenu dans cette découverte originale de la nature qui vous entoure. L\'homme y cohabite, mais elle est bien là, résiliente, adaptée, menant sa propre vie.\n\nLe lieu représente une petite jungle apprivoisée d\'un petit quartier de Lyon, entouré de bois, suffisamment pour y faire des rencontres régalantes et ressourçantes.\n\nToutes les images et sons sont originales et natives de l\'endroit. Malgré une frontière proche des habitats, il suffit d\'ouvrir les yeux et les oreilles, pour accéder à un monde parallèle lent, calme, différent et énergisant.\n\nSoyez curieux, n\'ayez pas peur de cliquer, d\'utiliser la molette, d\'essayer, rien n\'est expliqué, c\'est voulu, à vous de découvrir.\n\nIci, aucun cookie de suivi. Aucune publicité. Aucune collecte de données personnelles, pas de commerce. Une obséssion dans l\'éco conception, des affichages légers comme les stars à l\'honneur, et un ressenti que nous espérons naturel et fluide.\n\ncontact Webmaster : albouille69@gmail.com'
+      infoButtonLabel: 'Découvrir',
+      infoButtonAriaLabel: 'Découvrir l\'esprit de cette balade',
+      infoTooltipText: 'Bienvenue à Champvert.\n\nUn endroit où la nature tient sa place, sans forcer, au cœur de la ville.\n\nDes sons, des images, des passages à traverser lentement.\n\nTout a été capté ici, dans la grâce d’un instant vivant.\n\nAucun suivi, aucune publicité, aucune collecte de données. Prenez votre temps. Regardez. Écoutez. Essayez.\n\nContact : albouille69@gmail.com'
     },
     US: {
       toggleTitle: 'View map',
@@ -1160,8 +1233,9 @@
       mapToggleAria: 'Show the overlay with the OpenStreetMap map',
       mapToggleTitle: 'Hover to show the real map',
       learnMoreLabel: 'To go further:',
-      infoButtonLabel: 'Info',
-      infoTooltipText: 'Welcome to this original discovery of the nature around you. Humans live here too, but nature is present, resilient, adapted, and leading its own life.\n\nThis place represents a small tamed jungle in a small Lyon neighborhood, surrounded by woods, enough to offer rich and refreshing encounters.\n\nAll images and sounds are original and native to the place. Despite a nearby border of inhabited areas, simply open your eyes and ears to access a parallel world that is slow, calm, different and energizing.\n\nBe curious, don\'t be afraid to click, use the wheel, try things; nothing is explained, it is intentional, for you to discover.\n\nHere, no tracking cookies. No advertising. No personal data collection, no commerce. An obsession with eco-design, lightweight displays like the stars honored here, and a feeling we hope is natural and fluid.\n\ncontact Webmaster: albouille69@gmail.com'
+      infoButtonLabel: 'Discover',
+      infoButtonAriaLabel: 'Discover the spirit of this walk',
+      infoTooltipText: 'Welcome to Champvert.\n\nA place where nature finds its place without forcing it, at the heart of the city.\n\nSounds, images, paths to cross slowly.\n\nEverything was captured here, in the grace of a living moment.\n\nNo tracking, no advertising, no data collection. Take your time. Look. Listen. Try.\n\nContact: albouille69@gmail.com'
     }
   };
 
@@ -1494,6 +1568,7 @@
       langEnBtn.setAttribute('aria-pressed', String(currentLocale === 'US'));
     }
     updateMapToggleText();
+    updateSiteInfoButtonLanguage();
     refreshPoiLayer();
     if (isOpen && lastActivatedPoint) {
       activePointData = getPointData(lastActivatedPoint);
@@ -2557,6 +2632,18 @@
     return strings.infoTooltipText || '';
   }
 
+  function updateSiteInfoButtonLanguage() {
+    if (!infoToggleBtn) return;
+    const strings = localeStrings[currentLocale] || localeStrings.FR;
+    const label = strings.infoButtonLabel || 'Découvrir';
+    const ariaLabel = strings.infoButtonAriaLabel || 'Découvrir l\'esprit de cette balade';
+    const labelElement = infoToggleBtn.querySelector('.site-info-button-text');
+    if (labelElement) {
+      labelElement.textContent = label;
+    }
+    infoToggleBtn.setAttribute('aria-label', ariaLabel);
+  }
+
   function renderSiteInfoText() {
     const text = getSiteInfoText();
     if (!infoTooltip) return;
@@ -2569,17 +2656,21 @@
     infoTooltip.innerHTML = paragraphs;
   }
 
+  function setInfoTooltipOpen(isOpen) {
+    if (!infoTooltip || !infoToggleBtn) return;
+    infoTooltip.classList.toggle('visible', isOpen);
+    infoTooltip.setAttribute('aria-hidden', String(!isOpen));
+    infoToggleBtn.setAttribute('aria-expanded', String(isOpen));
+  }
+
   function showSiteInfoTooltip() {
     if (!infoTooltip) return;
     renderSiteInfoText();
-    infoTooltip.classList.add('visible');
-    infoTooltip.setAttribute('aria-hidden', 'false');
+    setInfoTooltipOpen(true);
   }
 
   function hideSiteInfoTooltip() {
-    if (!infoTooltip) return;
-    infoTooltip.classList.remove('visible');
-    infoTooltip.setAttribute('aria-hidden', 'true');
+    setInfoTooltipOpen(false);
   }
 
   function initializeSiteInfoControls() {
@@ -2606,6 +2697,7 @@
   }
 
   updateMapToggleText();
+  updateSiteInfoButtonLanguage();
   applyMapTransform();
   loadPoiData();
   initializeBackgroundAudioControls();
