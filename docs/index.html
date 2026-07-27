@@ -277,6 +277,49 @@
     transform: scale(1.22);
   }
 
+  .point.temporary-highlight--svg {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .point.temporary-highlight--svg.is-active {
+    animation: temporary-highlight-point-pulse 1s ease-in-out 5;
+  }
+
+  @keyframes temporary-highlight-point-pulse {
+    0% {
+      fill: rgba(255, 255, 255, 0.82);
+      stroke: rgba(0, 153, 255, 0.72);
+      stroke-width: 1.8;
+      transform: scale(1);
+      filter: drop-shadow(0 0 0 rgba(0, 195, 255, 0));
+    }
+
+    28% {
+      fill: rgba(255, 255, 255, 1);
+      stroke: rgba(72, 222, 255, 1);
+      stroke-width: 2.8;
+      transform: scale(1.26);
+      filter: drop-shadow(0 0 10px rgba(0, 195, 255, 0.84)) drop-shadow(0 0 22px rgba(102, 224, 255, 0.42));
+    }
+
+    62% {
+      fill: rgba(232, 248, 255, 0.98);
+      stroke: rgba(0, 170, 255, 0.92);
+      stroke-width: 2.4;
+      transform: scale(1.18);
+      filter: drop-shadow(0 0 12px rgba(0, 170, 255, 0.66)) drop-shadow(0 0 28px rgba(108, 228, 255, 0.28));
+    }
+
+    100% {
+      fill: rgba(255, 255, 255, 0.78);
+      stroke: #4d6a4a;
+      stroke-width: 1.8;
+      transform: scale(1);
+      filter: drop-shadow(0 0 0 rgba(0, 195, 255, 0));
+    }
+  }
+
   .point-pulse {
     fill: rgba(154, 202, 101, 0.16);
     stroke: rgba(121, 168, 77, 0.2);
@@ -564,6 +607,69 @@
   .site-info-button[aria-expanded="true"] {
     background: rgba(225, 235, 215, 0.96);
     border-color: rgba(77, 106, 74, 0.42);
+  }
+
+  .temporary-highlight {
+    isolation: isolate;
+  }
+
+  .temporary-highlight::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(72, 222, 255, 0.56) 0%, rgba(0, 191, 255, 0.42) 38%, rgba(0, 140, 255, 0.2) 62%, rgba(0, 140, 255, 0) 78%),
+      linear-gradient(135deg, rgba(138, 240, 255, 0.62), rgba(0, 153, 255, 0.24));
+    box-shadow:
+      0 0 0 0 rgba(0, 195, 255, 0.56),
+      0 0 40px rgba(0, 170, 255, 0.52),
+      0 0 72px rgba(102, 224, 255, 0.28);
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .temporary-highlight.is-active::after {
+    animation: temporary-highlight-pulse 1s ease-in-out 5;
+  }
+
+  @keyframes temporary-highlight-pulse {
+    0% {
+      opacity: 0;
+      transform: scale(0.94);
+      box-shadow:
+        0 0 0 0 rgba(0, 195, 255, 0.22),
+        0 0 20px rgba(0, 160, 255, 0.24),
+        0 0 34px rgba(108, 228, 255, 0.12);
+    }
+
+    28% {
+      opacity: 1;
+      transform: scale(1.02);
+      box-shadow:
+        0 0 0 12px rgba(0, 195, 255, 0.3),
+        0 0 42px rgba(0, 160, 255, 0.52),
+        0 0 84px rgba(108, 228, 255, 0.24);
+    }
+
+    62% {
+      opacity: 0.88;
+      transform: scale(1.04);
+      box-shadow:
+        0 0 0 18px rgba(0, 195, 255, 0.14),
+        0 0 48px rgba(0, 160, 255, 0.34),
+        0 0 92px rgba(108, 228, 255, 0.16);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(1.08);
+      box-shadow:
+        0 0 0 24px rgba(0, 195, 255, 0),
+        0 0 24px rgba(0, 160, 255, 0),
+        0 0 54px rgba(108, 228, 255, 0);
+    }
   }
 
   .site-info-tooltip {
@@ -1191,6 +1297,7 @@
   const variantPrevBtn = document.getElementById('variantPrevBtn');
   const variantNextBtn = document.getElementById('variantNextBtn');
   const variantPositionLabel = document.getElementById('variantPositionLabel');
+  const videoControls = document.getElementById('videoControls');
   const poiTooltip = document.getElementById('poiTooltip');
   const poiLayer = document.getElementById('poiLayer');
   const infoToggleBtn = document.getElementById('siteInfoButton');
@@ -1199,6 +1306,7 @@
   const audioVolumeControl = document.getElementById('audioVolumeControl');
   const audioVolumeRange = document.getElementById('audioVolumeRange');
   const backgroundAudio = document.getElementById('backgroundAudio');
+  const sessionHighlightPrefix = 'siteBaladeChampvertHighlight:';
   const poiMediaPathPrefix = 'data/';
   const pointVariants = new WeakMap();
   const langFrBtn = document.getElementById('langFrBtn');
@@ -1250,11 +1358,15 @@
   let bubbleVisible = false;
   let hideBubbleTimer = null;
   let introStarted = false;
+  let hasOpenedPoiVideo = false;
+  let poiIdleHighlightTimerId = null;
+  let poiIdleHighlightDue = false;
   let mapPinned = mapPinToggle.checked;
   let openingPoint = false;
   let lastActivatedPoint = null;
   let activeVariants = [];
   let activeVariantIndex = 0;
+  const poiIdleHighlightDelay = 20000;
   const minScale = 1;
   const maxScale = 4;
   const zoomStep = 0.2;
@@ -1551,9 +1663,9 @@
       variantPrevBtn.removeAttribute('hidden');
       variantNextBtn.removeAttribute('hidden');
       variantPositionLabel.removeAttribute('hidden');
-      document.getElementById('videoControls')?.removeAttribute('hidden');
+      videoControls?.removeAttribute('hidden');
     } else {
-      document.getElementById('videoControls')?.setAttribute('hidden', '');
+      videoControls?.setAttribute('hidden', '');
     }
   }
 
@@ -1616,6 +1728,8 @@
         hidePoiTooltip();
       });
     });
+
+    attemptIdlePoiHighlight();
   }
 
   function showPoiTooltip(point, event) {
@@ -1844,6 +1958,92 @@
     });
   }
 
+  function getSessionHighlightKey(highlightId) {
+    return `${sessionHighlightPrefix}${highlightId}`;
+  }
+
+  function hasSessionHighlightRun(highlightId) {
+    try {
+      return window.sessionStorage.getItem(getSessionHighlightKey(highlightId)) === 'true';
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function markSessionHighlightRun(highlightId) {
+    try {
+      window.sessionStorage.setItem(getSessionHighlightKey(highlightId), 'true');
+    } catch (error) {
+      return;
+    }
+  }
+
+  function playTemporaryHighlight(target, highlightId) {
+    if (!target || !highlightId || hasSessionHighlightRun(highlightId)) return false;
+
+    target.classList.add('temporary-highlight');
+    if (target instanceof SVGElement) {
+      target.classList.add('temporary-highlight--svg');
+    }
+
+    const handleAnimationEnd = (event) => {
+      const expectedAnimationName = target instanceof SVGElement
+        ? 'temporary-highlight-point-pulse'
+        : 'temporary-highlight-pulse';
+      if (event.target !== target || event.animationName !== expectedAnimationName) return;
+      target.classList.remove('is-active');
+      target.removeEventListener('animationend', handleAnimationEnd);
+    };
+
+    target.addEventListener('animationend', handleAnimationEnd);
+    target.classList.remove('is-active');
+    void target.offsetWidth;
+    target.classList.add('is-active');
+    markSessionHighlightRun(highlightId);
+    return true;
+  }
+
+  function clearPoiIdleHighlightTimer() {
+    if (!poiIdleHighlightTimerId) return;
+    window.clearTimeout(poiIdleHighlightTimerId);
+    poiIdleHighlightTimerId = null;
+  }
+
+  function attemptIdlePoiHighlight() {
+    if (!poiIdleHighlightDue || hasOpenedPoiVideo || hasSessionHighlightRun('poi-idle-intro')) {
+      return false;
+    }
+
+    const targetPoint = points[0] || null;
+    if (!targetPoint) return false;
+
+    const played = playTemporaryHighlight(targetPoint, 'poi-idle-intro');
+    if (played) {
+      poiIdleHighlightDue = false;
+    }
+    return played;
+  }
+
+  function scheduleIdlePoiHighlight() {
+    clearPoiIdleHighlightTimer();
+    poiIdleHighlightTimerId = window.setTimeout(() => {
+      poiIdleHighlightTimerId = null;
+      poiIdleHighlightDue = true;
+      attemptIdlePoiHighlight();
+    }, poiIdleHighlightDelay);
+  }
+
+  function triggerInitialVideoHighlights(hasVariantNavigator) {
+    if (hasVariantNavigator) {
+      if (videoControls && !videoControls.hasAttribute('hidden')) {
+        playTemporaryHighlight(videoControls, 'video-variant-navigator-intro');
+      }
+    }
+
+    playTemporaryHighlight(modeIndicator, 'video-fullscreen-intro');
+    playTemporaryHighlight(closeBtn, 'video-close-intro');
+  }
+
   function runIntro() {
     if (introStarted) return;
     introStarted = true;
@@ -1865,6 +2065,8 @@
     window.setTimeout(() => {
       body.classList.add('intro-complete');
       syncMapVisibility();
+      playTemporaryHighlight(infoToggleBtn, 'discover-button-intro');
+      playTemporaryHighlight(audioToggleBtn, 'audio-button-intro');
     }, 4000);
   }
 
@@ -2358,6 +2560,9 @@
   async function openVideo(pointEl, pointer = null) {
     if (openingPoint || isOpen) return;
     openingPoint = true;
+    hasOpenedPoiVideo = true;
+    poiIdleHighlightDue = false;
+    clearPoiIdleHighlightTimer();
 
     try {
       activePointRect = pointToRect(pointEl);
@@ -2397,6 +2602,7 @@
         ? activePointData.variants
         : [{ webm: activePointData.video, jpeg: activePointData.jpeg, poeticText: [], scientificText: [], latitude: null, longitude: null, date: null, game: null }];
       console.log('openVideo variants', activeVariants);
+      const hasVariantNavigator = activeVariants.length > 1;
       activeVariantIndex = 0;
       setActiveVariant(0);
 
@@ -2411,6 +2617,10 @@
           isOpen = true;
           lastActivatedPoint = pointEl;
           openingPoint = false;
+
+          requestAnimationFrame(() => {
+            triggerInitialVideoHighlights(hasVariantNavigator);
+          });
 
           requestAnimationFrame(() => {
             if (pendingInitialBubble) {
@@ -2699,6 +2909,7 @@
   updateMapToggleText();
   updateSiteInfoButtonLanguage();
   applyMapTransform();
+  scheduleIdlePoiHighlight();
   loadPoiData();
   initializeBackgroundAudioControls();
   initializeSiteInfoControls();
