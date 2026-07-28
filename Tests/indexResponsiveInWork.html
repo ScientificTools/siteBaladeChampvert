@@ -1,0 +1,3933 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Découvrez la biodiversité urbaine à Champvert, une balade interactive à Lyon 5 avec photos animées, sons et cartes." />
+<meta name="keywords" content="nature en ville, balade interactive, Champvert, Lyon 5, biodiversité urbaine, photos animées, motion picture" />
+<meta property="og:title" content="Nature en ville – Balade interactive à Champvert (Lyon 5)" />
+<meta property="og:description" content="Découvrez la biodiversité urbaine à Champvert, une balade interactive à Lyon 5 avec photos animées, sons et cartes." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://example.com/og-image.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Nature en ville – Balade interactive à Champvert (Lyon 5)" />
+<meta name="twitter:description" content="Découvrez la biodiversité urbaine à Champvert, une balade interactive à Lyon 5 avec photos animées, sons et cartes." />
+<title>Nature en ville – Balade interactive à Champvert (Lyon 5)</title>
+<style>
+  :root {
+    --bg: #edf1e7;
+    --panel: rgba(255, 255, 255, 0.88);
+    --line: rgba(66, 87, 62, 0.14);
+    --text: #233121;
+    --muted: #5f705c;
+    --shadow: rgba(21, 30, 18, 0.12);
+    --overlay: rgba(0, 0, 0, 0.72);
+    --map-opacity: 0;
+    --stage-width: min(96vw, calc(96vh * 1.5948795181));
+    --mobile-controls-height: 0px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+  }
+
+  body {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at top left, rgba(185, 206, 156, 0.3), transparent 38%),
+      radial-gradient(circle at bottom right, rgba(199, 213, 171, 0.28), transparent 34%),
+      linear-gradient(180deg, #f7faf4 0%, var(--bg) 100%);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+
+  body.show-map {
+    --map-opacity: 1;
+  }
+
+  body:not(.intro-complete) .map-toggle,
+  body:not(.intro-complete) .map-controls,
+  body:not(.intro-complete) .map-hint,
+  body:not(.intro-complete) .caption {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .app {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .background-stage {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at top left, rgba(28, 44, 23, 0.28), transparent 34%),
+      radial-gradient(circle at bottom right, rgba(77, 103, 70, 0.2), transparent 28%),
+      linear-gradient(180deg, rgba(22, 31, 19, 0.84) 0%, rgba(37, 49, 32, 0.7) 100%);
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  body.show-background-media .background-stage {
+    opacity: 1;
+  }
+
+  .background-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease;
+    filter: saturate(1.04) contrast(1.02) brightness(0.88);
+    background: transparent;
+  }
+
+  .background-video.is-active {
+    opacity: 1;
+  }
+
+  .map-toggle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid rgba(82, 106, 74, 0.16);
+    border-radius: 999px;
+    background: var(--panel);
+    color: var(--text);
+    box-shadow: 0 12px 28px var(--shadow);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+    --toggle-x: 18px;
+    --toggle-y: 18px;
+    --toggle-lift: 0px;
+    transform: translate(var(--toggle-x), var(--toggle-y)) translateY(var(--toggle-lift));
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  }
+
+  .map-toggle:hover,
+  .map-toggle:focus-visible {
+    --toggle-lift: -1px;
+    box-shadow: 0 16px 34px rgba(21, 30, 18, 0.16);
+    background: rgba(255, 255, 255, 0.94);
+  }
+
+  .map-toggle:focus-visible {
+    outline: 2px solid rgba(80, 118, 66, 0.35);
+    outline-offset: 3px;
+  }
+
+  .map-toggle svg {
+    width: 18px;
+    height: 18px;
+    fill: #54724d;
+    flex: 0 0 auto;
+  }
+
+  .map-toggle strong {
+    display: block;
+    font-size: 0.92rem;
+    line-height: 1.1;
+  }
+
+  .map-toggle span {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.15;
+  }
+
+  .map-toggle-copy {
+    min-width: 0;
+  }
+
+  .map-toggle-pin {
+    margin-left: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    pointer-events: auto;
+  }
+
+  .map-toggle-pin input {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: #54724d;
+    cursor: pointer;
+  }
+
+  .stage {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 76px 2vw 3vh;
+  }
+
+  body.is-mobile-layout {
+    overflow: auto;
+  }
+
+  body.is-mobile-layout .app {
+    min-height: 100vh;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  body.is-mobile-layout .stage {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: calc(84px + env(safe-area-inset-top, 0px)) 12px calc(var(--mobile-controls-height) + 18px) 12px;
+  }
+
+  .map-frame {
+    position: relative;
+    width: var(--stage-width);
+    aspect-ratio: 2118 / 1328;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow:
+      0 24px 70px rgba(34, 47, 28, 0.16),
+      inset 0 0 0 1px rgba(91, 113, 79, 0.08);
+    background: #ffffff;
+    transition: background 1s ease, box-shadow 1s ease;
+  }
+
+  body.is-mobile-layout .map-frame {
+    width: min(100%, 560px);
+    margin: 0 auto;
+    border-radius: 20px;
+  }
+
+  body.show-background-media .map-frame {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .map-viewport {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    touch-action: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .map-viewport.is-dragging {
+    cursor: grabbing;
+  }
+
+  .map-scene {
+    position: absolute;
+    inset: 0;
+    transform-origin: 0 0;
+    will-change: transform;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .map-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+
+  body.show-background-media .map-frame::after {
+    opacity: 0;
+  }
+
+  .layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .layer-map {
+    object-fit: contain;
+    opacity: var(--map-opacity);
+    transition: opacity 1s ease;
+  }
+
+  .layer-svg {
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  .layer-svg-outline {
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+
+  .poi-layer {
+    z-index: 4;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    pointer-events: auto;
+  }
+
+  body.show-map.reveal-outline .layer-svg-outline,
+  body.show-map.reveal-shape .layer-svg-outline,
+  body.show-map.intro-complete .layer-svg-outline,
+  body.show-map.reveal-shape .layer-svg,
+  body.reveal-shape .poi-layer,
+  body.show-map.intro-complete .layer-svg,
+  body.intro-complete .poi-layer {
+    opacity: 1;
+  }
+
+  .zone-flight {
+    position: fixed;
+    z-index: 35;
+    pointer-events: none;
+    opacity: 0.92;
+    will-change: transform, opacity;
+  }
+
+  .zone-flight svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+    filter: drop-shadow(0 18px 34px rgba(96, 67, 42, 0.22));
+  }
+
+  .point {
+    fill: rgba(255, 255, 255, 0.78);
+    stroke: #4d6a4a;
+    stroke-width: 1.8;
+    cursor: pointer;
+    vector-effect: non-scaling-stroke;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.25s ease, fill 0.25s ease, opacity 0.25s ease, stroke 0.25s ease;
+  }
+
+  .poi-item {
+    will-change: transform;
+  }
+
+  .poi-item.is-moving .point-pulse {
+    animation-play-state: paused;
+    opacity: 0.16;
+  }
+
+  .point:hover {
+    fill: #ffffff;
+    stroke: #6f925f;
+    transform: scale(1.22);
+  }
+
+  body.is-mobile-layout .point,
+  body.is-mobile-layout .point-pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  body.is-mobile-layout .point {
+    transform: scale(1.55);
+  }
+
+  body.is-mobile-layout .point-pulse {
+    transform: scale(1.25);
+  }
+
+  .point.temporary-highlight--svg {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .point.temporary-highlight--svg.is-active {
+    animation: temporary-highlight-point-pulse 1s ease-in-out 5;
+  }
+
+  @keyframes temporary-highlight-point-pulse {
+    0% {
+      fill: rgba(255, 255, 255, 0.82);
+      stroke: rgba(0, 153, 255, 0.72);
+      stroke-width: 1.8;
+      transform: scale(1);
+      filter: drop-shadow(0 0 0 rgba(0, 195, 255, 0));
+    }
+
+    28% {
+      fill: rgba(255, 255, 255, 1);
+      stroke: rgba(72, 222, 255, 1);
+      stroke-width: 2.8;
+      transform: scale(1.26);
+      filter: drop-shadow(0 0 10px rgba(0, 195, 255, 0.84)) drop-shadow(0 0 22px rgba(102, 224, 255, 0.42));
+    }
+
+    62% {
+      fill: rgba(232, 248, 255, 0.98);
+      stroke: rgba(0, 170, 255, 0.92);
+      stroke-width: 2.4;
+      transform: scale(1.18);
+      filter: drop-shadow(0 0 12px rgba(0, 170, 255, 0.66)) drop-shadow(0 0 28px rgba(108, 228, 255, 0.28));
+    }
+
+    100% {
+      fill: rgba(255, 255, 255, 0.78);
+      stroke: #4d6a4a;
+      stroke-width: 1.8;
+      transform: scale(1);
+      filter: drop-shadow(0 0 0 rgba(0, 195, 255, 0));
+    }
+  }
+
+  .point-pulse {
+    fill: rgba(154, 202, 101, 0.16);
+    stroke: rgba(121, 168, 77, 0.2);
+    stroke-width: 1;
+    pointer-events: none;
+    transform-origin: center;
+    animation: pulse 2.8s ease-in-out infinite;
+  }
+
+  #poiTooltip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(20, 24, 16, 0.9);
+    color: #fff;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    white-space: nowrap;
+    pointer-events: none;
+    transform: translate(-50%, -120%) scale(0.92);
+    opacity: 0;
+    transition: opacity 160ms ease, transform 160ms ease;
+    z-index: 20;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+  }
+
+  #poiTooltip.visible {
+    opacity: 1;
+    transform: translate(-50%, -120%) scale(1);
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(0.82); opacity: 0.22; }
+    50% { transform: scale(1.12); opacity: 0.5; }
+    100% { transform: scale(0.82); opacity: 0.22; }
+  }
+
+  .caption {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    z-index: 5;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--muted);
+    font-size: 0.8rem;
+    line-height: 1.35;
+    box-shadow: 0 10px 24px rgba(34, 47, 28, 0.08);
+    backdrop-filter: blur(6px);
+    transition: opacity 0.6s ease;
+  }
+
+  .caption a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .caption a:hover,
+  .caption a:focus-visible {
+    text-decoration: underline;
+  }
+
+  .audio-control {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 40;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--text);
+    box-shadow: 0 18px 40px rgba(21, 30, 18, 0.14);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(82, 106, 74, 0.12);
+    font-size: 0.88rem;
+    pointer-events: auto;
+  }
+
+  body.is-mobile-layout .audio-control {
+    top: auto;
+    right: auto;
+    left: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    width: calc(100vw - 24px);
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 20px;
+  }
+
+  .audio-control button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 999px;
+    background: #fcfdf7;
+    color: #54724d;
+    cursor: pointer;
+    transition: background 180ms ease, transform 180ms ease;
+  }
+
+  .audio-control button:hover,
+  .audio-control button:focus-visible {
+    background: #eef4e0;
+  }
+
+  .audio-control button.active {
+    background: #e8f1d8;
+  }
+
+  .audio-control svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    pointer-events: none;
+  }
+
+  .audio-volume {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 180ms ease, visibility 180ms ease;
+  }
+
+  .audio-volume.hidden {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    overflow: hidden;
+  }
+
+  .audio-volume input[type="range"] {
+    width: 110px;
+    accent-color: #54724d;
+    cursor: pointer;
+    background: transparent;
+  }
+
+  body.is-mobile-layout .audio-volume {
+    flex: 1 1 auto;
+    justify-content: flex-end;
+  }
+
+  body.is-mobile-layout .audio-volume input[type="range"] {
+    width: min(42vw, 180px);
+  }
+
+  #backgroundAudio {
+    display: none;
+  }
+
+  .map-controls {
+    position: absolute;
+    right: 18px;
+    top: 18px;
+    z-index: 21;
+    display: flex;
+    gap: 8px;
+  }
+
+  body.is-mobile-layout .map-controls {
+    right: 12px;
+    left: 12px;
+    top: auto;
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .map-control {
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(82, 106, 74, 0.16);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    color: var(--text);
+    font: inherit;
+    font-size: 1rem;
+    line-height: 1;
+    box-shadow: 0 12px 28px var(--shadow);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  }
+
+  body.is-mobile-layout .map-control {
+    width: 44px;
+    height: 44px;
+  }
+
+  .map-control:hover,
+  .map-control:focus-visible {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 16px 34px rgba(21, 30, 18, 0.16);
+  }
+
+  .map-control:focus-visible {
+    outline: 2px solid rgba(80, 118, 66, 0.35);
+    outline-offset: 3px;
+  }
+
+  .language-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 6px;
+  }
+
+  body.is-mobile-layout .language-switcher {
+    margin-right: auto;
+    gap: 8px;
+  }
+
+  .map-control--lang {
+    width: 34px;
+    height: 34px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0;
+  }
+
+  .map-control--lang.active {
+    background: rgba(82, 106, 74, 0.18);
+    border-color: rgba(82, 106, 74, 0.32);
+  }
+
+  .map-hint {
+    position: absolute;
+    left: 18px;
+    top: 92px;
+    z-index: 19;
+    max-width: min(260px, calc(100% - 36px));
+    padding: 9px 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.76);
+    color: var(--muted);
+    font-size: 0.76rem;
+    line-height: 1.35;
+    box-shadow: 0 10px 24px rgba(34, 47, 28, 0.08);
+    backdrop-filter: blur(6px);
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+  }
+
+  .site-info-button {
+    position: fixed;
+    left: 18px;
+    bottom: 18px;
+    z-index: 40;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    min-height: 44px;
+    padding: 9px 15px 9px 11px;
+
+    border: 1px solid rgba(77, 106, 74, 0.22);
+    border-radius: 999px;
+
+    background: rgba(247, 250, 244, 0.88);
+    color: #354d32;
+
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+
+    box-shadow:
+      0 10px 28px rgba(34, 47, 28, 0.13),
+      inset 0 1px 0 rgba(255, 255, 255, 0.75);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    cursor: pointer;
+    user-select: none;
+
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      background 180ms ease,
+      border-color 180ms ease;
+  }
+
+  body.is-mobile-layout .site-info-button {
+    left: 12px;
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+    min-width: 0;
+    padding-right: 13px;
+  }
+
+  .site-info-icon {
+    width: 22px;
+    height: 22px;
+    flex: 0 0 auto;
+    fill: #64845b;
+    transition: transform 350ms ease, fill 180ms ease;
+  }
+
+  .site-info-button:hover,
+  .site-info-button:focus-visible {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.96);
+    border-color: rgba(77, 106, 74, 0.36);
+    box-shadow:
+      0 15px 34px rgba(34, 47, 28, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  .site-info-button:hover .site-info-icon,
+  .site-info-button:focus-visible .site-info-icon {
+    transform: rotate(-8deg) scale(1.08);
+    fill: #4e7147;
+  }
+
+  .site-info-button:focus-visible {
+    outline: 2px solid rgba(80, 118, 66, 0.35);
+    outline-offset: 3px;
+  }
+
+  .site-info-button[aria-expanded="true"] {
+    background: rgba(225, 235, 215, 0.96);
+    border-color: rgba(77, 106, 74, 0.42);
+  }
+
+  .temporary-highlight {
+    isolation: isolate;
+  }
+
+  .temporary-highlight::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(72, 222, 255, 0.56) 0%, rgba(0, 191, 255, 0.42) 38%, rgba(0, 140, 255, 0.2) 62%, rgba(0, 140, 255, 0) 78%),
+      linear-gradient(135deg, rgba(138, 240, 255, 0.62), rgba(0, 153, 255, 0.24));
+    box-shadow:
+      0 0 0 0 rgba(0, 195, 255, 0.56),
+      0 0 40px rgba(0, 170, 255, 0.52),
+      0 0 72px rgba(102, 224, 255, 0.28);
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .temporary-highlight.is-active::after {
+    animation: temporary-highlight-pulse 1s ease-in-out 5;
+  }
+
+  @keyframes temporary-highlight-pulse {
+    0% {
+      opacity: 0;
+      transform: scale(0.94);
+      box-shadow:
+        0 0 0 0 rgba(0, 195, 255, 0.22),
+        0 0 20px rgba(0, 160, 255, 0.24),
+        0 0 34px rgba(108, 228, 255, 0.12);
+    }
+
+    28% {
+      opacity: 1;
+      transform: scale(1.02);
+      box-shadow:
+        0 0 0 12px rgba(0, 195, 255, 0.3),
+        0 0 42px rgba(0, 160, 255, 0.52),
+        0 0 84px rgba(108, 228, 255, 0.24);
+    }
+
+    62% {
+      opacity: 0.88;
+      transform: scale(1.04);
+      box-shadow:
+        0 0 0 18px rgba(0, 195, 255, 0.14),
+        0 0 48px rgba(0, 160, 255, 0.34),
+        0 0 92px rgba(108, 228, 255, 0.16);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(1.08);
+      box-shadow:
+        0 0 0 24px rgba(0, 195, 255, 0),
+        0 0 24px rgba(0, 160, 255, 0),
+        0 0 54px rgba(108, 228, 255, 0);
+    }
+  }
+
+  .site-info-tooltip {
+    position: fixed;
+    left: 18px;
+    bottom: 80px;
+    z-index: 41;
+    max-width: min(360px, calc(100vw - 36px));
+    padding: 16px 18px;
+    border-radius: 18px;
+    background: rgba(245, 248, 240, 0.96);
+    color: #31462b;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    box-shadow: 0 22px 48px rgba(9, 12, 29, 0.16);
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+
+  body.is-mobile-layout .site-info-tooltip {
+    left: 12px;
+    right: 12px;
+    bottom: calc(140px + env(safe-area-inset-bottom, 0px));
+    max-width: none;
+  }
+
+  .site-info-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .site-info-tooltip p {
+    margin: 0 0 0.9em;
+  }
+
+  .site-info-tooltip p:last-child {
+    margin-bottom: 0;
+  }
+
+  .site-info-tooltip p:last-child {
+    margin-bottom: 0;
+  }
+
+  #viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: none;
+    pointer-events: none;
+  }
+
+  #backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 680ms ease;
+  }
+
+  #viewer.open #backdrop {
+    background: var(--overlay);
+  }
+
+  #closeZone {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+  }
+
+  #halo {
+    position: absolute;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.12) 35%, rgba(255, 255, 255, 0.02) 70%, rgba(255, 255, 255, 0) 100%);
+    opacity: 0;
+    transition:
+      left 760ms cubic-bezier(0.22, 1, 0.36, 1),
+      top 760ms cubic-bezier(0.22, 1, 0.36, 1),
+      width 760ms cubic-bezier(0.22, 1, 0.36, 1),
+      height 760ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 420ms ease;
+    pointer-events: none;
+  }
+
+  #viewer.open #halo {
+    opacity: 1;
+  }
+
+  #mediaWrap {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  #videoShell {
+    position: absolute;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+    transition:
+      left 920ms cubic-bezier(0.22, 1, 0.36, 1),
+      top 920ms cubic-bezier(0.22, 1, 0.36, 1),
+      width 920ms cubic-bezier(0.22, 1, 0.36, 1),
+      height 920ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-radius 920ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 920ms ease;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  #viewer.open #videoShell {
+    border-radius: 18px;
+    box-shadow: 0 26px 68px rgba(0, 0, 0, 0.42);
+  }
+
+  #viewer.fullscreen #videoShell {
+    border-radius: 0;
+  }
+
+  #videoModeIndicator {
+    position: absolute;
+    left: 18px;
+    top: 18px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.68);
+    color: #fff;
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    border: none;
+    cursor: pointer;
+    pointer-events: auto;
+    opacity: 0;
+    transition: opacity 180ms ease, background 180ms ease;
+  }
+
+  #viewer.open #videoModeIndicator {
+    opacity: 1;
+  }
+
+  body.is-mobile-layout #videoModeIndicator {
+    display: none;
+  }
+
+  #videoModeIndicator:hover,
+  #videoModeIndicator:focus-visible {
+    background: rgba(0, 0, 0, 0.78);
+    outline: none;
+  }
+
+  .video-controls {
+    position: absolute;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.42);
+    color: #fff;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    pointer-events: auto;
+    opacity: 0;
+    transition: opacity 180ms ease;
+    z-index: 2;
+  }
+
+  body.is-mobile-layout .video-controls {
+    bottom: 176px;
+    max-width: calc(100vw - 24px);
+  }
+
+  #viewer.open .video-controls {
+    opacity: 1;
+  }
+
+  .video-controls[hidden] {
+    display: none;
+  }
+
+  .video-controls button {
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .video-controls button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .video-controls span {
+    min-width: 50px;
+    text-align: center;
+    display: inline-block;
+  }
+
+  #viewer.fullscreen #infoBubble {
+    display: none;
+  }
+
+  #videoPlayer {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    opacity: 0;
+    transition: opacity 260ms ease 240ms;
+  }
+
+  #viewer.open #videoPlayer {
+    opacity: 1;
+  }
+
+  #imagePlayer {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    opacity: 0;
+    transition: opacity 260ms ease 240ms;
+  }
+
+  #viewer.open #imagePlayer {
+    opacity: 1;
+  }
+
+  /* when image-mode is active, ensure only image shows */
+  #viewer.image-mode #videoPlayer {
+    opacity: 0 !important;
+  }
+
+  #viewer.image-mode #imagePlayer {
+    opacity: 1 !important;
+  }
+
+  #infoBubble {
+    position: absolute;
+    width: min(340px, 28vw);
+    min-width: 240px;
+    min-height: 120px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: rgba(246, 248, 243, 0.95);
+    color: #263426;
+    box-shadow: 0 18px 52px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transform: translateX(18px) translateY(8px) scale(0.98);
+    transition:
+      opacity 340ms ease,
+      transform 460ms cubic-bezier(0.22, 1, 0.36, 1),
+      left 920ms cubic-bezier(0.22, 1, 0.36, 1),
+      top 920ms cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: auto;
+  }
+
+  body.is-mobile-layout #infoBubble {
+    display: none;
+    width: auto;
+    min-width: 0;
+    left: 12px !important;
+    right: 12px;
+    bottom: 20px;
+    top: auto !important;
+    border-radius: 20px;
+    padding: 16px 18px;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  #infoBubble::before {
+    content: "";
+    position: absolute;
+    left: var(--tail-left, -30px);
+    right: var(--tail-right, auto);
+    top: var(--tail-top, 38px);
+    bottom: var(--tail-bottom, auto);
+    width: 38px;
+    height: 10px;
+    background: rgba(246, 248, 243, 0.95);
+    clip-path: polygon(0 50%, 100% 0, 86% 50%, 100% 100%);
+    transform: scaleX(var(--tail-scale-x, 1)) scaleY(var(--tail-scale-y, 1)) rotate(var(--tail-rotate, -18deg));
+    transform-origin: center center;
+    filter: drop-shadow(-2px 2px 2px rgba(0, 0, 0, 0.05));
+  }
+
+  body.is-mobile-layout #infoBubble::before {
+    display: none;
+  }
+
+  #infoBubble.visible {
+    opacity: 1;
+    transform: translateX(0) translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  body.is-mobile-layout #infoBubble.visible {
+    transform: translateY(0) scale(1);
+  }
+
+  #infoBubble .zoneLabel {
+    margin: 0 0 8px;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.62;
+  }
+
+  #infoBubble h3 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  #infoBubble p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+
+  #closeBtn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    font-size: 19px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 250ms ease 440ms, background 180ms ease;
+    pointer-events: auto;
+  }
+
+  body.is-mobile-layout #closeBtn {
+    top: calc(16px + env(safe-area-inset-top, 0px));
+    right: 12px;
+    width: 42px;
+    height: 42px;
+    background: rgba(0, 0, 0, 0.42);
+  }
+
+  #viewer.open #closeBtn {
+    opacity: 1;
+  }
+
+  #closeBtn:hover {
+    background: rgba(255, 255, 255, 0.24);
+  }
+
+  @media (max-width: 900px) {
+    :root {
+      --stage-width: min(97vw, calc(90vh * 1.5948795181));
+    }
+
+    .stage {
+      padding-top: 86px;
+    }
+
+    .map-frame {
+      border-radius: 18px;
+    }
+
+    .map-frame::after {
+      border-radius: 18px;
+    }
+
+    #infoBubble {
+      width: min(300px, 42vw);
+      min-width: 220px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    :root {
+      --mobile-controls-height: 152px;
+      --stage-width: min(100%, 560px);
+    }
+
+    .map-toggle {
+      max-width: calc(100% - 24px);
+      padding: 11px 13px;
+    }
+
+    .map-toggle strong {
+      font-size: 0.88rem;
+    }
+
+    .map-toggle span {
+      font-size: 0.74rem;
+    }
+
+    .stage {
+      padding: 84px 1.5vw 2vh;
+    }
+
+    body.is-mobile-layout .map-toggle {
+      left: 0;
+      right: auto;
+      width: calc(100% - 24px);
+      max-width: 440px;
+      --toggle-x: 12px;
+      --toggle-y: calc(12px + env(safe-area-inset-top, 0px));
+    }
+
+    body.is-mobile-layout .map-toggle strong {
+      font-size: 0.86rem;
+    }
+
+    body.is-mobile-layout .map-toggle span {
+      font-size: 0.72rem;
+    }
+
+    .caption {
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      font-size: 0.74rem;
+    }
+
+    body.is-mobile-layout .caption {
+      position: static;
+      margin: 12px auto 0;
+      width: min(100%, 560px);
+    }
+
+    .map-controls {
+      top: auto;
+      right: 12px;
+      bottom: 84px;
+    }
+
+    .map-hint {
+      top: 86px;
+      left: 12px;
+      max-width: calc(100% - 24px);
+      font-size: 0.72rem;
+    }
+
+    #infoBubble {
+      width: min(88vw, 340px);
+      left: 50% !important;
+      transform: translateX(-50%) translateY(8px) scale(0.98);
+    }
+
+    #infoBubble::before {
+      left: 50%;
+      top: -16px;
+      width: 30px;
+      height: 14px;
+      transform: translateX(-50%) rotate(90deg);
+      clip-path: polygon(0 50%, 100% 0, 86% 50%, 100% 100%);
+    }
+
+    #infoBubble.visible {
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+  }
+
+  .audio-control {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 40;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--text);
+    box-shadow: 0 18px 40px rgba(21, 30, 18, 0.14);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(82, 106, 74, 0.12);
+    font-size: 0.88rem;
+    pointer-events: auto;
+  }
+
+  .audio-control button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 999px;
+    background: #fcfdf7;
+    color: #54724d;
+    cursor: pointer;
+    transition: background 180ms ease, transform 180ms ease;
+  }
+
+  .audio-control button:hover,
+  .audio-control button:focus-visible {
+    background: #eef4e0;
+  }
+
+  .audio-control button.active {
+    background: #e8f1d8;
+  }
+
+  .audio-control svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    pointer-events: none;
+  }
+
+  .audio-volume {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 180ms ease, visibility 180ms ease;
+  }
+
+  .audio-volume.hidden {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    overflow: hidden;
+  }
+
+  .audio-volume input[type="range"] {
+    width: 110px;
+    accent-color: #54724d;
+    cursor: pointer;
+    background: transparent;
+  }
+
+  #backgroundAudio {
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <div id="backgroundStage" class="background-stage" aria-hidden="true">
+      <video id="backgroundVideoA" class="background-video is-active" muted loop playsinline preload="metadata"></video>
+      <video id="backgroundVideoB" class="background-video" muted loop playsinline preload="metadata"></video>
+    </div>
+    <main class="stage" aria-label="Carte schématique et fond cartographique alignés">
+      <div class="map-frame">
+        <div class="map-viewport" id="mapViewport" aria-label="Carte navigable">
+          <div class="map-scene" id="mapScene">
+            <img
+              class="layer layer-map"
+              src="openStreetViewcarte.png"
+              alt="Capture OpenStreetMap servant de fond de carte"
+              draggable="false"
+            />
+            <svg class="layer layer-svg-outline" viewBox="0 0 2118 1328" aria-hidden="true">
+              <path
+                fill="none"
+                stroke="#79A84D"
+                stroke-width="2"
+                vector-effect="non-scaling-stroke"
+                d="M 208 150 L 215 152 L 378 351 L 477 428 L 579 463 L 1044 377 L 1269 344 L 1308 340 L 1353 343 L 1448 358 L 1509 374 L 1667 465 L 1726 526 L 1779 556 L 1909 607 L 1907 615 L 1810 728 L 1784 790 L 1662 1201 L 1579 1207 L 1469 1182 L 1464 1133 L 1549 1012 L 1657 1043 L 1706 888 L 1706 883 L 1687 863 L 1727 744 L 1794 634 L 1794 624 L 1637 559 L 1617 518 L 1521 456 L 1398 426 L 1246 414 L 915 478 L 729 531 L 709 742 L 780 774 L 769 829 L 767 833 L 763 833 L 666 803 L 428 615 L 449 485 L 304 345 Z"
+              />
+            </svg>
+            <img
+              class="layer layer-svg"
+              src="openStreetViewBois.svg"
+              alt="Polygone vectoriel des zones boisées"
+              draggable="false"
+            />
+
+            <svg class="layer poi-layer" viewBox="0 0 2118 1328" aria-label="Points d'intérêt">
+              <g id="poiLayer" aria-label="Points d'intérêt dynamiques"></g>
+            </svg>
+            <div id="poiTooltip" class="poi-tooltip" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <div
+          id="mapToggle"
+          class="map-toggle"
+          role="button"
+          tabindex="0"
+          aria-label="Afficher la superposition avec la carte OpenStreetMap"
+          title="Survolez pour afficher la carte réelle"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/>
+          </svg>
+          <div class="map-toggle-copy">
+            <strong>Voir la carte</strong>
+            <span>La carte est affichee par defaut</span>
+          </div>
+          <label class="map-toggle-pin" aria-label="Garder la carte affichée">
+            <input id="mapPinToggle" type="checkbox" checked />
+          </label>
+        </div>
+
+        <div class="map-controls" aria-label="Contrôles de navigation">
+          <div class="language-switcher" role="group" aria-label="Choisir la langue">
+            <button id="langFrBtn" class="map-control map-control--lang active" type="button" aria-pressed="true" title="Français">FR</button>
+            <button id="langEnBtn" class="map-control map-control--lang" type="button" aria-pressed="false" title="English">EN</button>
+          </div>
+          <button id="zoomInBtn" class="map-control" type="button" aria-label="Zoomer">+</button>
+          <button id="zoomOutBtn" class="map-control" type="button" aria-label="Dézoomer">−</button>
+          <button id="resetViewBtn" class="map-control" type="button" aria-label="Réinitialiser la vue">↺</button>
+        </div>
+
+        <div class="caption">
+          Fond de carte © OpenStreetMap contributors
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">openstreetmap.org/copyright</a>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="audio-control" aria-label="Contrôle du son de fond" role="region">
+    <button id="audioToggleBtn" type="button" aria-pressed="false" aria-label="Activer le son de fond">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 9v6h4l5 5V4L7 9H3z" />
+        <path d="M16.5 12c0-1.77-.77-3.37-2-4.47v8.94c1.23-1.1 2-2.7 2-4.47z" />
+      </svg>
+    </button>
+    <div id="audioVolumeControl" class="audio-volume hidden" aria-hidden="true">
+      <input id="audioVolumeRange" type="range" min="0" max="1" step="0.01" value="0.55" aria-label="Volume du son de fond" />
+    </div>
+    <audio id="backgroundAudio" loop preload="none" src="song/fond.m4a"></audio>
+  </div>
+
+  <button
+    id="siteInfoButton"
+    class="site-info-button"
+    type="button"
+    aria-label="Découvrir l'esprit de cette balade"
+    aria-expanded="false"
+    aria-controls="siteInfoTooltip"
+  >
+    <svg class="site-info-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M19.8 3.7C13.3 3.8 7.2 6.3 5.1 11.1c-1.2 2.8-.4 5.4 1.4 7c2.1-4.7 5.8-7.7 9.8-9.7c-3.4 2.6-6.1 5.8-7.7 9.4c2.2.8 4.8.2 6.5-1.8c3.1-3.6 3.9-8.4 4.7-12.3Z" />
+    </svg>
+    <span class="site-info-button-text">Découvrir</span>
+  </button>
+  <div id="siteInfoTooltip" class="site-info-tooltip" role="tooltip" aria-hidden="true"></div>
+
+  <div id="viewer" aria-hidden="true">
+    <div id="closeZone"></div>
+    <div id="backdrop"></div>
+    <div id="halo"></div>
+    <div id="mediaWrap">
+      <div id="videoShell">
+          <video id="videoPlayer" autoplay loop muted playsinline></video>
+          <img id="imagePlayer" alt="" aria-hidden="true" />
+      </div>
+      <div id="videoControls" class="video-controls" hidden>
+        <button id="variantPrevBtn" type="button" aria-label="Variant précédente">←</button>
+        <span id="variantPositionLabel">1 / 1</span>
+        <button id="variantNextBtn" type="button" aria-label="Variant suivante">→</button>
+      </div>
+      <button id="videoModeIndicator" type="button" aria-live="polite">Fenêtre</button>
+      <aside id="infoBubble" aria-live="polite">
+        <div class="zoneLabel" id="infoZoneLabel"></div>
+        <h3 id="infoTitle"></h3>
+        <p id="infoText"></p>
+      </aside>
+    </div>
+    <button id="closeBtn" aria-label="Fermer">×</button>
+  </div>
+
+<script>
+  const body = document.body;
+  const mapToggle = document.getElementById('mapToggle');
+  const mapViewport = document.getElementById('mapViewport');
+  const mapScene = document.getElementById('mapScene');
+  const layerSvg = document.querySelector('.layer-svg');
+  const mapPinToggle = document.getElementById('mapPinToggle');
+  const zoomInBtn = document.getElementById('zoomInBtn');
+  const zoomOutBtn = document.getElementById('zoomOutBtn');
+  const resetViewBtn = document.getElementById('resetViewBtn');
+  const viewer = document.getElementById('viewer');
+  const backdrop = document.getElementById('backdrop');
+  const halo = document.getElementById('halo');
+  const shell = document.getElementById('videoShell');
+  const video = document.getElementById('videoPlayer');
+  const imageEl = document.getElementById('imagePlayer');
+  const infoBubble = document.getElementById('infoBubble');
+  const infoZoneLabel = document.getElementById('infoZoneLabel');
+  const infoTitle = document.getElementById('infoTitle');
+  const infoText = document.getElementById('infoText');
+  const closeZone = document.getElementById('closeZone');
+  const closeBtn = document.getElementById('closeBtn');
+  const modeIndicator = document.getElementById('videoModeIndicator');
+  const variantPrevBtn = document.getElementById('variantPrevBtn');
+  const variantNextBtn = document.getElementById('variantNextBtn');
+  const variantPositionLabel = document.getElementById('variantPositionLabel');
+  const videoControls = document.getElementById('videoControls');
+  const poiTooltip = document.getElementById('poiTooltip');
+  const poiLayer = document.getElementById('poiLayer');
+  const infoToggleBtn = document.getElementById('siteInfoButton');
+  const infoTooltip = document.getElementById('siteInfoTooltip');
+  const audioToggleBtn = document.getElementById('audioToggleBtn');
+  const audioVolumeControl = document.getElementById('audioVolumeControl');
+  const audioVolumeRange = document.getElementById('audioVolumeRange');
+  const backgroundAudio = document.getElementById('backgroundAudio');
+  const backgroundStage = document.getElementById('backgroundStage');
+  const backgroundVideoA = document.getElementById('backgroundVideoA');
+  const backgroundVideoB = document.getElementById('backgroundVideoB');
+  const sessionHighlightPrefix = 'siteBaladeChampvertHighlight:';
+  const poiMediaPathPrefix = 'data/';
+  const backgroundManifestPath = 'background/backgroundList.json';
+  const backgroundCycleMs = 10000;
+  const pointVariants = new WeakMap();
+  const pointMotionStates = new WeakMap();
+  const mobileLayoutQuery = window.matchMedia('(max-width: 700px)');
+  const langFrBtn = document.getElementById('langFrBtn');
+  const langEnBtn = document.getElementById('langEnBtn');
+  if (video) {
+    video.addEventListener('error', (event) => {
+      console.error('Video playback error', event);
+    });
+    video.addEventListener('stalled', () => {
+      console.warn('Video stalled', video.src);
+    });
+  }
+  const mapToggleTitleElement = document.querySelector('.map-toggle-copy strong');
+  const mapToggleSubtitleElement = document.querySelector('.map-toggle-copy span');
+  let points = [];
+  let rawImages = [];
+  let currentLocale = 'FR';
+  const localeStrings = {
+    FR: {
+      toggleTitle: 'Voir la carte',
+      toggleSubtitle: 'La carte est affichée par défaut',
+      mapToggleAria: 'Afficher la superposition avec la carte OpenStreetMap',
+      mapToggleTitle: 'Survolez pour afficher la carte réelle',
+      mapToggleTitleMobile: 'Touchez pour afficher la carte réelle',
+      learnMoreLabel: 'Pour aller plus loin :',
+      infoButtonLabel: 'Découvrir',
+      infoButtonAriaLabel: 'Découvrir l\'esprit de cette balade',
+      infoTooltipText: 'Bienvenue à Champvert.\n\nUn endroit où la nature tient sa place, sans forcer, au cœur de la ville.\n\nDes sons, des images, des passages à traverser lentement.\n\nTout a été capté ici, dans la grâce d’un instant vivant.\n\nAucun suivi, aucune publicité, aucune collecte de données. Prenez votre temps. Regardez. Écoutez. Essayez.\n\nContact : albouille69@gmail.com'
+    },
+    US: {
+      toggleTitle: 'View map',
+      toggleSubtitle: 'The map is shown by default',
+      mapToggleAria: 'Show the overlay with the OpenStreetMap map',
+      mapToggleTitle: 'Hover to show the real map',
+      mapToggleTitleMobile: 'Tap to show the real map',
+      learnMoreLabel: 'To go further:',
+      infoButtonLabel: 'Discover',
+      infoButtonAriaLabel: 'Discover the spirit of this walk',
+      infoTooltipText: 'Welcome to Champvert.\n\nA place where nature finds its place without forcing it, at the heart of the city.\n\nSounds, images, paths to cross slowly.\n\nEverything was captured here, in the grace of a living moment.\n\nNo tracking, no advertising, no data collection. Take your time. Look. Listen. Try.\n\nContact: albouille69@gmail.com'
+    }
+  };
+
+  let activePointRect = null;
+  let activePointData = null;
+  let activeRegions = [];
+  let activeRegion = null;
+  let activeZoneKey = null;
+  let pendingInitialBubble = false;
+  let isOpen = false;
+  let isFullscreenMode = false;
+  let bubbleVisible = false;
+  let hideBubbleTimer = null;
+  let introStarted = false;
+  let hasOpenedPoiVideo = false;
+  let poiIdleHighlightTimerId = null;
+  let poiIdleHighlightDue = false;
+  let mapPinned = mapPinToggle.checked;
+  let openingPoint = false;
+  let lastActivatedPoint = null;
+  let activeVariants = [];
+  let activeVariantIndex = 0;
+  let poiMotionSchedulerId = null;
+  let poiMotionRafId = null;
+  let poiMotionPaused = false;
+  let poiMotionPauseStartedAt = 0;
+  let backgroundEntries = [];
+  let activeBackgroundVideoIndex = 0;
+  let activeBackgroundEntryIndex = -1;
+  let backgroundSwitchTimerId = null;
+  let backgroundTransitionToken = 0;
+  let backgroundPlaybackPaused = false;
+  let isMobileLayout = mobileLayoutQuery.matches;
+  const poiIdleHighlightDelay = 20000;
+  const poiMotionRestMs = 6000;
+  const poiMotionBaseTravelMs = 4000;
+  const minScale = 1;
+  const maxScale = 4;
+  const zoomStep = 0.2;
+  const toggleAnchor = { x: 18, y: 18 };
+  let mapState = { scale: 1, x: 0, y: 0 };
+  let dragState = null;
+  const activePointers = new Map();
+  let pinchState = null;
+  const zonePolygonPoints = [
+    [208, 150], [215, 152], [378, 351], [477, 428], [579, 463], [1044, 377], [1269, 344],
+    [1308, 340], [1353, 343], [1448, 358], [1509, 374], [1667, 465], [1726, 526], [1779, 556],
+    [1909, 607], [1907, 615], [1810, 728], [1784, 790], [1662, 1201], [1579, 1207], [1469, 1182],
+    [1464, 1133], [1549, 1012], [1657, 1043], [1706, 888], [1706, 883], [1687, 863], [1727, 744],
+    [1794, 634], [1794, 624], [1637, 559], [1617, 518], [1521, 456], [1398, 426], [1246, 414],
+    [915, 478], [729, 531], [709, 742], [780, 774], [769, 829], [767, 833], [763, 833], [666, 803],
+    [428, 615], [449, 485], [304, 345]
+  ];
+  const zonePathD = `${zonePolygonPoints.map(([x, y], index) => `${index === 0 ? 'M' : 'L'} ${x} ${y}`).join(' ')} Z`;
+  const zoneCentroid = computePolygonCentroid(zonePolygonPoints);
+  const backgroundVideos = [backgroundVideoA, backgroundVideoB].filter(Boolean);
+  const zoneBounds = zonePolygonPoints.reduce((bounds, [x, y]) => ({
+    minX: Math.min(bounds.minX, x),
+    maxX: Math.max(bounds.maxX, x),
+    minY: Math.min(bounds.minY, y),
+    maxY: Math.max(bounds.maxY, y)
+  }), {
+    minX: Number.POSITIVE_INFINITY,
+    maxX: Number.NEGATIVE_INFINITY,
+    minY: Number.POSITIVE_INFINITY,
+    maxY: Number.NEGATIVE_INFINITY
+  });
+
+  function computePolygonCentroid(points) {
+    let twiceArea = 0;
+    let centroidX = 0;
+    let centroidY = 0;
+
+    for (let index = 0; index < points.length; index += 1) {
+      const [x1, y1] = points[index];
+      const [x2, y2] = points[(index + 1) % points.length];
+      const cross = (x1 * y2) - (x2 * y1);
+
+      twiceArea += cross;
+      centroidX += (x1 + x2) * cross;
+      centroidY += (y1 + y2) * cross;
+    }
+
+    if (Math.abs(twiceArea) < 0.0001) {
+      const fallback = points.reduce((sum, [x, y]) => ({ x: sum.x + x, y: sum.y + y }), { x: 0, y: 0 });
+      return { x: fallback.x / points.length, y: fallback.y / points.length };
+    }
+
+    return {
+      x: centroidX / (3 * twiceArea),
+      y: centroidY / (3 * twiceArea)
+    };
+  }
+
+  function getViewportRect() {
+    return mapViewport.getBoundingClientRect();
+  }
+
+  function updateResponsiveLayoutState() {
+    isMobileLayout = mobileLayoutQuery.matches;
+    body.classList.toggle('is-mobile-layout', isMobileLayout);
+    body.classList.toggle('is-desktop-layout', !isMobileLayout);
+    updateMapToggleText();
+    if (isMobileLayout) {
+      hidePoiTooltip();
+      hideBubble(true);
+    }
+  }
+
+  function clampMapState(nextState) {
+    const rect = getViewportRect();
+    const scale = Math.min(maxScale, Math.max(minScale, nextState.scale));
+    const minX = rect.width - (rect.width * scale);
+    const minY = rect.height - (rect.height * scale);
+
+    return {
+      scale,
+      x: Math.min(0, Math.max(minX, nextState.x)),
+      y: Math.min(0, Math.max(minY, nextState.y))
+    };
+  }
+
+  function getPreferredText(list, fallback = '_') {
+    if (!Array.isArray(list)) return fallback;
+    const preferred = list.find((entry) => Object.prototype.hasOwnProperty.call(entry, currentLocale) && entry[currentLocale] && entry[currentLocale] !== '_');
+    if (preferred) return preferred[currentLocale];
+
+    const fr = list.find((entry) => Object.prototype.hasOwnProperty.call(entry, 'FR') && entry.FR && entry.FR !== '_');
+    if (fr) return fr.FR;
+
+    const first = list[0];
+    if (first) {
+      const key = Object.keys(first)[0];
+      const value = first[key];
+      if (value && value !== '_') return value;
+    }
+    return fallback;
+  }
+
+  function getTextByLocale(list, localeKey) {
+    if (!Array.isArray(list)) return '';
+    const entry = list.find((item) => Object.prototype.hasOwnProperty.call(item, localeKey) && item[localeKey] && item[localeKey] !== '_');
+    return entry ? entry[localeKey] : '';
+  }
+
+  function getPreferredNameWithScientific(list, fallback = 'Observation') {
+    const name = getPreferredText(list, fallback);
+    const scientific = getTextByLocale(list, 'SC');
+    return scientific ? `${name} - ${scientific}` : name;
+  }
+
+  function normalizeVariants(image) {
+    const mainWebm = (image.webm && image.webm !== '_') ? `${poiMediaPathPrefix}${image.webm}` : '_';
+    const mainJpeg = (image.jpeg && image.jpeg !== '_') ? `${poiMediaPathPrefix}${image.jpeg}` : '_';
+    const variants = [
+      {
+        webm: mainWebm,
+        jpeg: mainJpeg,
+        poeticText: Array.isArray(image.poeticText) ? image.poeticText : [],
+        scientificText: Array.isArray(image.scientificText) ? image.scientificText : [],
+        latitude: image.latitude,
+        longitude: image.longitude,
+        date: image.date,
+        game: image.game
+      }
+    ];
+
+    if (Array.isArray(image.otherImage)) {
+      image.otherImage.forEach((other) => {
+        if (!other || typeof other !== 'object') return;
+        variants.push({
+          // Do NOT fallback to mainWebm for other variants: if other.webm is absent,
+          // treat it as no-webm so the jpeg fallback can be used.
+          webm: (other.webm && other.webm !== '_') ? `${poiMediaPathPrefix}${other.webm}` : '_',
+          jpeg: (other.jpeg && other.jpeg !== '_') ? `${poiMediaPathPrefix}${other.jpeg}` : mainJpeg,
+          poeticText: Array.isArray(other.poeticText) ? other.poeticText : [],
+          scientificText: Array.isArray(other.scientificText) ? other.scientificText : [],
+          latitude: other.latitude,
+          longitude: other.longitude,
+          date: other.date,
+          game: other.game
+        });
+      });
+    }
+
+    return variants;
+  }
+
+  function getVariantText(variantList, mainList, fallbackText) {
+    if (Array.isArray(variantList)) {
+      const candidate = getPreferredText(variantList, null);
+      if (candidate && candidate !== '_') return candidate;
+    } else if (typeof variantList === 'string' && variantList && variantList !== '_') {
+      return variantList;
+    }
+    if (Array.isArray(mainList)) {
+      return getPreferredText(mainList, fallbackText);
+    }
+    if (typeof mainList === 'string' && mainList && mainList !== '_') {
+      return mainList;
+    }
+    return fallbackText;
+  }
+
+  function getActiveVariantInfo() {
+    const variant = activeVariants[activeVariantIndex] || {};
+    const poetic = getVariantText(variant.poeticText, activePointData?.poetic || '', '');
+    const scientific = getVariantText(variant.scientificText, activePointData?.scientific || '', '');
+    return {
+      poetic,
+      scientific,
+      html: buildInfoHtml(poetic, scientific, activePointData?.links || [])
+    };
+  }
+
+  function updateMapToggleText() {
+    const strings = localeStrings[currentLocale] || localeStrings.FR;
+    if (mapToggleTitleElement) mapToggleTitleElement.textContent = strings.toggleTitle;
+    if (mapToggleSubtitleElement) mapToggleSubtitleElement.textContent = strings.toggleSubtitle;
+    if (mapToggle) {
+      mapToggle.setAttribute('aria-label', strings.mapToggleAria);
+      mapToggle.setAttribute('title', isMobileLayout ? (strings.mapToggleTitleMobile || strings.mapToggleTitle) : strings.mapToggleTitle);
+    }
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function buildInfoHtml(poetic, scientific, links) {
+    const htmlParts = [];
+    if (poetic) {
+      htmlParts.push(`<p>${escapeHtml(poetic)}</p>`);
+    }
+    if (poetic && scientific) {
+      htmlParts.push('<br/>');
+    }
+    if (scientific) {
+      htmlParts.push(`<p>${escapeHtml(scientific)}</p>`);
+    }
+    if (Array.isArray(links) && links.length > 0) {
+      const label = (localeStrings[currentLocale] || localeStrings.FR).learnMoreLabel;
+      const linkItems = links
+        .map((href) => {
+          const safeHref = escapeHtml(href);
+          return `<li><a href="${safeHref}" target="_blank" rel="noopener noreferrer">${safeHref}</a></li>`;
+        })
+        .join('');
+      htmlParts.push(`<br/><p>${escapeHtml(label)}</p><ul class="info-links">${linkItems}</ul>`);
+    }
+    return htmlParts.join('');
+  }
+
+  function getPointData(pointEl) {
+    const poetic = pointEl.dataset.poetic || '';
+    const scientific = pointEl.dataset.scientific || '';
+    let links = [];
+    let variants = pointVariants.get(pointEl) || [];
+    try {
+      links = JSON.parse(pointEl.dataset.links || '[]');
+    } catch (error) {
+      links = [];
+    }
+    return {
+      video: pointEl.dataset.video,
+      jpeg: pointEl.dataset.jpeg,
+      title: pointEl.dataset.title || 'Observation',
+      text: pointEl.dataset.text || 'Texte à venir.',
+      poetic,
+      scientific,
+      links,
+      variants,
+      html: buildInfoHtml(poetic, scientific, links)
+    };
+  }
+
+  function setActiveVariant(index) {
+    if (!Array.isArray(activeVariants) || activeVariants.length === 0) return;
+    const clampedIndex = Math.max(0, Math.min(index, activeVariants.length - 1));
+    const variant = activeVariants[clampedIndex] || {};
+    activeVariantIndex = clampedIndex;
+    const hasWebm = variant.webm && variant.webm !== '_' ;
+    const hasJpeg = variant.jpeg && variant.jpeg !== '_';
+
+    console.debug('setActiveVariant', { index: clampedIndex, variant });
+    if (hasWebm) {
+      // show video, hide image
+      viewer.classList.remove('image-mode');
+      try {
+        imageEl?.removeAttribute('src');
+      } catch (e) {}
+      // ensure display states
+      if (imageEl) imageEl.style.display = 'none';
+      if (video) video.style.display = 'block';
+
+      if (video.getAttribute('src') !== variant.webm) {
+        video.pause();
+        video.muted = true;
+        video.src = variant.webm;
+        video.load();
+        video.play().catch((error) => {
+          console.error('Video play failed for', variant.webm, error);
+        });
+      }
+    } else if (hasJpeg) {
+      // show image, hide video
+      viewer.classList.add('image-mode');
+      try {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+      } catch (e) {}
+      // ensure display states
+      if (video) video.style.display = 'none';
+      if (imageEl) imageEl.style.display = 'block';
+
+      if (imageEl && imageEl.getAttribute('src') !== variant.jpeg) {
+        console.debug('loading image', variant.jpeg);
+        imageEl.src = variant.jpeg;
+        // set alt to title when available
+        try { imageEl.alt = activePointData?.title || ''; } catch (e) {}
+      }
+    } else {
+      // nothing valid: hide media
+      viewer.classList.remove('image-mode');
+      try {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        imageEl?.removeAttribute('src');
+      } catch (e) {}
+    }
+    updateVariantControls();
+    if (bubbleVisible && activePointData) {
+      const activeInfo = getActiveVariantInfo();
+      infoTitle.textContent = activePointData.title;
+      infoText.innerHTML = activeInfo.html || escapeHtml(activePointData.text);
+    }
+  }
+
+  function updateVariantControls() {
+    if (!variantPrevBtn || !variantNextBtn || !variantPositionLabel) return;
+    const count = activeVariants.length;
+    if (count > 1) {
+      variantPrevBtn.disabled = activeVariantIndex <= 0;
+      variantNextBtn.disabled = activeVariantIndex >= count - 1;
+      variantPositionLabel.textContent = `${activeVariantIndex + 1} / ${count}`;
+      variantPrevBtn.removeAttribute('hidden');
+      variantNextBtn.removeAttribute('hidden');
+      variantPositionLabel.removeAttribute('hidden');
+      videoControls?.removeAttribute('hidden');
+    } else {
+      videoControls?.setAttribute('hidden', '');
+    }
+  }
+
+  function setActiveLocale(locale) {
+    currentLocale = locale === 'US' ? 'US' : 'FR';
+    if (langFrBtn) {
+      langFrBtn.classList.toggle('active', currentLocale === 'FR');
+      langFrBtn.setAttribute('aria-pressed', String(currentLocale === 'FR'));
+    }
+    if (langEnBtn) {
+      langEnBtn.classList.toggle('active', currentLocale === 'US');
+      langEnBtn.setAttribute('aria-pressed', String(currentLocale === 'US'));
+    }
+    updateMapToggleText();
+    updateSiteInfoButtonLanguage();
+    refreshPoiLayer();
+    if (isOpen && lastActivatedPoint) {
+      activePointData = getPointData(lastActivatedPoint);
+      if (Array.isArray(activePointData.variants) && activePointData.variants.length > 0) {
+        activeVariants = activePointData.variants;
+        activeVariantIndex = Math.min(activeVariantIndex, activeVariants.length - 1);
+        setActiveVariant(activeVariantIndex);
+      } else if (bubbleVisible) {
+        if (variantPrevBtn) variantPrevBtn.disabled = true;
+        if (variantNextBtn) variantNextBtn.disabled = true;
+        if (variantPositionLabel) variantPositionLabel.textContent = '1 / 1';
+        infoTitle.textContent = activePointData.title;
+        const activeInfo = getActiveVariantInfo();
+        infoText.innerHTML = activeInfo.html || activePointData.html || escapeHtml(activePointData.text);
+      }
+    }
+  }
+
+  function refreshPoiLayer() {
+    stopPoiMotionEngine();
+    poiLayer.innerHTML = '';
+    points = [];
+    const existingPositions = [];
+    rawImages.forEach((image, index) => {
+      const point = createPoiElement(image, index, existingPositions);
+      points.push(point);
+    });
+
+    points.forEach((point) => {
+      bindPoiInteractions(point);
+    });
+
+    attemptIdlePoiHighlight();
+    syncPoiMotionLifecycle();
+  }
+
+  function bindPoiInteractions(point) {
+    point.addEventListener('click', (e) => {
+      e.stopPropagation();
+      hidePoiTooltip();
+      openVideo(point, e);
+    });
+
+    point.addEventListener('mouseenter', (e) => {
+      e.stopPropagation();
+      showPoiTooltip(point, e);
+    });
+
+    point.addEventListener('mousemove', (e) => {
+      e.stopPropagation();
+      movePoiTooltip(e);
+    });
+
+    point.addEventListener('mouseleave', () => {
+      hidePoiTooltip();
+    });
+  }
+
+  function showPoiTooltip(point, event) {
+    if (!poiTooltip || !point || isMobileLayout || openingPoint || isOpen) {
+      hidePoiTooltip();
+      return;
+    }
+    const title = point.dataset.title || '';
+    if (!title) return;
+
+    const viewportRect = mapViewport.getBoundingClientRect();
+    poiTooltip.textContent = title;
+    poiTooltip.style.left = `${event.clientX - viewportRect.left}px`;
+    poiTooltip.style.top = `${event.clientY - viewportRect.top}px`;
+    poiTooltip.classList.add('visible');
+    poiTooltip.setAttribute('aria-hidden', 'false');
+  }
+
+  function movePoiTooltip(event) {
+    if (!poiTooltip || !poiTooltip.classList.contains('visible')) return;
+    if (isMobileLayout || openingPoint || isOpen) {
+      hidePoiTooltip();
+      return;
+    }
+    const viewportRect = mapViewport.getBoundingClientRect();
+    poiTooltip.style.left = `${event.clientX - viewportRect.left}px`;
+    poiTooltip.style.top = `${event.clientY - viewportRect.top}px`;
+  }
+
+  function hidePoiTooltip() {
+    if (!poiTooltip) return;
+    poiTooltip.classList.remove('visible');
+    poiTooltip.setAttribute('aria-hidden', 'true');
+  }
+
+  function isPointInPolygon(x, y, points) {
+    let inside = false;
+    for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+      const xi = points[i][0];
+      const yi = points[i][1];
+      const xj = points[j][0];
+      const yj = points[j][1];
+      const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi + 0.0000001) + xi);
+      if (intersect) inside = !inside;
+    }
+    return inside;
+  }
+
+  function getRandomPointInPolygon(polygon, attempts = 300) {
+    const xs = polygon.map((p) => p[0]);
+    const ys = polygon.map((p) => p[1]);
+    const minX = Math.min(...xs);
+    const maxX = Math.max(...xs);
+    const minY = Math.min(...ys);
+    const maxY = Math.max(...ys);
+
+    for (let i = 0; i < attempts; i += 1) {
+      const x = minX + Math.random() * (maxX - minX);
+      const y = minY + Math.random() * (maxY - minY);
+      if (isPointInPolygon(x, y, polygon)) {
+        return { x, y };
+      }
+    }
+    return { x: zoneCentroid.x, y: zoneCentroid.y };
+  }
+
+  function findNonOverlappingPoint(existingPoints, radius = 50, attempts = 300) {
+    for (let tryIndex = 0; tryIndex < attempts; tryIndex += 1) {
+      const candidate = getRandomPointInPolygon(zonePolygonPoints, 30);
+      const tooClose = existingPoints.some((point) => {
+        const dx = point.x - candidate.x;
+        const dy = point.y - candidate.y;
+        return Math.hypot(dx, dy) < radius * 2;
+      });
+      if (!tooClose) {
+        return candidate;
+      }
+    }
+    return null;
+  }
+
+  function getPoiAnchorElement(pointEl) {
+    if (!pointEl) return null;
+    if (pointEl instanceof SVGGElement) {
+      return pointEl.querySelector('.point');
+    }
+    return pointEl;
+  }
+
+  function getPoiMotionState(pointEl) {
+    return pointMotionStates.get(pointEl) || null;
+  }
+
+  function setPoiMotionPosition(pointEl, nextX, nextY) {
+    const motionState = getPoiMotionState(pointEl);
+    if (!motionState) return;
+
+    motionState.currentX = nextX;
+    motionState.currentY = nextY;
+    pointEl.setAttribute('transform', `translate(${(nextX - motionState.baseX).toFixed(3)} ${(nextY - motionState.baseY).toFixed(3)})`);
+  }
+
+  function getPoiMotionBaseDistance() {
+    const viewportRect = mapViewport.getBoundingClientRect();
+    return Math.min(viewportRect.width, viewportRect.height) / 10 / Math.max(mapState.scale, 0.001);
+  }
+
+  function isPoiMotionOutsideSoftBounds(candidateX, candidateY) {
+    const margin = getPoiMotionBaseDistance() * 1.2;
+    return candidateX < zoneBounds.minX - margin
+      || candidateX > zoneBounds.maxX + margin
+      || candidateY < zoneBounds.minY - margin
+      || candidateY > zoneBounds.maxY + margin;
+  }
+
+  function clampPoiMotionDistance(originX, originY, candidateX, candidateY, maxDistance) {
+    const deltaX = candidateX - originX;
+    const deltaY = candidateY - originY;
+    const distance = Math.hypot(deltaX, deltaY);
+    if (!distance || distance <= maxDistance) {
+      return { x: candidateX, y: candidateY };
+    }
+
+    const ratio = maxDistance / distance;
+    return {
+      x: originX + (deltaX * ratio),
+      y: originY + (deltaY * ratio)
+    };
+  }
+
+  function getPoiMotionControlPoint(startX, startY, endX, endY) {
+    const deltaX = endX - startX;
+    const deltaY = endY - startY;
+    const distance = Math.hypot(deltaX, deltaY);
+    if (!distance || Math.random() < 0.45) {
+      return null;
+    }
+
+    const midX = startX + (deltaX * 0.5);
+    const midY = startY + (deltaY * 0.5);
+    const normalX = -deltaY / distance;
+    const normalY = deltaX / distance;
+    const curveStrength = distance * randomBetween(0.12, 0.3) * (Math.random() < 0.5 ? -1 : 1);
+
+    return {
+      x: midX + (normalX * curveStrength),
+      y: midY + (normalY * curveStrength)
+    };
+  }
+
+  function getPoiMotionDestination(pointEl) {
+    const motionState = getPoiMotionState(pointEl);
+    if (!motionState) return null;
+
+    const startX = motionState.currentX;
+    const startY = motionState.currentY;
+    const maxDistance = getPoiMotionBaseDistance();
+    const currentlyInside = isPointInPolygon(startX, startY, zonePolygonPoints);
+    const preferInside = !currentlyInside || Math.random() < 0.84;
+
+    for (let attempt = 0; attempt < 28; attempt += 1) {
+      const angle = Math.random() * Math.PI * 2;
+      const distance = maxDistance * randomBetween(0.35, 1);
+      let candidateX = startX + (Math.cos(angle) * distance);
+      let candidateY = startY + (Math.sin(angle) * distance);
+
+      if (!preferInside && currentlyInside) {
+        const awayX = startX - zoneCentroid.x;
+        const awayY = startY - zoneCentroid.y;
+        const awayLength = Math.hypot(awayX, awayY) || 1;
+        const tangent = randomBetween(-0.22, 0.22) * maxDistance;
+        candidateX = startX + ((awayX / awayLength) * distance) - ((awayY / awayLength) * tangent);
+        candidateY = startY + ((awayY / awayLength) * distance) + ((awayX / awayLength) * tangent);
+      }
+
+      const inside = isPointInPolygon(candidateX, candidateY, zonePolygonPoints);
+      if (preferInside && inside) {
+        return clampPoiMotionDistance(startX, startY, candidateX, candidateY, maxDistance);
+      }
+      if (!preferInside && !inside && !isPoiMotionOutsideSoftBounds(candidateX, candidateY)) {
+        return clampPoiMotionDistance(startX, startY, candidateX, candidateY, maxDistance);
+      }
+    }
+
+    const fallbackInside = getRandomPointInPolygon(zonePolygonPoints, 80);
+    const blend = currentlyInside ? randomBetween(0.25, 0.45) : randomBetween(0.45, 0.68);
+    const candidateX = startX + ((fallbackInside.x - startX) * blend);
+    const candidateY = startY + ((fallbackInside.y - startY) * blend);
+    return clampPoiMotionDistance(startX, startY, candidateX, candidateY, maxDistance);
+  }
+
+  function getPoiMotionPosition(move, progress) {
+    if (!move.control) {
+      return {
+        x: move.startX + ((move.endX - move.startX) * progress),
+        y: move.startY + ((move.endY - move.startY) * progress)
+      };
+    }
+
+    const oneMinus = 1 - progress;
+    return {
+      x: (oneMinus * oneMinus * move.startX) + (2 * oneMinus * progress * move.control.x) + (progress * progress * move.endX),
+      y: (oneMinus * oneMinus * move.startY) + (2 * oneMinus * progress * move.control.y) + (progress * progress * move.endY)
+    };
+  }
+
+  function getPoiMotionMaxConcurrent() {
+    return window.innerWidth <= 700 ? 2 : 3;
+  }
+
+  function getPoiMotionTickDelay() {
+    return window.innerWidth <= 700 ? randomBetween(2600, 4200) : randomBetween(1700, 3200);
+  }
+
+  function canRunPoiMotion() {
+    return !poiMotionPaused && !isOpen && points.length > 0 && body.classList.contains('intro-complete');
+  }
+
+  function clearPoiMotionScheduler() {
+    if (!poiMotionSchedulerId) return;
+    window.clearTimeout(poiMotionSchedulerId);
+    poiMotionSchedulerId = null;
+  }
+
+  function stopPoiMotionEngine() {
+    clearPoiMotionScheduler();
+    if (poiMotionRafId) {
+      window.cancelAnimationFrame(poiMotionRafId);
+      poiMotionRafId = null;
+    }
+  }
+
+  function ensurePoiMotionFrame() {
+    if (poiMotionPaused || poiMotionRafId) return;
+    poiMotionRafId = window.requestAnimationFrame(stepPoiMotionFrame);
+  }
+
+  function schedulePoiMotionTick(delay = getPoiMotionTickDelay()) {
+    clearPoiMotionScheduler();
+    if (!canRunPoiMotion()) return;
+
+    poiMotionSchedulerId = window.setTimeout(() => {
+      poiMotionSchedulerId = null;
+      launchPoiMotionIfNeeded();
+      schedulePoiMotionTick();
+    }, delay);
+  }
+
+  function startPoiMotion(pointEl, now = performance.now()) {
+    const motionState = getPoiMotionState(pointEl);
+    if (!motionState || motionState.moving) return false;
+
+    const destination = getPoiMotionDestination(pointEl);
+    if (!destination) return false;
+
+    const distance = Math.hypot(destination.x - motionState.currentX, destination.y - motionState.currentY);
+    if (distance < 1) {
+      motionState.restUntil = now + poiMotionRestMs;
+      return false;
+    }
+
+    const baseDistance = getPoiMotionBaseDistance();
+    const duration = Math.max(2200, Math.min(11200, (distance / Math.max(baseDistance, 1)) * poiMotionBaseTravelMs));
+    motionState.moving = true;
+    motionState.move = {
+      startX: motionState.currentX,
+      startY: motionState.currentY,
+      endX: destination.x,
+      endY: destination.y,
+      control: getPoiMotionControlPoint(motionState.currentX, motionState.currentY, destination.x, destination.y),
+      startedAt: now,
+      duration
+    };
+    pointEl.classList.add('is-moving');
+    ensurePoiMotionFrame();
+    return true;
+  }
+
+  function stepPoiMotionFrame(now) {
+    poiMotionRafId = null;
+    let hasActiveMotion = false;
+
+    points.forEach((point) => {
+      const motionState = getPoiMotionState(point);
+      if (!motionState || !motionState.moving || !motionState.move) return;
+
+      hasActiveMotion = true;
+      const rawProgress = Math.min(1, (now - motionState.move.startedAt) / motionState.move.duration);
+      const easedProgress = easeInOutCubic(rawProgress);
+      const nextPosition = getPoiMotionPosition(motionState.move, easedProgress);
+      setPoiMotionPosition(point, nextPosition.x, nextPosition.y);
+
+      if (rawProgress >= 1) {
+        motionState.moving = false;
+        motionState.move = null;
+        motionState.restUntil = now + poiMotionRestMs + randomBetween(0, 2800);
+        point.classList.remove('is-moving');
+      }
+    });
+
+    if (hasActiveMotion && !poiMotionPaused) {
+      ensurePoiMotionFrame();
+    }
+  }
+
+  function launchPoiMotionIfNeeded() {
+    if (!canRunPoiMotion()) return;
+
+    const now = performance.now();
+    const movingCount = points.reduce((count, point) => {
+      const motionState = getPoiMotionState(point);
+      return count + (motionState?.moving ? 1 : 0);
+    }, 0);
+    const capacity = getPoiMotionMaxConcurrent() - movingCount;
+    if (capacity <= 0) return;
+
+    const eligible = points.filter((point) => {
+      const motionState = getPoiMotionState(point);
+      return motionState && !motionState.moving && motionState.restUntil <= now;
+    });
+    if (eligible.length === 0) return;
+
+    const shouldLaunch = Math.random() < (movingCount > 0 ? 0.46 : 0.34);
+    if (!shouldLaunch) return;
+
+    const maxLaunches = Math.min(capacity, eligible.length, movingCount > 0 ? 2 : 1);
+    const launchCount = maxLaunches > 1 && Math.random() < 0.24 ? 2 : 1;
+
+    for (let launched = 0; launched < Math.min(maxLaunches, launchCount); launched += 1) {
+      const candidateIndex = Math.floor(Math.random() * eligible.length);
+      const [candidate] = eligible.splice(candidateIndex, 1);
+      if (candidate) {
+        startPoiMotion(candidate, now + launched * 120);
+      }
+    }
+  }
+
+  function pausePoiMotion() {
+    if (poiMotionPaused) return;
+
+    poiMotionPaused = true;
+    poiMotionPauseStartedAt = performance.now();
+    clearPoiMotionScheduler();
+    if (poiMotionRafId) {
+      window.cancelAnimationFrame(poiMotionRafId);
+      poiMotionRafId = null;
+    }
+
+    points.forEach((point) => {
+      const motionState = getPoiMotionState(point);
+      if (motionState?.moving && motionState.move) {
+        motionState.move.pausedAt = poiMotionPauseStartedAt;
+      }
+    });
+  }
+
+  function resumePoiMotion() {
+    if (!poiMotionPaused) {
+      syncPoiMotionLifecycle();
+      return;
+    }
+
+    const now = performance.now();
+    const pauseDelta = poiMotionPauseStartedAt ? now - poiMotionPauseStartedAt : 0;
+    poiMotionPaused = false;
+    poiMotionPauseStartedAt = 0;
+
+    points.forEach((point) => {
+      const motionState = getPoiMotionState(point);
+      if (motionState?.moving && motionState.move) {
+        motionState.move.startedAt += pauseDelta;
+        delete motionState.move.pausedAt;
+      }
+    });
+
+    syncPoiMotionLifecycle();
+  }
+
+  function syncPoiMotionLifecycle() {
+    if (!canRunPoiMotion()) {
+      stopPoiMotionEngine();
+      return;
+    }
+
+    const hasActiveMotion = points.some((point) => getPoiMotionState(point)?.moving);
+    if (hasActiveMotion) {
+      ensurePoiMotionFrame();
+    }
+    schedulePoiMotionTick();
+  }
+
+  function createPoiElement(image, index, occupiedPositions) {
+    const pointGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    const position = findNonOverlappingPoint(occupiedPositions, 42, 200);
+    const cx = position ? position.x : zoneCentroid.x;
+    const cy = position ? position.y : zoneCentroid.y;
+
+    pointGroup.setAttribute('class', 'poi-item');
+    pointGroup.setAttribute('transform', 'translate(0 0)');
+
+    pulse.setAttribute('class', 'point-pulse');
+    pulse.setAttribute('cx', String(cx));
+    pulse.setAttribute('cy', String(cy));
+    pulse.setAttribute('r', '28');
+
+    point.setAttribute('class', 'point');
+    point.setAttribute('cx', String(cx));
+    point.setAttribute('cy', String(cy));
+    point.setAttribute('r', '11');
+    pointGroup.dataset.video = (image.webm && image.webm !== '_') ? `${poiMediaPathPrefix}${image.webm}` : '_';
+    pointGroup.dataset.jpeg = (image.jpeg && image.jpeg !== '_') ? `${poiMediaPathPrefix}${image.jpeg}` : '_';
+    pointGroup.dataset.title = getPreferredNameWithScientific(image.name, 'Observation');
+    pointGroup.dataset.poetic = getPreferredText(image.poeticText, '');
+    pointGroup.dataset.scientific = getPreferredText(image.scientificText, '');
+    pointGroup.dataset.text = getPreferredText(image.poeticText, getPreferredText(image.scientificText, 'Texte à venir.'));
+    pointGroup.dataset.links = JSON.stringify(Array.isArray(image.liensSon) ? image.liensSon.filter((link) => typeof link === 'string' && link && link !== '_') : []);
+    pointGroup.dataset.regions = JSON.stringify([]);
+    pointVariants.set(pointGroup, normalizeVariants(image));
+    pointGroup.appendChild(pulse);
+    pointGroup.appendChild(point);
+    poiLayer.appendChild(pointGroup);
+
+    pointMotionStates.set(pointGroup, {
+      baseX: cx,
+      baseY: cy,
+      currentX: cx,
+      currentY: cy,
+      moving: false,
+      move: null,
+      restUntil: performance.now() + randomBetween(5000, 12000)
+    });
+
+    occupiedPositions.push({ x: cx, y: cy });
+    return pointGroup;
+  }
+
+  async function loadPoiData() {
+    try {
+      const response = await fetch('data/data.json');
+      if (!response.ok) {
+        throw new Error(`Échec du chargement du JSON : ${response.status}`);
+      }
+      const rawData = await response.json();
+      rawImages = Array.isArray(rawData.images) ? rawData.images : [];
+      refreshPoiLayer();
+    } catch (error) {
+      console.error('Impossible de charger ou traiter data/data.json :', error);
+    }
+  }
+
+  async function loadBackgroundList() {
+    try {
+      const response = await fetch(backgroundManifestPath);
+      if (!response.ok) {
+        throw new Error(`Échec du chargement du manifeste des fonds : ${response.status}`);
+      }
+
+      const rawData = await response.json();
+      const manifestEntries = Array.isArray(rawData.backgrounds) ? rawData.backgrounds : [];
+      backgroundEntries = manifestEntries
+        .map((entry, index) => {
+          if (!entry || typeof entry.src !== 'string' || !entry.src.trim()) return null;
+          return {
+            id: typeof entry.id === 'string' && entry.id.trim() ? entry.id.trim() : `background-${index + 1}`,
+            src: entry.src.trim()
+          };
+        })
+        .filter(Boolean);
+      syncBackgroundPlayback();
+    } catch (error) {
+      backgroundEntries = [];
+      console.error('Impossible de charger ou traiter background/backgroundList.json :', error);
+    }
+  }
+
+  function clearBackgroundSwitchTimer() {
+    if (!backgroundSwitchTimerId) return;
+    window.clearTimeout(backgroundSwitchTimerId);
+    backgroundSwitchTimerId = null;
+  }
+
+  function shouldShowBackgroundMedia() {
+    return body.classList.contains('intro-complete') && !body.classList.contains('show-map');
+  }
+
+  function shouldRunBackgroundPlayback() {
+    return shouldShowBackgroundMedia() && !isOpen && backgroundEntries.length > 0 && backgroundVideos.length > 0;
+  }
+
+  function getInactiveBackgroundVideo() {
+    if (backgroundVideos.length < 2) return backgroundVideos[0] || null;
+    return backgroundVideos[1 - activeBackgroundVideoIndex];
+  }
+
+  function pickNextBackgroundEntryIndex() {
+    if (!backgroundEntries.length) return -1;
+    if (backgroundEntries.length === 1) return 0;
+
+    let nextIndex = activeBackgroundEntryIndex;
+    while (nextIndex === activeBackgroundEntryIndex) {
+      nextIndex = Math.floor(Math.random() * backgroundEntries.length);
+    }
+
+    return nextIndex;
+  }
+
+  function waitForBackgroundVideoReady(videoEl) {
+    return new Promise((resolve, reject) => {
+      let settled = false;
+
+      const cleanup = () => {
+        videoEl.removeEventListener('loadeddata', handleReady);
+        videoEl.removeEventListener('canplay', handleReady);
+        videoEl.removeEventListener('error', handleError);
+      };
+
+      const handleReady = () => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        resolve();
+      };
+
+      const handleError = () => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        reject(new Error(`Impossible de lire le fond vidéo : ${videoEl.currentSrc || videoEl.src || 'source inconnue'}`));
+      };
+
+      if (videoEl.readyState >= 2) {
+        resolve();
+        return;
+      }
+
+      videoEl.addEventListener('loadeddata', handleReady, { once: true });
+      videoEl.addEventListener('canplay', handleReady, { once: true });
+      videoEl.addEventListener('error', handleError, { once: true });
+    });
+  }
+
+  async function prepareBackgroundVideo(videoEl, entry) {
+    if (!videoEl || !entry) return;
+    if (videoEl.dataset.backgroundId === entry.id && videoEl.getAttribute('src') === entry.src) {
+      return;
+    }
+
+    videoEl.pause();
+    videoEl.dataset.backgroundId = entry.id;
+    videoEl.setAttribute('src', entry.src);
+    videoEl.load();
+    await waitForBackgroundVideoReady(videoEl);
+  }
+
+  async function activateBackgroundEntry(entryIndex, { immediate = false } = {}) {
+    if (entryIndex < 0 || entryIndex >= backgroundEntries.length || !backgroundVideos.length) return;
+
+    const transitionToken = ++backgroundTransitionToken;
+    const nextVideo = immediate ? (backgroundVideos[activeBackgroundVideoIndex] || backgroundVideos[0]) : getInactiveBackgroundVideo();
+    const currentVideo = backgroundVideos[activeBackgroundVideoIndex] || null;
+    const entry = backgroundEntries[entryIndex];
+
+    if (!nextVideo || !entry) return;
+
+    try {
+      await prepareBackgroundVideo(nextVideo, entry);
+      if (transitionToken !== backgroundTransitionToken) return;
+
+      nextVideo.currentTime = 0;
+      if (!backgroundPlaybackPaused) {
+        nextVideo.play().catch(() => {});
+      }
+
+      nextVideo.classList.add('is-active');
+      if (currentVideo && currentVideo !== nextVideo) {
+        currentVideo.classList.remove('is-active');
+        currentVideo.pause();
+      }
+
+      activeBackgroundVideoIndex = backgroundVideos.indexOf(nextVideo);
+      if (activeBackgroundVideoIndex < 0) {
+        activeBackgroundVideoIndex = 0;
+      }
+      activeBackgroundEntryIndex = entryIndex;
+    } catch (error) {
+      console.error('Impossible d\'activer le fond vidéo :', error);
+    }
+  }
+
+  async function rotateBackground() {
+    if (!shouldRunBackgroundPlayback()) return;
+
+    const nextEntryIndex = pickNextBackgroundEntryIndex();
+    if (nextEntryIndex < 0) return;
+
+    await activateBackgroundEntry(nextEntryIndex);
+    scheduleBackgroundSwitch();
+  }
+
+  function scheduleBackgroundSwitch() {
+    clearBackgroundSwitchTimer();
+    if (!shouldRunBackgroundPlayback()) return;
+
+    backgroundSwitchTimerId = window.setTimeout(() => {
+      rotateBackground().catch((error) => {
+        console.error('Impossible de faire tourner les fonds vidéo :', error);
+        scheduleBackgroundSwitch();
+      });
+    }, backgroundCycleMs);
+  }
+
+  async function startBackgroundPlayback() {
+    if (!backgroundEntries.length || !backgroundVideos.length) return;
+
+    backgroundPlaybackPaused = false;
+
+    if (activeBackgroundEntryIndex < 0) {
+      const initialEntryIndex = pickNextBackgroundEntryIndex();
+      await activateBackgroundEntry(initialEntryIndex, { immediate: true });
+    }
+
+    const activeVideo = backgroundVideos[activeBackgroundVideoIndex];
+    activeVideo?.play().catch(() => {});
+    scheduleBackgroundSwitch();
+  }
+
+  function pauseBackgroundPlayback() {
+    backgroundPlaybackPaused = true;
+    clearBackgroundSwitchTimer();
+    backgroundVideos.forEach((videoEl) => {
+      try {
+        videoEl.pause();
+      } catch (error) {}
+    });
+  }
+
+  function syncBackgroundPlayback() {
+    const showBackgroundMedia = shouldShowBackgroundMedia();
+    body.classList.toggle('show-background-media', showBackgroundMedia && backgroundEntries.length > 0);
+
+    if (backgroundStage) {
+      backgroundStage.setAttribute('aria-hidden', String(!(showBackgroundMedia && backgroundEntries.length > 0)));
+    }
+
+    if (!showBackgroundMedia || isOpen) {
+      pauseBackgroundPlayback();
+      return;
+    }
+
+    startBackgroundPlayback().catch((error) => {
+      console.error('Impossible de démarrer le fond vidéo :', error);
+    });
+  }
+
+  function updateMapTogglePosition() {
+    const rect = getViewportRect();
+    const toggleRect = mapToggle.getBoundingClientRect();
+    const margin = window.innerWidth <= 700 ? 12 : 18;
+    const rawX = mapState.x + (toggleAnchor.x * mapState.scale);
+    const rawY = mapState.y + (toggleAnchor.y * mapState.scale);
+    const clampedX = Math.min(rect.width - toggleRect.width - margin, Math.max(margin, rawX));
+    const clampedY = Math.min(rect.height - toggleRect.height - margin, Math.max(margin, rawY));
+
+    mapToggle.style.setProperty('--toggle-x', `${clampedX}px`);
+    mapToggle.style.setProperty('--toggle-y', `${clampedY}px`);
+  }
+
+  function applyMapTransform() {
+    mapScene.style.transform = `translate(${mapState.x}px, ${mapState.y}px) scale(${mapState.scale})`;
+    updateMapTogglePosition();
+  }
+
+  function setMapState(nextState) {
+    mapState = clampMapState(nextState);
+    applyMapTransform();
+  }
+
+  function zoomAt(clientX, clientY, deltaScale) {
+    const rect = getViewportRect();
+    const pointerX = clientX - rect.left;
+    const pointerY = clientY - rect.top;
+    const nextScale = Math.min(maxScale, Math.max(minScale, mapState.scale + deltaScale));
+
+    if (nextScale === mapState.scale) return;
+
+    const sceneX = (pointerX - mapState.x) / mapState.scale;
+    const sceneY = (pointerY - mapState.y) / mapState.scale;
+
+    setMapState({
+      scale: nextScale,
+      x: pointerX - (sceneX * nextScale),
+      y: pointerY - (sceneY * nextScale)
+    });
+  }
+
+  function resetMapView() {
+    setMapState({ scale: 1, x: 0, y: 0 });
+  }
+
+  function startDrag(pointerId, clientX, clientY) {
+    dragState = {
+      pointerId,
+      startX: clientX,
+      startY: clientY,
+      originX: mapState.x,
+      originY: mapState.y
+    };
+    mapViewport.classList.add('is-dragging');
+  }
+
+  function stopDrag() {
+    dragState = null;
+    mapViewport.classList.remove('is-dragging');
+    window.getSelection()?.removeAllRanges();
+  }
+
+  function getPointerDistance(pointerA, pointerB) {
+    return Math.hypot(pointerA.clientX - pointerB.clientX, pointerA.clientY - pointerB.clientY);
+  }
+
+  function getPointerCenter(pointerA, pointerB) {
+    return {
+      clientX: (pointerA.clientX + pointerB.clientX) / 2,
+      clientY: (pointerA.clientY + pointerB.clientY) / 2
+    };
+  }
+
+  function startPinch() {
+    const pointers = Array.from(activePointers.values());
+    if (pointers.length < 2) return;
+
+    const [first, second] = pointers;
+    pinchState = {
+      startDistance: getPointerDistance(first, second),
+      startScale: mapState.scale,
+      center: getPointerCenter(first, second),
+      originX: mapState.x,
+      originY: mapState.y
+    };
+    stopDrag();
+  }
+
+  function updatePinch() {
+    if (!pinchState || activePointers.size < 2) return;
+
+    const [first, second] = Array.from(activePointers.values());
+    const center = getPointerCenter(first, second);
+    const nextScale = pinchState.startScale * (getPointerDistance(first, second) / pinchState.startDistance);
+    const rect = getViewportRect();
+    const pointerX = pinchState.center.clientX - rect.left;
+    const pointerY = pinchState.center.clientY - rect.top;
+    const sceneX = (pointerX - pinchState.originX) / pinchState.startScale;
+    const sceneY = (pointerY - pinchState.originY) / pinchState.startScale;
+
+    setMapState({
+      scale: nextScale,
+      x: (center.clientX - rect.left) - (sceneX * nextScale),
+      y: (center.clientY - rect.top) - (sceneY * nextScale)
+    });
+  }
+
+  function getSessionHighlightKey(highlightId) {
+    return `${sessionHighlightPrefix}${highlightId}`;
+  }
+
+  function hasSessionHighlightRun(highlightId) {
+    try {
+      return window.sessionStorage.getItem(getSessionHighlightKey(highlightId)) === 'true';
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function markSessionHighlightRun(highlightId) {
+    try {
+      window.sessionStorage.setItem(getSessionHighlightKey(highlightId), 'true');
+    } catch (error) {
+      return;
+    }
+  }
+
+  function playTemporaryHighlight(target, highlightId) {
+    if (!target || !highlightId || hasSessionHighlightRun(highlightId)) return false;
+
+    target.classList.add('temporary-highlight');
+    if (target instanceof SVGElement) {
+      target.classList.add('temporary-highlight--svg');
+    }
+
+    const handleAnimationEnd = (event) => {
+      const expectedAnimationName = target instanceof SVGElement
+        ? 'temporary-highlight-point-pulse'
+        : 'temporary-highlight-pulse';
+      if (event.target !== target || event.animationName !== expectedAnimationName) return;
+      target.classList.remove('is-active');
+      target.removeEventListener('animationend', handleAnimationEnd);
+    };
+
+    target.addEventListener('animationend', handleAnimationEnd);
+    target.classList.remove('is-active');
+    void target.offsetWidth;
+    target.classList.add('is-active');
+    markSessionHighlightRun(highlightId);
+    return true;
+  }
+
+  function clearPoiIdleHighlightTimer() {
+    if (!poiIdleHighlightTimerId) return;
+    window.clearTimeout(poiIdleHighlightTimerId);
+    poiIdleHighlightTimerId = null;
+  }
+
+  function attemptIdlePoiHighlight() {
+    if (!poiIdleHighlightDue || hasOpenedPoiVideo || hasSessionHighlightRun('poi-idle-intro')) {
+      return false;
+    }
+
+    const targetPoint = points[0] || null;
+    if (!targetPoint) return false;
+
+    const played = playTemporaryHighlight(getPoiAnchorElement(targetPoint), 'poi-idle-intro');
+    if (played) {
+      poiIdleHighlightDue = false;
+    }
+    return played;
+  }
+
+  function scheduleIdlePoiHighlight() {
+    clearPoiIdleHighlightTimer();
+    poiIdleHighlightTimerId = window.setTimeout(() => {
+      poiIdleHighlightTimerId = null;
+      poiIdleHighlightDue = true;
+      attemptIdlePoiHighlight();
+    }, poiIdleHighlightDelay);
+  }
+
+  function triggerInitialVideoHighlights(hasVariantNavigator) {
+    if (hasVariantNavigator) {
+      if (videoControls && !videoControls.hasAttribute('hidden')) {
+        playTemporaryHighlight(videoControls, 'video-variant-navigator-intro');
+      }
+    }
+
+    playTemporaryHighlight(modeIndicator, 'video-fullscreen-intro');
+    playTemporaryHighlight(closeBtn, 'video-close-intro');
+  }
+
+  function runIntro() {
+    if (introStarted) return;
+    introStarted = true;
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        body.classList.add('show-map');
+      });
+    });
+
+    window.setTimeout(() => {
+      body.classList.add('reveal-outline');
+    }, 2000);
+
+    window.setTimeout(() => {
+      body.classList.add('reveal-shape');
+    }, 3000);
+
+    window.setTimeout(() => {
+      body.classList.add('intro-complete');
+      syncMapVisibility();
+      syncBackgroundPlayback();
+      playTemporaryHighlight(mapToggle, 'map-toggle-intro');
+      playTemporaryHighlight(infoToggleBtn, 'discover-button-intro');
+      playTemporaryHighlight(audioToggleBtn, 'audio-button-intro');
+      syncPoiMotionLifecycle();
+    }, 4000);
+  }
+
+  function showMap() {
+    body.classList.add('show-map');
+    syncBackgroundPlayback();
+  }
+
+  function hideMap() {
+    if (mapPinned) return;
+    body.classList.remove('show-map');
+    syncBackgroundPlayback();
+  }
+
+  function syncMapVisibility() {
+    body.classList.toggle('show-map', mapPinned);
+    syncBackgroundPlayback();
+  }
+
+  mapToggle.addEventListener('mouseenter', showMap);
+  mapToggle.addEventListener('mouseleave', hideMap);
+  mapToggle.addEventListener('focus', showMap);
+  mapToggle.addEventListener('blur', hideMap);
+  mapToggle.addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    if (event.target === mapPinToggle) return;
+    event.preventDefault();
+    if (mapPinned) {
+      showMap();
+      return;
+    }
+    body.classList.toggle('show-map');
+  });
+  mapToggle.addEventListener('pointerdown', (event) => {
+    event.stopPropagation();
+  });
+  mapToggle.addEventListener('touchstart', (event) => {
+    if (event.target === mapPinToggle) return;
+    body.classList.toggle('show-map', mapPinned ? true : !body.classList.contains('show-map'));
+  }, { passive: true });
+  mapPinToggle.addEventListener('pointerdown', (event) => {
+    event.stopPropagation();
+  });
+  mapPinToggle.addEventListener('click', (event) => {
+    event.stopPropagation();
+  });
+  mapPinToggle.addEventListener('change', () => {
+    mapPinned = mapPinToggle.checked;
+    syncMapVisibility();
+  });
+
+  zoomInBtn.addEventListener('click', () => {
+    const rect = getViewportRect();
+    zoomAt(rect.left + (rect.width / 2), rect.top + (rect.height / 2), zoomStep);
+  });
+
+  zoomOutBtn.addEventListener('click', () => {
+    const rect = getViewportRect();
+    zoomAt(rect.left + (rect.width / 2), rect.top + (rect.height / 2), -zoomStep);
+  });
+
+  resetViewBtn.addEventListener('click', resetMapView);
+
+  if (langFrBtn) {
+    langFrBtn.addEventListener('click', () => setActiveLocale('FR'));
+  }
+  if (langEnBtn) {
+    langEnBtn.addEventListener('click', () => setActiveLocale('US'));
+  }
+
+  mapViewport.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    const direction = event.deltaY < 0 ? zoomStep : -zoomStep;
+    zoomAt(event.clientX, event.clientY, direction);
+  }, { passive: false });
+
+  mapViewport.addEventListener('dblclick', (event) => {
+    if (event.target.closest('.point')) return;
+    zoomAt(event.clientX, event.clientY, zoomStep * 2);
+  });
+
+  mapViewport.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    if (event.target.closest('.point') || event.target.closest('.map-toggle') || event.target.closest('.map-control')) {
+      return;
+    }
+
+    event.preventDefault();
+
+    activePointers.set(event.pointerId, { clientX: event.clientX, clientY: event.clientY });
+    mapViewport.setPointerCapture(event.pointerId);
+
+    if (activePointers.size === 2) {
+      startPinch();
+      return;
+    }
+
+    if (activePointers.size === 1) {
+      startDrag(event.pointerId, event.clientX, event.clientY);
+    }
+  });
+
+  mapViewport.addEventListener('pointermove', (event) => {
+    if (dragState || activePointers.size >= 2) {
+      event.preventDefault();
+    }
+
+    if (activePointers.has(event.pointerId)) {
+      activePointers.set(event.pointerId, { clientX: event.clientX, clientY: event.clientY });
+    }
+
+    if (activePointers.size >= 2) {
+      updatePinch();
+      return;
+    }
+
+    if (!dragState || dragState.pointerId !== event.pointerId) return;
+
+    setMapState({
+      scale: mapState.scale,
+      x: dragState.originX + (event.clientX - dragState.startX),
+      y: dragState.originY + (event.clientY - dragState.startY)
+    });
+  });
+
+  function releasePointer(event) {
+    activePointers.delete(event.pointerId);
+    if (mapViewport.hasPointerCapture(event.pointerId)) {
+      mapViewport.releasePointerCapture(event.pointerId);
+    }
+
+    if (activePointers.size < 2) {
+      pinchState = null;
+    }
+
+    if (dragState && dragState.pointerId === event.pointerId) {
+      stopDrag();
+    }
+
+    if (activePointers.size === 1 && !dragState) {
+      const [remainingPointerId, remainingPointer] = activePointers.entries().next().value;
+      startDrag(remainingPointerId, remainingPointer.clientX, remainingPointer.clientY);
+    }
+  }
+
+  mapViewport.addEventListener('pointerup', releasePointer);
+  mapViewport.addEventListener('pointercancel', releasePointer);
+  mapViewport.addEventListener('dragstart', (event) => {
+    event.preventDefault();
+  });
+  mapViewport.addEventListener('selectstart', (event) => {
+    event.preventDefault();
+  });
+  mapViewport.addEventListener('pointerleave', (event) => {
+    if (!mapViewport.hasPointerCapture(event.pointerId)) {
+      releasePointer(event);
+    }
+  });
+
+  function pointToRect(pointEl) {
+    const targetElement = getPoiAnchorElement(pointEl) || pointEl;
+    const r = targetElement.getBoundingClientRect();
+    const size = Math.max(r.width, r.height);
+    return {
+      left: r.left,
+      top: r.top,
+      width: size,
+      height: size
+    };
+  }
+
+  function rectCenter(rect) {
+    return {
+      x: rect.left + (rect.width / 2),
+      y: rect.top + (rect.height / 2)
+    };
+  }
+
+  function getTargetRect() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    if (isMobileLayout) {
+      const ratio = 16 / 9;
+      const horizontalMargin = 12;
+      const maxWidth = Math.min(560, vw - (horizontalMargin * 2));
+      const maxHeight = Math.max(180, Math.min(vh * 0.34, vh - 320));
+      let width = maxWidth;
+      let height = width / ratio;
+
+      if (height > maxHeight) {
+        height = maxHeight;
+        width = height * ratio;
+      }
+
+      const left = Math.max(horizontalMargin, (vw - width) / 2);
+      const top = Math.max(76, vh * 0.14);
+      return { left, top, width, height };
+    }
+
+    const maxW = vw * 0.42;
+    const maxH = vh * 0.42;
+    const ratio = 16 / 9;
+
+    let width = maxW;
+    let height = width / ratio;
+
+    if (height > maxH) {
+      height = maxH;
+      width = height * ratio;
+    }
+
+    const left = Math.max(36, vw * 0.17);
+    const top = (vh - height) / 2;
+
+    return { left, top, width, height };
+  }
+
+  function getFullscreenRect() {
+    return {
+      left: 0,
+      top: 0,
+      width: window.innerWidth,
+      height: window.innerHeight
+    };
+  }
+
+  function updateModeIndicator() {
+    if (!modeIndicator) return;
+    modeIndicator.textContent = isFullscreenMode ? 'Fenêtre' : 'Plein écran';
+    modeIndicator.setAttribute('aria-label', isFullscreenMode ? 'Passer en mode fenêtre' : 'Passer en mode plein écran');
+  }
+
+  function setFullscreenMode(enabled) {
+    if (isMobileLayout) return;
+    if (!isOpen || isFullscreenMode === enabled) return;
+    isFullscreenMode = enabled;
+
+    if (isFullscreenMode) {
+      viewer.classList.add('fullscreen');
+      hideBubble(true);
+      const fullscreenRect = getFullscreenRect();
+      setRect(shell, fullscreenRect);
+      setRect(halo, getHaloRect(activePointRect, fullscreenRect));
+      setBubblePosition(fullscreenRect, activeRegion, true);
+    } else {
+      viewer.classList.remove('fullscreen');
+      const target = getTargetRect();
+      setRect(shell, target);
+      setRect(halo, getHaloRect(activePointRect, target));
+      setBubblePosition(target, activeRegion, true);
+    }
+    updateModeIndicator();
+  }
+
+  function getHaloRect(fromRect, targetRect) {
+    const cx = fromRect.left + fromRect.width / 2;
+    const cy = fromRect.top + fromRect.height / 2;
+    const radius = Math.max(targetRect.width, targetRect.height) * 1.25;
+
+    return {
+      left: cx - radius / 2,
+      top: cy - radius / 2,
+      width: radius,
+      height: radius
+    };
+  }
+
+  function setRect(el, rect) {
+    el.style.left = rect.left + 'px';
+    el.style.top = rect.top + 'px';
+    el.style.width = rect.width + 'px';
+    el.style.height = rect.height + 'px';
+  }
+
+  function animateZoneElement(drawFrame, duration) {
+    return new Promise((resolve) => {
+      const start = performance.now();
+
+      function step(now) {
+        const progress = Math.min(1, (now - start) / duration);
+        drawFrame(progress);
+        if (progress < 1) {
+          requestAnimationFrame(step);
+          return;
+        }
+        resolve();
+      }
+
+      requestAnimationFrame(step);
+    });
+  }
+
+  function easeInOutCubic(value) {
+    if (value < 0.5) {
+      return 4 * value * value * value;
+    }
+    return 1 - (Math.pow(-2 * value + 2, 3) / 2);
+  }
+
+  function easeOutQuad(value) {
+    return 1 - ((1 - value) * (1 - value));
+  }
+
+  function createZoneFlight(rect) {
+    const zoneFlight = document.createElement('div');
+    const originX = (zoneCentroid.x / 2118) * rect.width;
+    const originY = (zoneCentroid.y / 1328) * rect.height;
+
+    zoneFlight.className = 'zone-flight';
+    zoneFlight.style.left = `${rect.left}px`;
+    zoneFlight.style.top = `${rect.top}px`;
+    zoneFlight.style.width = `${rect.width}px`;
+    zoneFlight.style.height = `${rect.height}px`;
+    zoneFlight.style.transformOrigin = `${originX}px ${originY}px`;
+    zoneFlight.style.transform = 'translate(0px, 0px) scale(1)';
+    zoneFlight.innerHTML = `
+      <svg viewBox="0 0 2118 1328" aria-hidden="true" focusable="false">
+        <path fill="#8B5E3C" fill-opacity="0.82" stroke="#5F3F28" stroke-width="2" fill-rule="evenodd" d="${zonePathD}"></path>
+      </svg>
+    `;
+
+    document.body.appendChild(zoneFlight);
+
+    return {
+      zoneFlight,
+      originX,
+      originY
+    };
+  }
+
+  async function playPointLaunch(pointEl, pointer = null) {
+    const zoneRect = layerSvg.getBoundingClientRect();
+    const targetRect = pointToRect(pointEl);
+    const targetCenterX = pointer?.clientX ?? (targetRect.left + (targetRect.width / 2));
+    const targetCenterY = pointer?.clientY ?? (targetRect.top + (targetRect.height / 2));
+    const { zoneFlight, originX, originY } = createZoneFlight(zoneRect);
+    const centroidX = zoneRect.left + originX;
+    const centroidY = zoneRect.top + originY;
+    const finalScale = 0.05;
+    let startCenterX = centroidX;
+    let startCenterY = centroidY;
+    let startTranslateX = 0;
+    let startTranslateY = 0;
+
+    if (lastActivatedPoint) {
+      const previousPointCenter = rectCenter(pointToRect(lastActivatedPoint));
+      startCenterX = previousPointCenter.x;
+      startCenterY = previousPointCenter.y;
+      startTranslateX = startCenterX - centroidX;
+      startTranslateY = startCenterY - centroidY;
+      zoneFlight.style.transform = `translate(${startTranslateX}px, ${startTranslateY}px) scale(${finalScale})`;
+      zoneFlight.style.opacity = '0.82';
+    } else {
+      await animateZoneElement((progress) => {
+        const eased = easeInOutCubic(progress);
+        const scale = 1 + ((finalScale - 1) * eased);
+        zoneFlight.style.transform = `translate(0px, 0px) scale(${scale})`;
+        zoneFlight.style.opacity = `${0.92 - (0.1 * eased)}`;
+      }, 500);
+      startTranslateX = 0;
+      startTranslateY = 0;
+    }
+
+    const deltaX = targetCenterX - startCenterX;
+    const deltaY = targetCenterY - startCenterY;
+    const lift = Math.max(70, Math.min(220, (Math.abs(deltaX) * 0.18) + 40));
+    const controlX = deltaX * 0.5;
+    const controlY = (deltaY * 0.5) - lift;
+
+    await animateZoneElement((progress) => {
+      const eased = easeOutQuad(progress);
+      const inverse = 1 - eased;
+      const curveX = (inverse * inverse * 0) + (2 * inverse * eased * controlX) + (eased * eased * deltaX);
+      const curveY = (inverse * inverse * 0) + (2 * inverse * eased * controlY) + (eased * eased * deltaY);
+      const translateX = startTranslateX + curveX;
+      const translateY = startTranslateY + curveY;
+
+      zoneFlight.style.transform = `translate(${translateX}px, ${translateY}px) scale(${finalScale})`;
+      zoneFlight.style.opacity = `${0.82 - (0.26 * eased)}`;
+    }, 500);
+
+    zoneFlight.remove();
+  }
+
+  function randomBetween(min, max) {
+    return min + Math.random() * (max - min);
+  }
+
+  function pickRegionFromPointer(event, rect, regions) {
+    if (!regions || !regions.length) return null;
+
+    const rx = (event.clientX - rect.left) / rect.width;
+    const regionIndex = rx < 0.5 ? 0 : 1;
+    const region = regions[regionIndex] || regions[0] || null;
+
+    return region ? { ...region, _zoneKey: `zone-${regionIndex}` } : null;
+  }
+
+  function setBubbleTailStyle({
+    left = '-30px',
+    right = 'auto',
+    top = '38px',
+    bottom = 'auto',
+    rotate = '-18deg',
+    scaleX = '1',
+    scaleY = '1'
+  } = {}) {
+    infoBubble.style.setProperty('--tail-left', left);
+    infoBubble.style.setProperty('--tail-right', right);
+    infoBubble.style.setProperty('--tail-top', top);
+    infoBubble.style.setProperty('--tail-bottom', bottom);
+    infoBubble.style.setProperty('--tail-rotate', rotate);
+    infoBubble.style.setProperty('--tail-scale-x', scaleX);
+    infoBubble.style.setProperty('--tail-scale-y', scaleY);
+  }
+
+  function setBubblePosition(videoRect, region = null, randomize = false) {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const gap = 24;
+    const margin = 24;
+
+    if (isMobileLayout) {
+      infoBubble.style.left = '12px';
+      infoBubble.style.right = '12px';
+      infoBubble.style.bottom = '20px';
+      infoBubble.style.top = 'auto';
+      setBubbleTailStyle({ top: '0px', rotate: '90deg' });
+      return;
+    }
+
+    const bubbleWidth = Math.min(340, Math.max(240, vw * 0.28));
+    const bubbleHeightEstimate = 150;
+    const regionBiasX = region?._zoneKey === 'zone-0'
+      ? 0.32
+      : region?._zoneKey === 'zone-1'
+        ? 0.68
+        : 0.5;
+    const anchorX = videoRect.left + videoRect.width * regionBiasX;
+
+    let anchorY = videoRect.top + videoRect.height * 0.5;
+    if (region) {
+      anchorY = videoRect.top + videoRect.height * region.y;
+    }
+
+    const spaceRight = vw - videoRect.right - margin;
+    const spaceLeft = videoRect.left - margin;
+    const spaceAbove = videoRect.top - margin;
+    const spaceBelow = vh - videoRect.bottom - margin;
+
+    const canPlaceRight = spaceRight >= bubbleWidth + gap;
+    const canPlaceLeft = spaceLeft >= bubbleWidth + gap;
+    const canPlaceAbove = spaceAbove >= bubbleHeightEstimate + gap;
+    const canPlaceBelow = spaceBelow >= bubbleHeightEstimate + gap;
+
+    let placementSide = 'right';
+    if (canPlaceRight) {
+      placementSide = 'right';
+    } else if (canPlaceLeft) {
+      placementSide = 'left';
+    } else if (canPlaceAbove) {
+      placementSide = 'top';
+    } else if (canPlaceBelow) {
+      placementSide = 'bottom';
+    } else {
+      const rankedPlacements = [
+        { side: 'right', space: spaceRight },
+        { side: 'left', space: spaceLeft },
+        { side: 'top', space: spaceAbove },
+        { side: 'bottom', space: spaceBelow }
+      ].sort((a, b) => b.space - a.space);
+      placementSide = rankedPlacements[0]?.side || 'right';
+    }
+
+    if (!region) {
+      let left = videoRect.left + videoRect.width + gap;
+      let top = Math.max(margin, Math.min(anchorY - bubbleHeightEstimate * 0.38, vh - bubbleHeightEstimate - margin));
+
+      if (placementSide === 'left') {
+        left = Math.max(margin, videoRect.left - bubbleWidth - gap);
+        setBubbleTailStyle({ left: 'auto', right: '-30px', top: '38px', bottom: 'auto', rotate: '18deg', scaleX: '-1' });
+      } else if (placementSide === 'top') {
+        left = Math.max(margin, Math.min(anchorX - (bubbleWidth / 2), vw - bubbleWidth - margin));
+        top = Math.max(margin, videoRect.top - bubbleHeightEstimate - gap);
+        const tailLeft = Math.max(24, Math.min(anchorX - left - 18, bubbleWidth - 24));
+        setBubbleTailStyle({ left: `${tailLeft}px`, right: 'auto', top: 'auto', bottom: '-24px', rotate: '90deg' });
+      } else if (placementSide === 'bottom') {
+        left = Math.max(margin, Math.min(anchorX - (bubbleWidth / 2), vw - bubbleWidth - margin));
+        top = Math.min(vh - bubbleHeightEstimate - margin, videoRect.bottom + gap);
+        const tailLeft = Math.max(24, Math.min(anchorX - left - 18, bubbleWidth - 24));
+        setBubbleTailStyle({ left: `${tailLeft}px`, right: 'auto', top: '-24px', bottom: 'auto', rotate: '-90deg' });
+      } else {
+        if (left + bubbleWidth > vw - margin) {
+          left = vw - bubbleWidth - margin;
+        }
+        setBubbleTailStyle({ left: '-30px', right: 'auto', top: '38px', bottom: 'auto', rotate: '-18deg', scaleX: '1' });
+      }
+
+      infoBubble.style.left = left + 'px';
+      infoBubble.style.top = top + 'px';
+      return;
+    }
+
+    if (randomize || !region._bubblePlacement) {
+      let left = videoRect.left + videoRect.width + gap + randomBetween(-10, 16);
+      let top = anchorY - bubbleHeightEstimate * 0.38 + randomBetween(-12, 12);
+      let tail = {
+        left: '-30px',
+        right: 'auto',
+        top: '38px',
+        bottom: 'auto',
+        rotate: randomBetween(-26, -8).toFixed(1) + 'deg',
+        scaleX: '1',
+        scaleY: '1'
+      };
+
+      if (placementSide === 'left') {
+        left = Math.max(margin, videoRect.left - bubbleWidth - gap + randomBetween(-16, 10));
+        top = Math.max(margin, Math.min(top, vh - bubbleHeightEstimate - margin));
+        const tailTop = Math.max(18, Math.min(anchorY - top - 10, bubbleHeightEstimate - 22));
+        tail = {
+          left: 'auto',
+          right: '-30px',
+          top: `${tailTop}px`,
+          bottom: 'auto',
+          rotate: randomBetween(8, 26).toFixed(1) + 'deg',
+          scaleX: '-1',
+          scaleY: '1'
+        };
+      } else if (placementSide === 'top') {
+        left = Math.max(margin, Math.min(anchorX - (bubbleWidth / 2) + randomBetween(-18, 18), vw - bubbleWidth - margin));
+        top = Math.max(margin, videoRect.top - bubbleHeightEstimate - gap + randomBetween(-10, 6));
+        const tailLeft = Math.max(24, Math.min(anchorX - left - 18, bubbleWidth - 24));
+        tail = {
+          left: `${tailLeft}px`,
+          right: 'auto',
+          top: 'auto',
+          bottom: '-24px',
+          rotate: '90deg',
+          scaleX: '1',
+          scaleY: '1'
+        };
+      } else if (placementSide === 'bottom') {
+        left = Math.max(margin, Math.min(anchorX - (bubbleWidth / 2) + randomBetween(-18, 18), vw - bubbleWidth - margin));
+        top = Math.min(vh - bubbleHeightEstimate - margin, videoRect.bottom + gap + randomBetween(-6, 10));
+        const tailLeft = Math.max(24, Math.min(anchorX - left - 18, bubbleWidth - 24));
+        tail = {
+          left: `${tailLeft}px`,
+          right: 'auto',
+          top: '-24px',
+          bottom: 'auto',
+          rotate: '-90deg',
+          scaleX: '1',
+          scaleY: '1'
+        };
+      } else {
+        if (left + bubbleWidth > vw - margin) {
+          left = vw - bubbleWidth - margin;
+        }
+        top = Math.max(margin, Math.min(top, vh - bubbleHeightEstimate - margin));
+        const tailTop = Math.max(18, Math.min(anchorY - top - 10, bubbleHeightEstimate - 22));
+        tail.top = `${tailTop}px`;
+      }
+
+      region._bubblePlacement = { left, top, tail };
+    }
+
+    const placement = region._bubblePlacement;
+    infoBubble.style.left = placement.left + 'px';
+    infoBubble.style.top = placement.top + 'px';
+    setBubbleTailStyle(placement.tail);
+  }
+
+  function clearBubbleTimer() {
+    if (hideBubbleTimer) {
+      clearTimeout(hideBubbleTimer);
+      hideBubbleTimer = null;
+    }
+  }
+
+  function hideBubble(immediate = false) {
+    clearBubbleTimer();
+    bubbleVisible = false;
+    infoBubble.classList.remove('visible');
+    if (immediate) return;
+  }
+
+  function showBubble(event = null) {
+    if (isMobileLayout) return;
+    if (!isOpen || !activePointData) return;
+    clearBubbleTimer();
+
+    const rect = shell.getBoundingClientRect();
+    const region = event ? pickRegionFromPointer(event, rect, activeRegions) : (activeRegion || activeRegions[0]);
+    const resolvedRegion = region || activeRegions[0] || {
+      label: 'Observation',
+      title: activePointData.title,
+      text: activePointData.text,
+      y: 0.5,
+      _zoneKey: 'default-zone'
+    };
+
+    const zoneChanged = activeZoneKey !== resolvedRegion._zoneKey;
+    const shouldReposition = zoneChanged || !bubbleVisible;
+
+    activeRegion = resolvedRegion;
+    activeZoneKey = resolvedRegion._zoneKey;
+
+    infoZoneLabel.textContent = resolvedRegion.label || 'Observation';
+    infoTitle.textContent = resolvedRegion.title || activePointData.title;
+    const activeInfo = getActiveVariantInfo();
+    infoText.innerHTML = resolvedRegion.html || activeInfo.html || activePointData.html || escapeHtml(resolvedRegion.text || activePointData.text);
+
+    if (shouldReposition) {
+      const bubbleAnchorRect = isFullscreenMode ? getFullscreenRect() : shell.getBoundingClientRect();
+      setBubblePosition(bubbleAnchorRect, activeRegion, zoneChanged || !activeRegion._bubblePlacement);
+    }
+
+    requestAnimationFrame(() => {
+      infoBubble.classList.add('visible');
+      bubbleVisible = true;
+    });
+  }
+
+  function scheduleBubbleHide() {
+    if (isMobileLayout) return;
+    clearBubbleTimer();
+    hideBubbleTimer = setTimeout(() => {
+      const hoveredVideo = shell.matches(':hover');
+      const hoveredBubble = infoBubble.matches(':hover');
+      if (!hoveredVideo && !hoveredBubble) {
+        hideBubble();
+      }
+    }, 140);
+  }
+
+  async function openVideo(pointEl, pointer = null) {
+    if (openingPoint || isOpen) return;
+    openingPoint = true;
+    hidePoiTooltip();
+    hasOpenedPoiVideo = true;
+    poiIdleHighlightDue = false;
+    clearPoiIdleHighlightTimer();
+    pausePoiMotion();
+    pauseBackgroundPlayback();
+
+    try {
+      activePointRect = pointToRect(pointEl);
+      activePointData = getPointData(pointEl);
+
+      try {
+        activeRegions = JSON.parse(pointEl.dataset.regions || '[]');
+      } catch (error) {
+        console.error('Impossible de lire data-regions :', error, pointEl.dataset.regions);
+        activeRegions = [];
+      }
+
+      activeRegion = activeRegions[0] ? { ...activeRegions[0], _zoneKey: 'zone-0' } : null;
+      activeZoneKey = null;
+      pendingInitialBubble = true;
+      try {
+        await playPointLaunch(pointEl, pointer);
+      } catch (error) {
+        console.error('Impossible de jouer l animation de lancement :', error);
+      }
+
+      viewer.style.display = 'block';
+      viewer.style.pointerEvents = 'auto';
+      viewer.setAttribute('aria-hidden', 'false');
+      isFullscreenMode = false;
+      viewer.classList.remove('fullscreen');
+
+      const target = getTargetRect();
+      setRect(shell, activePointRect);
+      setRect(halo, activePointRect);
+      setBubblePosition(target, activeRegion);
+      hideBubble(true);
+      updateModeIndicator();
+      updateModeIndicator();
+
+      activeVariants = Array.isArray(activePointData.variants) && activePointData.variants.length > 0
+        ? activePointData.variants
+        : [{ webm: activePointData.video, jpeg: activePointData.jpeg, poeticText: [], scientificText: [], latitude: null, longitude: null, date: null, game: null }];
+      console.log('openVideo variants', activeVariants);
+      const hasVariantNavigator = activeVariants.length > 1;
+      activeVariantIndex = 0;
+      setActiveVariant(0);
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          viewer.classList.add('open');
+          setRect(shell, target);
+          setRect(halo, getHaloRect(activePointRect, target));
+          if (!viewer.classList.contains('image-mode')) {
+            video.play().catch(() => {});
+          }
+          isOpen = true;
+          lastActivatedPoint = pointEl;
+          openingPoint = false;
+
+          requestAnimationFrame(() => {
+            triggerInitialVideoHighlights(hasVariantNavigator);
+          });
+
+          requestAnimationFrame(() => {
+            if (pendingInitialBubble) {
+              showBubble();
+              pendingInitialBubble = false;
+            }
+          });
+        });
+      });
+    } catch (error) {
+      openingPoint = false;
+      if (!isOpen) {
+        resumePoiMotion();
+        syncBackgroundPlayback();
+      }
+      throw error;
+    }
+  }
+
+  function closeVideo() {
+    if (!isOpen || !activePointRect) return;
+
+    pendingInitialBubble = false;
+    hideBubble(true);
+    viewer.classList.remove('open');
+    viewer.classList.remove('fullscreen');
+    isFullscreenMode = false;
+    setRect(shell, activePointRect);
+    setRect(halo, activePointRect);
+
+    setTimeout(() => {
+      try {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+      } catch (e) {}
+      try {
+        if (imageEl) {
+          imageEl.removeAttribute('src');
+          imageEl.style.display = 'none';
+        }
+      } catch (e) {}
+      viewer.classList.remove('image-mode');
+      viewer.style.display = 'none';
+      viewer.style.pointerEvents = 'none';
+      viewer.setAttribute('aria-hidden', 'true');
+      isOpen = false;
+      activePointData = null;
+      activeRegion = null;
+      activeZoneKey = null;
+      resumePoiMotion();
+      syncBackgroundPlayback();
+    }, 940);
+  }
+
+  points.forEach((point) => {
+    point.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openVideo(point, e);
+    });
+  });
+  if (variantPrevBtn) {
+    variantPrevBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      setActiveVariant(activeVariantIndex - 1);
+    });
+  }
+  if (variantNextBtn) {
+    variantNextBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      setActiveVariant(activeVariantIndex + 1);
+    });
+  }
+
+  shell.addEventListener('mouseenter', (e) => {
+    if (isMobileLayout) return;
+    hidePoiTooltip();
+    if (pendingInitialBubble) return;
+    if (!isFullscreenMode) showBubble(e);
+  });
+
+  shell.addEventListener('wheel', (event) => {
+    if (!isOpen) return;
+    event.preventDefault();
+    const shouldFullscreen = event.deltaY < 0;
+    setFullscreenMode(shouldFullscreen);
+  });
+
+  if (modeIndicator) {
+    modeIndicator.addEventListener('click', (event) => {
+      event.stopPropagation();
+      setFullscreenMode(!isFullscreenMode);
+    });
+  }
+
+  shell.addEventListener('mousemove', (e) => {
+    if (isMobileLayout) return;
+    if (isFullscreenMode) return;
+    if (pendingInitialBubble) return;
+    const rect = shell.getBoundingClientRect();
+    const hoveredRegion = pickRegionFromPointer(e, rect, activeRegions);
+    if (!hoveredRegion) return;
+
+    if (hoveredRegion._zoneKey !== activeZoneKey) {
+      showBubble(e);
+    }
+  });
+
+  shell.addEventListener('mouseleave', () => {
+    scheduleBubbleHide();
+  });
+
+  infoBubble.addEventListener('mouseenter', () => {
+    if (isMobileLayout) return;
+    clearBubbleTimer();
+    if (!bubbleVisible) showBubble();
+  });
+
+  infoBubble.addEventListener('mouseleave', () => {
+    scheduleBubbleHide();
+  });
+
+  closeZone.addEventListener('click', closeVideo);
+  backdrop.addEventListener('click', closeVideo);
+  closeBtn.addEventListener('click', closeVideo);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeVideo();
+  });
+
+  window.addEventListener('resize', () => {
+    updateResponsiveLayoutState();
+    setMapState(mapState);
+    syncPoiMotionLifecycle();
+    if (!viewer.style.display || viewer.style.display === 'none') return;
+    if (isOpen) {
+      if (isFullscreenMode) {
+        const fullscreenRect = getFullscreenRect();
+        setRect(shell, fullscreenRect);
+        if (activeRegion) {
+          setBubblePosition(fullscreenRect, activeRegion, false);
+        }
+      } else {
+        const target = getTargetRect();
+        setRect(shell, target);
+        if (activeRegion) {
+          setBubblePosition(target, activeRegion, false);
+        }
+      }
+    }
+  });
+
+  if (typeof mobileLayoutQuery.addEventListener === 'function') {
+    mobileLayoutQuery.addEventListener('change', updateResponsiveLayoutState);
+  } else if (typeof mobileLayoutQuery.addListener === 'function') {
+    mobileLayoutQuery.addListener(updateResponsiveLayoutState);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      pausePoiMotion();
+      return;
+    }
+    if (!isOpen) {
+      resumePoiMotion();
+    }
+  });
+
+  function getSavedAudioVolume() {
+    const saved = localStorage.getItem('siteBaladeChampvertAudioVolume');
+    const parsed = parseFloat(saved);
+    return Number.isFinite(parsed) && parsed >= 0 && parsed <= 1 ? parsed : 0.55;
+  }
+
+  function saveAudioVolume(value) {
+    localStorage.setItem('siteBaladeChampvertAudioVolume', String(value));
+  }
+
+  function updateAudioToggleState() {
+    const isActive = !!audioToggleBtn && audioToggleBtn.classList.contains('active');
+    if (!audioToggleBtn || !audioVolumeControl) return;
+
+    audioToggleBtn.classList.toggle('active', isActive);
+    audioToggleBtn.setAttribute('aria-pressed', String(isActive));
+    audioToggleBtn.setAttribute('aria-label', isActive ? 'Désactiver le son de fond' : 'Activer le son de fond');
+    audioVolumeControl.classList.toggle('hidden', !isActive);
+    audioVolumeControl.setAttribute('aria-hidden', String(!isActive));
+  }
+
+  function setBackgroundAudioVolume(value) {
+    const normalized = Math.min(1, Math.max(0, Number(value)));
+    if (backgroundAudio) {
+      backgroundAudio.volume = normalized;
+    }
+    if (audioVolumeRange) {
+      audioVolumeRange.value = String(normalized);
+    }
+    saveAudioVolume(normalized);
+  }
+
+  function toggleBackgroundAudio() {
+    if (!audioToggleBtn || !audioVolumeControl || !audioVolumeRange || !backgroundAudio) return;
+
+    const isActive = !audioToggleBtn.classList.contains('active');
+    audioToggleBtn.classList.toggle('active', isActive);
+    audioToggleBtn.setAttribute('aria-pressed', String(isActive));
+    audioToggleBtn.setAttribute('aria-label', isActive ? 'Désactiver le son de fond' : 'Activer le son de fond');
+    audioVolumeControl.classList.toggle('hidden', !isActive);
+    audioVolumeControl.setAttribute('aria-hidden', String(!isActive));
+
+    if (isActive) {
+      backgroundAudio.volume = Number(audioVolumeRange.value) || getSavedAudioVolume();
+      backgroundAudio.play().catch((error) => {
+        console.warn('Impossible de démarrer le son de fond :', error);
+      });
+    } else {
+      backgroundAudio.pause();
+    }
+  }
+
+  function initializeBackgroundAudioControls() {
+    if (!audioToggleBtn || !audioVolumeControl || !audioVolumeRange || !backgroundAudio) return;
+
+    const startingVolume = getSavedAudioVolume();
+    audioVolumeRange.value = String(startingVolume);
+    backgroundAudio.volume = startingVolume;
+    audioToggleBtn.classList.remove('active');
+    audioToggleBtn.setAttribute('aria-pressed', 'false');
+    audioToggleBtn.setAttribute('aria-label', 'Activer le son de fond');
+    audioVolumeControl.classList.add('hidden');
+    audioVolumeControl.setAttribute('aria-hidden', 'true');
+
+    audioToggleBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      toggleBackgroundAudio();
+    });
+
+    audioVolumeRange.addEventListener('input', (event) => {
+      const target = /** @type {HTMLInputElement} */ (event.target);
+      if (!target) return;
+      setBackgroundAudioVolume(target.value);
+    });
+  }
+
+  function getSiteInfoText() {
+    const strings = localeStrings[currentLocale] || localeStrings.FR;
+    return strings.infoTooltipText || '';
+  }
+
+  function updateSiteInfoButtonLanguage() {
+    if (!infoToggleBtn) return;
+    const strings = localeStrings[currentLocale] || localeStrings.FR;
+    const label = strings.infoButtonLabel || 'Découvrir';
+    const ariaLabel = strings.infoButtonAriaLabel || 'Découvrir l\'esprit de cette balade';
+    const labelElement = infoToggleBtn.querySelector('.site-info-button-text');
+    if (labelElement) {
+      labelElement.textContent = label;
+    }
+    infoToggleBtn.setAttribute('aria-label', ariaLabel);
+  }
+
+  function renderSiteInfoText() {
+    const text = getSiteInfoText();
+    if (!infoTooltip) return;
+    const paragraphs = text
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => `<p>${escapeHtml(line)}</p>`)
+      .join('');
+    infoTooltip.innerHTML = paragraphs;
+  }
+
+  function setInfoTooltipOpen(isOpen) {
+    if (!infoTooltip || !infoToggleBtn) return;
+    infoTooltip.classList.toggle('visible', isOpen);
+    infoTooltip.setAttribute('aria-hidden', String(!isOpen));
+    infoToggleBtn.setAttribute('aria-expanded', String(isOpen));
+  }
+
+  function showSiteInfoTooltip() {
+    if (!infoTooltip) return;
+    renderSiteInfoText();
+    setInfoTooltipOpen(true);
+  }
+
+  function hideSiteInfoTooltip() {
+    setInfoTooltipOpen(false);
+  }
+
+  function initializeSiteInfoControls() {
+    if (!infoToggleBtn || !infoTooltip) return;
+
+    infoToggleBtn.addEventListener('click', (event) => {
+      if (!isMobileLayout) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const shouldOpen = infoTooltip.getAttribute('aria-hidden') !== 'false';
+      if (shouldOpen) {
+        showSiteInfoTooltip();
+      } else {
+        hideSiteInfoTooltip();
+      }
+    });
+
+    infoToggleBtn.addEventListener('mouseenter', () => showSiteInfoTooltip());
+    infoToggleBtn.addEventListener('focus', () => showSiteInfoTooltip());
+    infoToggleBtn.addEventListener('mouseleave', () => {
+      window.setTimeout(() => {
+        if (!infoToggleBtn.matches(':hover') && !infoTooltip.matches(':hover')) {
+          hideSiteInfoTooltip();
+        }
+      }, 100);
+    });
+
+    infoTooltip.addEventListener('mouseenter', () => showSiteInfoTooltip());
+    infoTooltip.addEventListener('mouseleave', () => {
+      window.setTimeout(() => {
+        if (!infoToggleBtn.matches(':hover') && !infoTooltip.matches(':hover')) {
+          hideSiteInfoTooltip();
+        }
+      }, 100);
+    });
+
+    document.addEventListener('pointerdown', (event) => {
+      if (!isMobileLayout) return;
+      const target = event.target;
+      if (target instanceof Node && (infoToggleBtn.contains(target) || infoTooltip.contains(target))) {
+        return;
+      }
+      hideSiteInfoTooltip();
+    });
+  }
+
+  updateMapToggleText();
+  updateSiteInfoButtonLanguage();
+  updateResponsiveLayoutState();
+  applyMapTransform();
+  scheduleIdlePoiHighlight();
+  loadPoiData();
+  loadBackgroundList();
+  initializeBackgroundAudioControls();
+  initializeSiteInfoControls();
+  runIntro();
+</script>
+</body>
+</html>
