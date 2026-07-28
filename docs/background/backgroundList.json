@@ -1,0 +1,24 @@
+{
+  "backgrounds": [
+    {
+      "id": "fond1",
+      "src": "background/fond1.webm"
+    },
+    {
+      "id": "fond2",
+      "src": "background/fond2.webm"
+    },
+    {
+      "id": "fond3",
+      "src": "background/fond3.webm"
+    },
+    {
+      "id": "fond4",
+      "src": "background/fond4.webm"
+    },
+    {
+      "id": "fond5",
+      "src": "background/fond5.webm"
+    }
+  ]
+}

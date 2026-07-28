@@ -67,6 +67,40 @@
     overflow: hidden;
   }
 
+  .background-stage {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at top left, rgba(28, 44, 23, 0.28), transparent 34%),
+      radial-gradient(circle at bottom right, rgba(77, 103, 70, 0.2), transparent 28%),
+      linear-gradient(180deg, rgba(22, 31, 19, 0.84) 0%, rgba(37, 49, 32, 0.7) 100%);
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  body.show-background-media .background-stage {
+    opacity: 1;
+  }
+
+  .background-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease;
+    filter: saturate(1.04) contrast(1.02) brightness(0.88);
+    background: transparent;
+  }
+
+  .background-video.is-active {
+    opacity: 1;
+  }
+
   .map-toggle {
     position: absolute;
     top: 0;
@@ -164,6 +198,12 @@
       0 24px 70px rgba(34, 47, 28, 0.16),
       inset 0 0 0 1px rgba(91, 113, 79, 0.08);
     background: #ffffff;
+    transition: background 1s ease, box-shadow 1s ease;
+  }
+
+  body.show-background-media .map-frame {
+    background: transparent;
+    box-shadow: none;
   }
 
   .map-viewport {
@@ -196,6 +236,11 @@
     border: 1px solid var(--line);
     border-radius: 24px;
     pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+
+  body.show-background-media .map-frame::after {
+    opacity: 0;
   }
 
   .layer {
@@ -234,12 +279,12 @@
     pointer-events: auto;
   }
 
-  body.reveal-outline .layer-svg-outline,
-  body.reveal-shape .layer-svg-outline,
-  body.intro-complete .layer-svg-outline,
-  body.reveal-shape .layer-svg,
+  body.show-map.reveal-outline .layer-svg-outline,
+  body.show-map.reveal-shape .layer-svg-outline,
+  body.show-map.intro-complete .layer-svg-outline,
+  body.show-map.reveal-shape .layer-svg,
   body.reveal-shape .poi-layer,
-  body.intro-complete .layer-svg,
+  body.show-map.intro-complete .layer-svg,
   body.intro-complete .poi-layer {
     opacity: 1;
   }
@@ -1156,6 +1201,10 @@
 </head>
 <body>
   <div class="app">
+    <div id="backgroundStage" class="background-stage" aria-hidden="true">
+      <video id="backgroundVideoA" class="background-video is-active" muted loop playsinline preload="metadata"></video>
+      <video id="backgroundVideoB" class="background-video" muted loop playsinline preload="metadata"></video>
+    </div>
     <main class="stage" aria-label="Carte schématique et fond cartographique alignés">
       <div class="map-frame">
         <div class="map-viewport" id="mapViewport" aria-label="Carte navigable">
@@ -1315,8 +1364,13 @@
   const audioVolumeControl = document.getElementById('audioVolumeControl');
   const audioVolumeRange = document.getElementById('audioVolumeRange');
   const backgroundAudio = document.getElementById('backgroundAudio');
+  const backgroundStage = document.getElementById('backgroundStage');
+  const backgroundVideoA = document.getElementById('backgroundVideoA');
+  const backgroundVideoB = document.getElementById('backgroundVideoB');
   const sessionHighlightPrefix = 'siteBaladeChampvertHighlight:';
   const poiMediaPathPrefix = 'data/';
+  const backgroundManifestPath = 'background/backgroundList.json';
+  const backgroundCycleMs = 10000;
   const pointVariants = new WeakMap();
   const pointMotionStates = new WeakMap();
   const langFrBtn = document.getElementById('langFrBtn');
@@ -1380,6 +1434,12 @@
   let poiMotionRafId = null;
   let poiMotionPaused = false;
   let poiMotionPauseStartedAt = 0;
+  let backgroundEntries = [];
+  let activeBackgroundVideoIndex = 0;
+  let activeBackgroundEntryIndex = -1;
+  let backgroundSwitchTimerId = null;
+  let backgroundTransitionToken = 0;
+  let backgroundPlaybackPaused = false;
   const poiIdleHighlightDelay = 20000;
   const poiMotionRestMs = 6000;
   const poiMotionBaseTravelMs = 4000;
@@ -1402,6 +1462,7 @@
   ];
   const zonePathD = `${zonePolygonPoints.map(([x, y], index) => `${index === 0 ? 'M' : 'L'} ${x} ${y}`).join(' ')} Z`;
   const zoneCentroid = computePolygonCentroid(zonePolygonPoints);
+  const backgroundVideos = [backgroundVideoA, backgroundVideoB].filter(Boolean);
   const zoneBounds = zonePolygonPoints.reduce((bounds, [x, y]) => ({
     minX: Math.min(bounds.minX, x),
     maxX: Math.max(bounds.maxX, x),
@@ -2208,6 +2269,210 @@
     }
   }
 
+  async function loadBackgroundList() {
+    try {
+      const response = await fetch(backgroundManifestPath);
+      if (!response.ok) {
+        throw new Error(`Échec du chargement du manifeste des fonds : ${response.status}`);
+      }
+
+      const rawData = await response.json();
+      const manifestEntries = Array.isArray(rawData.backgrounds) ? rawData.backgrounds : [];
+      backgroundEntries = manifestEntries
+        .map((entry, index) => {
+          if (!entry || typeof entry.src !== 'string' || !entry.src.trim()) return null;
+          return {
+            id: typeof entry.id === 'string' && entry.id.trim() ? entry.id.trim() : `background-${index + 1}`,
+            src: entry.src.trim()
+          };
+        })
+        .filter(Boolean);
+      syncBackgroundPlayback();
+    } catch (error) {
+      backgroundEntries = [];
+      console.error('Impossible de charger ou traiter background/backgroundList.json :', error);
+    }
+  }
+
+  function clearBackgroundSwitchTimer() {
+    if (!backgroundSwitchTimerId) return;
+    window.clearTimeout(backgroundSwitchTimerId);
+    backgroundSwitchTimerId = null;
+  }
+
+  function shouldShowBackgroundMedia() {
+    return body.classList.contains('intro-complete') && !body.classList.contains('show-map');
+  }
+
+  function shouldRunBackgroundPlayback() {
+    return shouldShowBackgroundMedia() && !isOpen && backgroundEntries.length > 0 && backgroundVideos.length > 0;
+  }
+
+  function getInactiveBackgroundVideo() {
+    if (backgroundVideos.length < 2) return backgroundVideos[0] || null;
+    return backgroundVideos[1 - activeBackgroundVideoIndex];
+  }
+
+  function pickNextBackgroundEntryIndex() {
+    if (!backgroundEntries.length) return -1;
+    if (backgroundEntries.length === 1) return 0;
+
+    let nextIndex = activeBackgroundEntryIndex;
+    while (nextIndex === activeBackgroundEntryIndex) {
+      nextIndex = Math.floor(Math.random() * backgroundEntries.length);
+    }
+
+    return nextIndex;
+  }
+
+  function waitForBackgroundVideoReady(videoEl) {
+    return new Promise((resolve, reject) => {
+      let settled = false;
+
+      const cleanup = () => {
+        videoEl.removeEventListener('loadeddata', handleReady);
+        videoEl.removeEventListener('canplay', handleReady);
+        videoEl.removeEventListener('error', handleError);
+      };
+
+      const handleReady = () => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        resolve();
+      };
+
+      const handleError = () => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        reject(new Error(`Impossible de lire le fond vidéo : ${videoEl.currentSrc || videoEl.src || 'source inconnue'}`));
+      };
+
+      if (videoEl.readyState >= 2) {
+        resolve();
+        return;
+      }
+
+      videoEl.addEventListener('loadeddata', handleReady, { once: true });
+      videoEl.addEventListener('canplay', handleReady, { once: true });
+      videoEl.addEventListener('error', handleError, { once: true });
+    });
+  }
+
+  async function prepareBackgroundVideo(videoEl, entry) {
+    if (!videoEl || !entry) return;
+    if (videoEl.dataset.backgroundId === entry.id && videoEl.getAttribute('src') === entry.src) {
+      return;
+    }
+
+    videoEl.pause();
+    videoEl.dataset.backgroundId = entry.id;
+    videoEl.setAttribute('src', entry.src);
+    videoEl.load();
+    await waitForBackgroundVideoReady(videoEl);
+  }
+
+  async function activateBackgroundEntry(entryIndex, { immediate = false } = {}) {
+    if (entryIndex < 0 || entryIndex >= backgroundEntries.length || !backgroundVideos.length) return;
+
+    const transitionToken = ++backgroundTransitionToken;
+    const nextVideo = immediate ? (backgroundVideos[activeBackgroundVideoIndex] || backgroundVideos[0]) : getInactiveBackgroundVideo();
+    const currentVideo = backgroundVideos[activeBackgroundVideoIndex] || null;
+    const entry = backgroundEntries[entryIndex];
+
+    if (!nextVideo || !entry) return;
+
+    try {
+      await prepareBackgroundVideo(nextVideo, entry);
+      if (transitionToken !== backgroundTransitionToken) return;
+
+      nextVideo.currentTime = 0;
+      if (!backgroundPlaybackPaused) {
+        nextVideo.play().catch(() => {});
+      }
+
+      nextVideo.classList.add('is-active');
+      if (currentVideo && currentVideo !== nextVideo) {
+        currentVideo.classList.remove('is-active');
+        currentVideo.pause();
+      }
+
+      activeBackgroundVideoIndex = backgroundVideos.indexOf(nextVideo);
+      if (activeBackgroundVideoIndex < 0) {
+        activeBackgroundVideoIndex = 0;
+      }
+      activeBackgroundEntryIndex = entryIndex;
+    } catch (error) {
+      console.error('Impossible d\'activer le fond vidéo :', error);
+    }
+  }
+
+  async function rotateBackground() {
+    if (!shouldRunBackgroundPlayback()) return;
+
+    const nextEntryIndex = pickNextBackgroundEntryIndex();
+    if (nextEntryIndex < 0) return;
+
+    await activateBackgroundEntry(nextEntryIndex);
+    scheduleBackgroundSwitch();
+  }
+
+  function scheduleBackgroundSwitch() {
+    clearBackgroundSwitchTimer();
+    if (!shouldRunBackgroundPlayback()) return;
+
+    backgroundSwitchTimerId = window.setTimeout(() => {
+      rotateBackground().catch((error) => {
+        console.error('Impossible de faire tourner les fonds vidéo :', error);
+        scheduleBackgroundSwitch();
+      });
+    }, backgroundCycleMs);
+  }
+
+  async function startBackgroundPlayback() {
+    if (!backgroundEntries.length || !backgroundVideos.length) return;
+
+    backgroundPlaybackPaused = false;
+
+    if (activeBackgroundEntryIndex < 0) {
+      const initialEntryIndex = pickNextBackgroundEntryIndex();
+      await activateBackgroundEntry(initialEntryIndex, { immediate: true });
+    }
+
+    const activeVideo = backgroundVideos[activeBackgroundVideoIndex];
+    activeVideo?.play().catch(() => {});
+    scheduleBackgroundSwitch();
+  }
+
+  function pauseBackgroundPlayback() {
+    backgroundPlaybackPaused = true;
+    clearBackgroundSwitchTimer();
+    backgroundVideos.forEach((videoEl) => {
+      try {
+        videoEl.pause();
+      } catch (error) {}
+    });
+  }
+
+  function syncBackgroundPlayback() {
+    const showBackgroundMedia = shouldShowBackgroundMedia();
+    body.classList.toggle('show-background-media', showBackgroundMedia && backgroundEntries.length > 0);
+
+    if (backgroundStage) {
+      backgroundStage.setAttribute('aria-hidden', String(!(showBackgroundMedia && backgroundEntries.length > 0)));
+    }
+
+    if (!showBackgroundMedia || isOpen) {
+      pauseBackgroundPlayback();
+      return;
+    }
+
+    startBackgroundPlayback().catch((error) => {
+      console.error('Impossible de démarrer le fond vidéo :', error);
+    });
+  }
+
   function updateMapTogglePosition() {
     const rect = getViewportRect();
     const toggleRect = mapToggle.getBoundingClientRect();
@@ -2422,6 +2687,8 @@
     window.setTimeout(() => {
       body.classList.add('intro-complete');
       syncMapVisibility();
+      syncBackgroundPlayback();
+      playTemporaryHighlight(mapToggle, 'map-toggle-intro');
       playTemporaryHighlight(infoToggleBtn, 'discover-button-intro');
       playTemporaryHighlight(audioToggleBtn, 'audio-button-intro');
       syncPoiMotionLifecycle();
@@ -2430,15 +2697,18 @@
 
   function showMap() {
     body.classList.add('show-map');
+    syncBackgroundPlayback();
   }
 
   function hideMap() {
     if (mapPinned) return;
     body.classList.remove('show-map');
+    syncBackgroundPlayback();
   }
 
   function syncMapVisibility() {
     body.classList.toggle('show-map', mapPinned);
+    syncBackgroundPlayback();
   }
 
   mapToggle.addEventListener('mouseenter', showMap);
@@ -2923,6 +3193,7 @@
     poiIdleHighlightDue = false;
     clearPoiIdleHighlightTimer();
     pausePoiMotion();
+    pauseBackgroundPlayback();
 
     try {
       activePointRect = pointToRect(pointEl);
@@ -2996,6 +3267,7 @@
       openingPoint = false;
       if (!isOpen) {
         resumePoiMotion();
+        syncBackgroundPlayback();
       }
       throw error;
     }
@@ -3033,6 +3305,7 @@
       activeRegion = null;
       activeZoneKey = null;
       resumePoiMotion();
+      syncBackgroundPlayback();
     }, 940);
   }
 
@@ -3286,6 +3559,7 @@
   applyMapTransform();
   scheduleIdlePoiHighlight();
   loadPoiData();
+  loadBackgroundList();
   initializeBackgroundAudioControls();
   initializeSiteInfoControls();
   runIntro();
