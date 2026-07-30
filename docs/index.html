@@ -101,11 +101,22 @@
     opacity: 1;
   }
 
+  .top-left-controls {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 45;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  body.video-open .map-toggle {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
   .map-toggle {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 20;
     display: inline-flex;
     align-items: center;
     gap: 12px;
@@ -119,16 +130,12 @@
     cursor: pointer;
     user-select: none;
     touch-action: manipulation;
-    --toggle-x: 18px;
-    --toggle-y: 18px;
-    --toggle-lift: 0px;
-    transform: translate(var(--toggle-x), var(--toggle-y)) translateY(var(--toggle-lift));
-    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, opacity 180ms ease;
   }
 
   .map-toggle:hover,
   .map-toggle:focus-visible {
-    --toggle-lift: -1px;
+    transform: translateY(-1px);
     box-shadow: 0 16px 34px rgba(21, 30, 18, 0.16);
     background: rgba(255, 255, 255, 0.94);
   }
@@ -440,10 +447,6 @@
   }
 
   .audio-control {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    z-index: 40;
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -514,12 +517,23 @@
   }
 
   .map-controls {
-    position: absolute;
-    right: 18px;
-    top: 18px;
-    z-index: 21;
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 45;
     display: flex;
+    align-items: center;
     gap: 8px;
+  }
+
+  .map-controls-zoom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  body.video-open .map-controls-zoom {
+    display: none;
   }
 
   .map-control {
@@ -554,7 +568,6 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin-right: 6px;
   }
 
   .map-control--lang {
@@ -841,7 +854,7 @@
   #videoModeIndicator {
     position: absolute;
     left: 18px;
-    top: 18px;
+    top: 86px;
     padding: 6px 12px;
     border-radius: 999px;
     background: rgba(0, 0, 0, 0.68);
@@ -1020,7 +1033,7 @@
 
   #closeBtn {
     position: absolute;
-    top: 18px;
+    top: 60px;
     right: 18px;
     width: 34px;
     height: 34px;
@@ -1125,10 +1138,6 @@
   }
 
   .audio-control {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    z-index: 40;
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -1238,36 +1247,6 @@
           </div>
         </div>
 
-        <div
-          id="mapToggle"
-          class="map-toggle"
-          role="button"
-          tabindex="0"
-          aria-label="Afficher la superposition avec la carte OpenStreetMap"
-          title="Survolez pour afficher la carte réelle"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/>
-          </svg>
-          <div class="map-toggle-copy">
-            <strong>Voir la carte</strong>
-            <span>La carte est affichee par defaut</span>
-          </div>
-          <label class="map-toggle-pin" aria-label="Garder la carte affichée">
-            <input id="mapPinToggle" type="checkbox" checked />
-          </label>
-        </div>
-
-        <div class="map-controls" aria-label="Contrôles de navigation">
-          <div class="language-switcher" role="group" aria-label="Choisir la langue">
-            <button id="langFrBtn" class="map-control map-control--lang active" type="button" aria-pressed="true" title="Français">FR</button>
-            <button id="langEnBtn" class="map-control map-control--lang" type="button" aria-pressed="false" title="English">EN</button>
-          </div>
-          <button id="zoomInBtn" class="map-control" type="button" aria-label="Zoomer">+</button>
-          <button id="zoomOutBtn" class="map-control" type="button" aria-label="Dézoomer">−</button>
-          <button id="resetViewBtn" class="map-control" type="button" aria-label="Réinitialiser la vue">↺</button>
-        </div>
-
         <div class="caption">
           Fond de carte © OpenStreetMap contributors
           <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">openstreetmap.org/copyright</a>
@@ -1277,17 +1256,51 @@
     </main>
   </div>
 
-  <div class="audio-control" aria-label="Contrôle du son de fond" role="region">
-    <button id="audioToggleBtn" type="button" aria-pressed="false" aria-label="Activer le son de fond">
+  <div class="top-left-controls">
+    <div
+      id="mapToggle"
+      class="map-toggle"
+      role="button"
+      tabindex="0"
+      aria-label="Afficher la superposition avec la carte OpenStreetMap"
+      title="Survolez pour afficher la carte réelle"
+    >
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M3 9v6h4l5 5V4L7 9H3z" />
-        <path d="M16.5 12c0-1.77-.77-3.37-2-4.47v8.94c1.23-1.1 2-2.7 2-4.47z" />
+        <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/>
       </svg>
-    </button>
-    <div id="audioVolumeControl" class="audio-volume hidden" aria-hidden="true">
-      <input id="audioVolumeRange" type="range" min="0" max="1" step="0.01" value="0.55" aria-label="Volume du son de fond" />
+      <div class="map-toggle-copy">
+        <strong>Voir la carte</strong>
+        <span>La carte est affichee par defaut</span>
+      </div>
+      <label class="map-toggle-pin" aria-label="Garder la carte affichée">
+        <input id="mapPinToggle" type="checkbox" checked />
+      </label>
     </div>
-    <audio id="backgroundAudio" loop preload="none" src="song/fond.m4a"></audio>
+
+    <div class="audio-control" aria-label="Contrôle du son de fond" role="region">
+      <button id="audioToggleBtn" type="button" aria-pressed="false" aria-label="Activer le son de fond">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 9v6h4l5 5V4L7 9H3z" />
+          <path d="M16.5 12c0-1.77-.77-3.37-2-4.47v8.94c1.23-1.1 2-2.7 2-4.47z" />
+        </svg>
+      </button>
+      <div id="audioVolumeControl" class="audio-volume hidden" aria-hidden="true">
+        <input id="audioVolumeRange" type="range" min="0" max="1" step="0.01" value="0.55" aria-label="Volume du son de fond" />
+      </div>
+      <audio id="backgroundAudio" loop preload="none" src="song/fond.m4a"></audio>
+    </div>
+  </div>
+
+  <div class="map-controls" aria-label="Contrôles de navigation">
+    <div class="language-switcher" role="group" aria-label="Choisir la langue">
+      <button id="langFrBtn" class="map-control map-control--lang active" type="button" aria-pressed="true" title="Français">FR</button>
+      <button id="langEnBtn" class="map-control map-control--lang" type="button" aria-pressed="false" title="English">EN</button>
+    </div>
+    <div class="map-controls-zoom">
+      <button id="zoomInBtn" class="map-control" type="button" aria-label="Zoomer">+</button>
+      <button id="zoomOutBtn" class="map-control" type="button" aria-label="Dézoomer">−</button>
+      <button id="resetViewBtn" class="map-control" type="button" aria-label="Réinitialiser la vue">↺</button>
+    </div>
   </div>
 
   <button
@@ -1419,6 +1432,7 @@
   let pendingInitialBubble = false;
   let isOpen = false;
   let isFullscreenMode = false;
+  let fullscreenExitAt = 0;
   let bubbleVisible = false;
   let hideBubbleTimer = null;
   let introStarted = false;
@@ -1446,7 +1460,6 @@
   const minScale = 1;
   const maxScale = 4;
   const zoomStep = 0.2;
-  const toggleAnchor = { x: 18, y: 18 };
   let mapState = { scale: 1, x: 0, y: 0 };
   let dragState = null;
   const activePointers = new Map();
@@ -2473,22 +2486,8 @@
     });
   }
 
-  function updateMapTogglePosition() {
-    const rect = getViewportRect();
-    const toggleRect = mapToggle.getBoundingClientRect();
-    const margin = window.innerWidth <= 700 ? 12 : 18;
-    const rawX = mapState.x + (toggleAnchor.x * mapState.scale);
-    const rawY = mapState.y + (toggleAnchor.y * mapState.scale);
-    const clampedX = Math.min(rect.width - toggleRect.width - margin, Math.max(margin, rawX));
-    const clampedY = Math.min(rect.height - toggleRect.height - margin, Math.max(margin, rawY));
-
-    mapToggle.style.setProperty('--toggle-x', `${clampedX}px`);
-    mapToggle.style.setProperty('--toggle-y', `${clampedY}px`);
-  }
-
   function applyMapTransform() {
     mapScene.style.transform = `translate(${mapState.x}px, ${mapState.y}px) scale(${mapState.scale})`;
-    updateMapTogglePosition();
   }
 
   function setMapState(nextState) {
@@ -2919,10 +2918,14 @@
       setBubblePosition(fullscreenRect, activeRegion, true);
     } else {
       viewer.classList.remove('fullscreen');
+      fullscreenExitAt = Date.now();
       const target = getTargetRect();
       setRect(shell, target);
       setRect(halo, getHaloRect(activePointRect, target));
       setBubblePosition(target, activeRegion, true);
+      window.setTimeout(() => {
+        if (isOpen && !isFullscreenMode) showBubble();
+      }, 940);
     }
     updateModeIndicator();
   }
@@ -3240,6 +3243,7 @@
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           viewer.classList.add('open');
+          body.classList.add('video-open');
           setRect(shell, target);
           setRect(halo, getHaloRect(activePointRect, target));
           if (!viewer.classList.contains('image-mode')) {
@@ -3279,6 +3283,7 @@
     pendingInitialBubble = false;
     hideBubble(true);
     viewer.classList.remove('open');
+    body.classList.remove('video-open');
     viewer.classList.remove('fullscreen');
     isFullscreenMode = false;
     setRect(shell, activePointRect);
@@ -3335,8 +3340,19 @@
   shell.addEventListener('wheel', (event) => {
     if (!isOpen) return;
     event.preventDefault();
-    const shouldFullscreen = event.deltaY < 0;
-    setFullscreenMode(shouldFullscreen);
+    if (event.deltaY < 0) {
+      setFullscreenMode(true);
+    } else if (isFullscreenMode) {
+      setFullscreenMode(false);
+    } else if (Date.now() - fullscreenExitAt > 1000) {
+      closeVideo();
+    }
+  });
+
+  shell.addEventListener('click', (event) => {
+    if (!isOpen) return;
+    event.stopPropagation();
+    setFullscreenMode(!isFullscreenMode);
   });
 
   if (modeIndicator) {

@@ -39,6 +39,22 @@
     {
       "id": "fond10",
       "src": "background/fond10.webm"
+    },
+    {
+      "id": "fond11",
+      "src": "background/fond11.webm"
+    },
+    {
+      "id": "fond12",
+      "src": "background/fond12.webm"
+    },
+    {
+      "id": "fond13",
+      "src": "background/fond13.webm"
+    },
+    {
+      "id": "fond14",
+      "src": "background/fond14.webm"
     }
   ]
 }
