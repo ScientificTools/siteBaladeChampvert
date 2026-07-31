@@ -583,6 +583,33 @@
     border-color: rgba(82, 106, 74, 0.32);
   }
 
+  .map-control--dia {
+    width: auto;
+    min-width: 44px;
+    padding: 0 12px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  body.diaporama-active .top-left-controls,
+  body.diaporama-active .map-controls,
+  body.diaporama-active .site-info-button,
+  body.diaporama-active .caption,
+  body.diaporama-active .poi-layer,
+  body.diaporama-active #poiTooltip {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 2s ease;
+  }
+
+  body.dia-map-return .layer-map,
+  body.dia-map-return .layer-svg,
+  body.dia-map-return .layer-svg-outline,
+  body.dia-map-return .map-frame {
+    transition-duration: 2s !important;
+  }
+
   .map-hint {
     position: absolute;
     left: 18px;
@@ -1300,6 +1327,7 @@
       <button id="zoomInBtn" class="map-control" type="button" aria-label="Zoomer">+</button>
       <button id="zoomOutBtn" class="map-control" type="button" aria-label="Dézoomer">−</button>
       <button id="resetViewBtn" class="map-control" type="button" aria-label="Réinitialiser la vue">↺</button>
+      <button id="diaToggleBtn" class="map-control map-control--dia" type="button" aria-label="Lancer le diaporama" title="Diaporama">Dia</button>
     </div>
   </div>
 
@@ -1352,6 +1380,7 @@
   const zoomInBtn = document.getElementById('zoomInBtn');
   const zoomOutBtn = document.getElementById('zoomOutBtn');
   const resetViewBtn = document.getElementById('resetViewBtn');
+  const diaToggleBtn = document.getElementById('diaToggleBtn');
   const viewer = document.getElementById('viewer');
   const backdrop = document.getElementById('backdrop');
   const halo = document.getElementById('halo');
@@ -1454,6 +1483,9 @@
   let backgroundSwitchTimerId = null;
   let backgroundTransitionToken = 0;
   let backgroundPlaybackPaused = false;
+  let diaporamaActive = false;
+  let diaporamaWasMapMode = false;
+  let diaporamaEntries = [];
   const poiIdleHighlightDelay = 20000;
   const poiMotionRestMs = 6000;
   const poiMotionBaseTravelMs = 4000;
@@ -2317,8 +2349,12 @@
     return body.classList.contains('intro-complete') && !body.classList.contains('show-map');
   }
 
+  function getBackgroundEntries() {
+    return diaporamaActive ? diaporamaEntries : backgroundEntries;
+  }
+
   function shouldRunBackgroundPlayback() {
-    return shouldShowBackgroundMedia() && !isOpen && backgroundEntries.length > 0 && backgroundVideos.length > 0;
+    return shouldShowBackgroundMedia() && !isOpen && getBackgroundEntries().length > 0 && backgroundVideos.length > 0;
   }
 
   function getInactiveBackgroundVideo() {
@@ -2327,12 +2363,13 @@
   }
 
   function pickNextBackgroundEntryIndex() {
-    if (!backgroundEntries.length) return -1;
-    if (backgroundEntries.length === 1) return 0;
+    const entries = getBackgroundEntries();
+    if (!entries.length) return -1;
+    if (entries.length === 1) return 0;
 
     let nextIndex = activeBackgroundEntryIndex;
     while (nextIndex === activeBackgroundEntryIndex) {
-      nextIndex = Math.floor(Math.random() * backgroundEntries.length);
+      nextIndex = Math.floor(Math.random() * entries.length);
     }
 
     return nextIndex;
@@ -2387,12 +2424,13 @@
   }
 
   async function activateBackgroundEntry(entryIndex, { immediate = false } = {}) {
-    if (entryIndex < 0 || entryIndex >= backgroundEntries.length || !backgroundVideos.length) return;
+    const entries = getBackgroundEntries();
+    if (entryIndex < 0 || entryIndex >= entries.length || !backgroundVideos.length) return;
 
     const transitionToken = ++backgroundTransitionToken;
     const nextVideo = immediate ? (backgroundVideos[activeBackgroundVideoIndex] || backgroundVideos[0]) : getInactiveBackgroundVideo();
     const currentVideo = backgroundVideos[activeBackgroundVideoIndex] || null;
-    const entry = backgroundEntries[entryIndex];
+    const entry = entries[entryIndex];
 
     if (!nextVideo || !entry) return;
 
@@ -2444,7 +2482,7 @@
   }
 
   async function startBackgroundPlayback() {
-    if (!backgroundEntries.length || !backgroundVideos.length) return;
+    if (!getBackgroundEntries().length || !backgroundVideos.length) return;
 
     backgroundPlaybackPaused = false;
 
@@ -2470,10 +2508,11 @@
 
   function syncBackgroundPlayback() {
     const showBackgroundMedia = shouldShowBackgroundMedia();
-    body.classList.toggle('show-background-media', showBackgroundMedia && backgroundEntries.length > 0);
+    const hasEntries = getBackgroundEntries().length > 0;
+    body.classList.toggle('show-background-media', showBackgroundMedia && hasEntries);
 
     if (backgroundStage) {
-      backgroundStage.setAttribute('aria-hidden', String(!(showBackgroundMedia && backgroundEntries.length > 0)));
+      backgroundStage.setAttribute('aria-hidden', String(!(showBackgroundMedia && hasEntries)));
     }
 
     if (!showBackgroundMedia || isOpen) {
@@ -2484,6 +2523,63 @@
     startBackgroundPlayback().catch((error) => {
       console.error('Impossible de démarrer le fond vidéo :', error);
     });
+  }
+
+  function buildDiaporamaEntries() {
+    const entries = backgroundEntries.slice();
+    rawImages.forEach((image, imageIndex) => {
+      normalizeVariants(image).forEach((variant, variantIndex) => {
+        if (variant.webm && variant.webm !== '_') {
+          entries.push({ id: `data-${imageIndex}-${variantIndex}`, src: variant.webm });
+        }
+      });
+    });
+    return entries;
+  }
+
+  function handleDiaporamaExit(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    exitDiaporamaMode();
+  }
+
+  function enterDiaporamaMode() {
+    if (diaporamaActive || isOpen) return;
+
+    diaporamaWasMapMode = body.classList.contains('show-map');
+    diaporamaEntries = buildDiaporamaEntries();
+    if (!diaporamaEntries.length) return;
+
+    diaporamaActive = true;
+    body.classList.add('diaporama-active');
+
+    if (diaporamaWasMapMode) {
+      activeBackgroundEntryIndex = -1;
+      body.classList.remove('show-map');
+      syncBackgroundPlayback();
+    }
+
+    document.addEventListener('keydown', handleDiaporamaExit, true);
+    document.addEventListener('click', handleDiaporamaExit, true);
+  }
+
+  function exitDiaporamaMode() {
+    if (!diaporamaActive) return;
+    diaporamaActive = false;
+    document.removeEventListener('keydown', handleDiaporamaExit, true);
+    document.removeEventListener('click', handleDiaporamaExit, true);
+
+    body.classList.remove('diaporama-active');
+
+    if (diaporamaWasMapMode) {
+      activeBackgroundEntryIndex = -1;
+      body.classList.add('dia-map-return');
+      body.classList.add('show-map');
+      window.setTimeout(() => {
+        body.classList.remove('dia-map-return');
+      }, 2100);
+      syncBackgroundPlayback();
+    }
   }
 
   function applyMapTransform() {
@@ -2690,6 +2786,7 @@
       playTemporaryHighlight(mapToggle, 'map-toggle-intro');
       playTemporaryHighlight(infoToggleBtn, 'discover-button-intro');
       playTemporaryHighlight(audioToggleBtn, 'audio-button-intro');
+      playTemporaryHighlight(diaToggleBtn, 'dia-toggle-intro');
       syncPoiMotionLifecycle();
     }, 4000);
   }
@@ -2753,6 +2850,13 @@
   });
 
   resetViewBtn.addEventListener('click', resetMapView);
+
+  if (diaToggleBtn) {
+    diaToggleBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      enterDiaporamaMode();
+    });
+  }
 
   if (langFrBtn) {
     langFrBtn.addEventListener('click', () => setActiveLocale('FR'));
