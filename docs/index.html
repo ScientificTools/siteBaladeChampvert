@@ -421,10 +421,10 @@
   }
 
   .caption {
-    position: absolute;
+    position: fixed;
     right: 18px;
     bottom: 18px;
-    z-index: 5;
+    z-index: 40;
     padding: 10px 12px;
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.82);
@@ -625,7 +625,21 @@
     box-shadow: 0 10px 24px rgba(34, 47, 28, 0.08);
     backdrop-filter: blur(6px);
     transition: opacity 0.6s ease;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  .map-hint.hidden {
+    opacity: 0;
     pointer-events: none;
+  }
+
+  .map-hint strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--text);
+    font-size: 0.78rem;
+    font-weight: 600;
   }
 
   .site-info-button {
@@ -1058,6 +1072,31 @@
     line-height: 1.45;
   }
 
+  #infoBubble .info-section-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #557150;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  #infoBubble .info-section + .info-section {
+    margin-top: 14px;
+  }
+
+  #infoBubble .info-links {
+    margin: 10px 0 0;
+    padding-left: 18px;
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+
+  #infoBubble .info-links a {
+    color: #486544;
+  }
+
   #closeBtn {
     position: absolute;
     top: 60px;
@@ -1289,15 +1328,15 @@
       class="map-toggle"
       role="button"
       tabindex="0"
-      aria-label="Afficher la superposition avec la carte OpenStreetMap"
-      title="Survolez pour afficher la carte réelle"
+      aria-label="Afficher l’ancrage géographique sur la carte OpenStreetMap"
+      title="Afficher l’ancrage géographique"
     >
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/>
       </svg>
       <div class="map-toggle-copy">
-        <strong>Voir la carte</strong>
-        <span>La carte est affichee par defaut</span>
+        <strong>Carte ou immersion</strong>
+        <span>Alternez entre la vue sensible et la carte réelle</span>
       </div>
       <label class="map-toggle-pin" aria-label="Garder la carte affichée">
         <input id="mapPinToggle" type="checkbox" checked />
@@ -1327,22 +1366,27 @@
       <button id="zoomInBtn" class="map-control" type="button" aria-label="Zoomer">+</button>
       <button id="zoomOutBtn" class="map-control" type="button" aria-label="Dézoomer">−</button>
       <button id="resetViewBtn" class="map-control" type="button" aria-label="Réinitialiser la vue">↺</button>
-      <button id="diaToggleBtn" class="map-control map-control--dia" type="button" aria-label="Lancer le diaporama" title="Diaporama">Dia</button>
+      <button id="diaToggleBtn" class="map-control map-control--dia" type="button" aria-label="Lancer le diaporama" title="Diaporama">Diaporama</button>
     </div>
+  </div>
+
+  <div id="mapHint" class="map-hint" aria-hidden="true">
+    <strong>Commencer</strong>
+    <span>Explorez la carte, cliquez sur les points, écoutez, regardez.</span>
   </div>
 
   <button
     id="siteInfoButton"
     class="site-info-button"
     type="button"
-    aria-label="Découvrir l'esprit de cette balade"
+    aria-label="À propos de cette balade"
     aria-expanded="false"
     aria-controls="siteInfoTooltip"
   >
     <svg class="site-info-icon" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M19.8 3.7C13.3 3.8 7.2 6.3 5.1 11.1c-1.2 2.8-.4 5.4 1.4 7c2.1-4.7 5.8-7.7 9.8-9.7c-3.4 2.6-6.1 5.8-7.7 9.4c2.2.8 4.8.2 6.5-1.8c3.1-3.6 3.9-8.4 4.7-12.3Z" />
     </svg>
-    <span class="site-info-button-text">Découvrir</span>
+    <span class="site-info-button-text">À propos</span>
   </button>
   <div id="siteInfoTooltip" class="site-info-tooltip" role="tooltip" aria-hidden="true"></div>
 
@@ -1364,7 +1408,7 @@
       <aside id="infoBubble" aria-live="polite">
         <div class="zoneLabel" id="infoZoneLabel"></div>
         <h3 id="infoTitle"></h3>
-        <p id="infoText"></p>
+        <div id="infoText"></div>
       </aside>
     </div>
     <button id="closeBtn" aria-label="Fermer">×</button>
@@ -1400,6 +1444,7 @@
   const videoControls = document.getElementById('videoControls');
   const poiTooltip = document.getElementById('poiTooltip');
   const poiLayer = document.getElementById('poiLayer');
+  const mapHint = document.getElementById('mapHint');
   const infoToggleBtn = document.getElementById('siteInfoButton');
   const infoTooltip = document.getElementById('siteInfoTooltip');
   const audioToggleBtn = document.getElementById('audioToggleBtn');
@@ -1432,24 +1477,34 @@
   let currentLocale = 'FR';
   const localeStrings = {
     FR: {
-      toggleTitle: 'Voir la carte',
-      toggleSubtitle: 'La carte est affichée par défaut',
-      mapToggleAria: 'Afficher la superposition avec la carte OpenStreetMap',
-      mapToggleTitle: 'Survolez pour afficher la carte réelle',
+      toggleTitle: 'Carte ou immersion',
+      toggleSubtitle: 'Alternez entre la vue sensible et la carte réelle',
+      mapToggleAria: 'Afficher l’ancrage géographique sur la carte OpenStreetMap',
+      mapToggleTitle: 'Afficher l’ancrage géographique',
+      mapHintTitle: 'Commencer',
+      mapHintText: 'Explorez la carte, cliquez sur les points, écoutez, regardez.',
+      poeticLabel: 'Regard sensible',
+      scientificLabel: 'Repère naturaliste',
       learnMoreLabel: 'Pour aller plus loin :',
-      infoButtonLabel: 'Découvrir',
-      infoButtonAriaLabel: 'Découvrir l\'esprit de cette balade',
-      infoTooltipText: 'Bienvenue à Champvert.\n\nUn endroit où la nature tient sa place, sans forcer, au cœur de la ville.\n\nDes sons, des images, des passages à traverser lentement.\n\nTout a été capté ici, dans la grâce d’un instant vivant.\n\nAucun suivi, aucune publicité, aucune collecte de données. Prenez votre temps. Regardez. Écoutez. Essayez.\n\nContact : albouille69@gmail.com'
+      diaLabel: 'Diaporama',
+      infoButtonLabel: 'Maison des curiosités',
+      infoButtonAriaLabel: 'Ouvrir la Maison des curiosités',
+      infoTooltipText: 'Bienvenue à Champvert.\n\nUn endroit où la nature tient sa place, sans forcer, au cœur de la ville.\n\nDes sons, des images, des passages à traverser lentement.\n\nToutes les images et observations présentées ici ont été captées à Champvert.\n\nTout a été saisi dans la grâce d’un instant vivant.\n\nAucun suivi, aucune publicité, aucune collecte de données. Prenez votre temps. Regardez. Écoutez. Essayez.\n\nContact : albouille69@gmail.com'
     },
     US: {
-      toggleTitle: 'View map',
-      toggleSubtitle: 'The map is shown by default',
-      mapToggleAria: 'Show the overlay with the OpenStreetMap map',
-      mapToggleTitle: 'Hover to show the real map',
+      toggleTitle: 'Map or immersion',
+      toggleSubtitle: 'Switch between the sensory view and the real map',
+      mapToggleAria: 'Show the geographic anchor on the OpenStreetMap map',
+      mapToggleTitle: 'Show the geographic anchor',
+      mapHintTitle: 'Start here',
+      mapHintText: 'Explore the map, click the points, listen, look.',
+      poeticLabel: 'Sensitive view',
+      scientificLabel: 'Naturalist note',
       learnMoreLabel: 'To go further:',
-      infoButtonLabel: 'Discover',
-      infoButtonAriaLabel: 'Discover the spirit of this walk',
-      infoTooltipText: 'Welcome to Champvert.\n\nA place where nature finds its place without forcing it, at the heart of the city.\n\nSounds, images, paths to cross slowly.\n\nEverything was captured here, in the grace of a living moment.\n\nNo tracking, no advertising, no data collection. Take your time. Look. Listen. Try.\n\nContact: albouille69@gmail.com'
+      diaLabel: 'Slideshow',
+      infoButtonLabel: 'Cabinet of Curiosities',
+      infoButtonAriaLabel: 'Open the Cabinet of Curiosities',
+      infoTooltipText: 'Welcome to Champvert.\n\nA place where nature finds its place without forcing it, at the heart of the city.\n\nSounds, images, paths to cross slowly.\n\nAll the images and observations presented here were captured in Champvert.\n\nEverything was gathered in the grace of a living moment.\n\nNo tracking, no advertising, no data collection. Take your time. Look. Listen. Try.\n\nContact: albouille69@gmail.com'
     }
   };
 
@@ -1464,6 +1519,7 @@
   let fullscreenExitAt = 0;
   let bubbleVisible = false;
   let hideBubbleTimer = null;
+  let mapHintTimerId = null;
   let introStarted = false;
   let hasOpenedPoiVideo = false;
   let poiIdleHighlightTimerId = null;
@@ -1660,10 +1716,44 @@
     const strings = localeStrings[currentLocale] || localeStrings.FR;
     if (mapToggleTitleElement) mapToggleTitleElement.textContent = strings.toggleTitle;
     if (mapToggleSubtitleElement) mapToggleSubtitleElement.textContent = strings.toggleSubtitle;
+    if (mapHint) {
+      const title = mapHint.querySelector('strong');
+      const text = mapHint.querySelector('span');
+      if (title) title.textContent = strings.mapHintTitle;
+      if (text) text.textContent = strings.mapHintText;
+    }
     if (mapToggle) {
       mapToggle.setAttribute('aria-label', strings.mapToggleAria);
       mapToggle.setAttribute('title', strings.mapToggleTitle);
     }
+    if (diaToggleBtn) {
+      diaToggleBtn.textContent = strings.diaLabel;
+      diaToggleBtn.setAttribute('title', strings.diaLabel);
+      diaToggleBtn.setAttribute('aria-label', currentLocale === 'FR' ? 'Lancer le diaporama' : 'Start slideshow');
+    }
+  }
+
+  function hideMapHint() {
+    if (!mapHint) return;
+    mapHint.classList.add('hidden');
+    mapHint.setAttribute('aria-hidden', 'true');
+    if (mapHintTimerId) {
+      window.clearTimeout(mapHintTimerId);
+      mapHintTimerId = null;
+    }
+  }
+
+  function showMapHintTemporarily(durationMs = 20000) {
+    if (!mapHint) return;
+    mapHint.classList.remove('hidden');
+    mapHint.setAttribute('aria-hidden', 'false');
+    if (mapHintTimerId) {
+      window.clearTimeout(mapHintTimerId);
+    }
+    mapHintTimerId = window.setTimeout(() => {
+      mapHintTimerId = null;
+      hideMapHint();
+    }, durationMs);
   }
 
   function escapeHtml(value) {
@@ -1676,25 +1766,23 @@
   }
 
   function buildInfoHtml(poetic, scientific, links) {
+    const strings = localeStrings[currentLocale] || localeStrings.FR;
     const htmlParts = [];
     if (poetic) {
-      htmlParts.push(`<p>${escapeHtml(poetic)}</p>`);
-    }
-    if (poetic && scientific) {
-      htmlParts.push('<br/>');
+      htmlParts.push(`<section class="info-section"><span class="info-section-label">${escapeHtml(strings.poeticLabel)}</span><p>${escapeHtml(poetic)}</p></section>`);
     }
     if (scientific) {
-      htmlParts.push(`<p>${escapeHtml(scientific)}</p>`);
+      htmlParts.push(`<section class="info-section"><span class="info-section-label">${escapeHtml(strings.scientificLabel)}</span><p>${escapeHtml(scientific)}</p></section>`);
     }
     if (Array.isArray(links) && links.length > 0) {
-      const label = (localeStrings[currentLocale] || localeStrings.FR).learnMoreLabel;
+      const label = strings.learnMoreLabel;
       const linkItems = links
         .map((href) => {
           const safeHref = escapeHtml(href);
           return `<li><a href="${safeHref}" target="_blank" rel="noopener noreferrer">${safeHref}</a></li>`;
         })
         .join('');
-      htmlParts.push(`<br/><p>${escapeHtml(label)}</p><ul class="info-links">${linkItems}</ul>`);
+      htmlParts.push(`<section class="info-section"><span class="info-section-label">${escapeHtml(label)}</span><ul class="info-links">${linkItems}</ul></section>`);
     }
     return htmlParts.join('');
   }
@@ -2783,12 +2871,19 @@
       body.classList.add('intro-complete');
       syncMapVisibility();
       syncBackgroundPlayback();
+      showMapHintTemporarily(20000);
       playTemporaryHighlight(mapToggle, 'map-toggle-intro');
       playTemporaryHighlight(infoToggleBtn, 'discover-button-intro');
       playTemporaryHighlight(audioToggleBtn, 'audio-button-intro');
       playTemporaryHighlight(diaToggleBtn, 'dia-toggle-intro');
       syncPoiMotionLifecycle();
     }, 4000);
+  }
+
+  if (mapHint) {
+    mapHint.addEventListener('click', () => {
+      hideMapHint();
+    });
   }
 
   function showMap() {
@@ -3613,8 +3708,8 @@
   function updateSiteInfoButtonLanguage() {
     if (!infoToggleBtn) return;
     const strings = localeStrings[currentLocale] || localeStrings.FR;
-    const label = strings.infoButtonLabel || 'Découvrir';
-    const ariaLabel = strings.infoButtonAriaLabel || 'Découvrir l\'esprit de cette balade';
+    const label = strings.infoButtonLabel || 'Maison des curiosités';
+    const ariaLabel = strings.infoButtonAriaLabel || 'Ouvrir la Maison des curiosités';
     const labelElement = infoToggleBtn.querySelector('.site-info-button-text');
     if (labelElement) {
       labelElement.textContent = label;
