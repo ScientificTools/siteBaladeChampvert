@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="description" content="Guide naturaliste pratique de Champvert sur smartphone : carte, espèces observées, photos animées et repères de terrain." />
+<meta name="theme-color" content="#edf1e7" />
+<title>Champvert - Guide naturaliste mobile</title>
+<style>
+  :root {
+    --bg: #edf1e7;
+    --panel: rgba(255, 255, 255, 0.92);
+    --panel-strong: #ffffff;
+    --line: rgba(66, 87, 62, 0.16);
+    --text: #213021;
+    --muted: #60715d;
+    --accent: #57724b;
+    --accent-soft: #e4ecd8;
+    --shadow: rgba(26, 36, 22, 0.12);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at top left, rgba(185, 206, 156, 0.26), transparent 38%),
+      linear-gradient(180deg, #f8fbf4 0%, var(--bg) 100%);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  button,
+  input,
+  select {
+    font: inherit;
+  }
+
+  .shell {
+    width: min(100%, 860px);
+    margin: 0 auto;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 14px calc(28px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .eyebrow {
+    margin: 0 0 4px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.3rem;
+    line-height: 1.15;
+  }
+
+  .lang-switcher {
+    display: inline-flex;
+    gap: 6px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 10px 24px var(--shadow);
+  }
+
+  .lang-switcher button,
+  .chip-row button,
+  .ghost-link,
+  .species-card button,
+  .media-nav button {
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .lang-switcher button {
+    min-width: 42px;
+    padding: 7px 11px;
+    background: transparent;
+    color: var(--muted);
+  }
+
+  .lang-switcher button.active {
+    background: var(--accent-soft);
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .panel {
+    margin-bottom: 14px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: var(--panel);
+    box-shadow: 0 12px 30px var(--shadow);
+    backdrop-filter: blur(10px);
+  }
+
+  .intro p,
+  .desktop-note p,
+  .empty-state {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .desktop-note p {
+    font-size: 0.94rem;
+  }
+
+  .ghost-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+    padding: 11px 14px;
+    background: rgba(255, 255, 255, 0.76);
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid rgba(87, 114, 75, 0.18);
+  }
+
+  .map-visual {
+    position: relative;
+    margin-top: 10px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(66, 87, 62, 0.12);
+    background: #f4f7ee;
+  }
+
+  .map-card img {
+    display: block;
+    width: 100%;
+    border-radius: 18px;
+  }
+
+  .map-outline {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .map-outline path {
+    fill: none;
+    stroke: rgba(87, 114, 75, 0.88);
+    stroke-width: 3;
+    vector-effect: non-scaling-stroke;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 6px rgba(245, 251, 236, 0.45));
+  }
+
+  .map-meta {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .chip-row button {
+    padding: 10px 13px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--muted);
+  }
+
+  .chip-row button.active {
+    background: var(--accent-soft);
+    color: var(--text);
+    border-color: rgba(87, 114, 75, 0.24);
+    font-weight: 600;
+  }
+
+  .search-input {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.86);
+    color: var(--text);
+  }
+
+  .section-title {
+    margin: 0 0 8px;
+    font-size: 1rem;
+  }
+
+  .section-subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+
+  .species-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .species-card {
+    display: grid;
+    grid-template-columns: 68px minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.84);
+  }
+
+  .species-card.active {
+    border-color: rgba(87, 114, 75, 0.3);
+    background: #f8fbf2;
+  }
+
+  .species-thumb {
+    width: 68px;
+    height: 68px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #dfe8d6;
+  }
+
+  .species-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .species-card h3 {
+    margin: 0 0 4px;
+    font-size: 0.98rem;
+    line-height: 1.2;
+  }
+
+  .species-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  .species-card button {
+    padding: 10px 12px;
+    background: var(--accent-soft);
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .viewer {
+    position: sticky;
+    top: 12px;
+  }
+
+  .viewer.hidden {
+    display: none;
+  }
+
+  .media-frame {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #1d251a;
+  }
+
+  .media-frame video,
+  .media-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 52vh;
+    object-fit: cover;
+  }
+
+  .viewer-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .viewer-head h2 {
+    margin: 0 0 4px;
+    font-size: 1.08rem;
+    line-height: 1.2;
+  }
+
+  .viewer-head p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.84rem;
+    line-height: 1.35;
+  }
+
+  .media-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .media-nav button {
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.84);
+    color: var(--text);
+    border: 1px solid var(--line);
+  }
+
+  .media-nav .media-count {
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+
+  .info-block {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(66, 87, 62, 0.1);
+  }
+
+  .info-label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .info-block p,
+  .info-block ul {
+    margin: 0;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .info-block ul {
+    padding-left: 18px;
+  }
+
+  .map-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .loading {
+    color: var(--muted);
+    text-align: center;
+    padding: 28px 0 8px;
+  }
+</style>
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('view') === 'desktop') {
+      try {
+        localStorage.setItem('siteBaladeChampvertPreferredView', 'desktop');
+      } catch (error) {}
+      window.location.replace('index.html?view=desktop');
+      return;
+    }
+    if (params.get('view') === 'mobile') {
+      try {
+        localStorage.setItem('siteBaladeChampvertPreferredView', 'mobile');
+      } catch (error) {}
+    }
+  })();
+</script>
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <p class="eyebrow" id="eyebrow">Champvert</p>
+        <h1 id="pageTitle">Guide naturaliste</h1>
+      </div>
+      <div class="lang-switcher" role="group" aria-label="Choisir la langue">
+        <button id="langFrBtn" type="button" class="active" aria-pressed="true">FR</button>
+        <button id="langEnBtn" type="button" aria-pressed="false">EN</button>
+      </div>
+    </div>
+
+    <section class="panel intro">
+      <h2 class="section-title" id="introTitle">En balade</h2>
+      <p id="introText">Repérez le lieu sur la carte, puis consultez rapidement les espèces observées et leurs images animées.</p>
+    </section>
+
+    <section class="panel map-card">
+      <h2 class="section-title" id="mapTitle">Carte pratique</h2>
+      <p class="section-subtitle" id="mapText">La carte réelle du secteur pour vous orienter sur place.</p>
+      <div class="map-visual">
+        <img src="openStreetViewcarte.png" alt="Carte du secteur de Champvert" id="mapImage" />
+        <svg class="map-outline" viewBox="0 0 2118 1328" aria-hidden="true">
+          <path d="M 208 150 L 215 152 L 378 351 L 477 428 L 579 463 L 1044 377 L 1269 344 L 1308 340 L 1353 343 L 1448 358 L 1509 374 L 1667 465 L 1726 526 L 1779 556 L 1909 607 L 1907 615 L 1810 728 L 1784 790 L 1662 1201 L 1579 1207 L 1469 1182 L 1464 1133 L 1549 1012 L 1657 1043 L 1706 888 L 1706 883 L 1687 863 L 1727 744 L 1794 634 L 1794 624 L 1637 559 L 1617 518 L 1521 456 L 1398 426 L 1246 414 L 915 478 L 729 531 L 709 742 L 780 774 L 769 829 L 767 833 L 763 833 L 666 803 L 428 615 L 449 485 L 304 345 Z"></path>
+        </svg>
+      </div>
+      <div class="map-meta">
+        <span id="mapMetaLabel">Fond de carte © OpenStreetMap contributors</span>
+        <a class="map-link" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" id="mapMetaLink">Licence</a>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-title" id="listTitle">Espèces observées</h2>
+      <p class="section-subtitle" id="listText">Choisissez un oiseau pour ouvrir sa fiche, puis faites défiler ses images et vidéos.</p>
+      <div class="chip-row" id="filterChips" role="group" aria-label="Filtrer les espèces"></div>
+      <input id="searchInput" class="search-input" type="search" placeholder="Rechercher une espèce" />
+      <div id="speciesList" class="species-list" aria-live="polite"></div>
+      <p id="emptyState" class="empty-state" hidden>Aucune espèce ne correspond à cette recherche.</p>
+      <p id="loadingState" class="loading">Chargement en cours...</p>
+    </section>
+
+    <section id="viewer" class="panel viewer hidden" aria-live="polite">
+      <div class="viewer-head">
+        <div>
+          <h2 id="viewerTitle">Observation</h2>
+          <p id="viewerMeta"></p>
+        </div>
+      </div>
+      <div class="media-frame">
+        <video id="viewerVideo" controls autoplay loop muted playsinline hidden></video>
+        <img id="viewerImage" alt="" hidden />
+      </div>
+      <div class="media-nav">
+        <button id="prevVariantBtn" type="button">←</button>
+        <span id="variantCount" class="media-count">1 / 1</span>
+        <button id="nextVariantBtn" type="button">→</button>
+      </div>
+      <div class="info-block">
+        <span class="info-label" id="poeticLabel">Regard sensible</span>
+        <p id="poeticText"></p>
+      </div>
+      <div class="info-block">
+        <span class="info-label" id="scientificLabel">Repère naturaliste</span>
+        <p id="scientificText"></p>
+      </div>
+      <div class="info-block" id="linksBlock" hidden>
+        <span class="info-label" id="linksLabel">Pour aller plus loin</span>
+        <ul id="linksList"></ul>
+      </div>
+    </section>
+
+    <section class="panel desktop-note">
+      <p id="desktopNote">Pour une expérience immersive de balade, visitez le site depuis votre ordinateur.</p>
+      <a id="desktopLink" class="ghost-link" href="index.html?view=desktop">Version immersive</a>
+    </section>
+  </main>
+
+<script>
+  const STRINGS = {
+    FR: {
+      pageTitle: 'Guide naturaliste',
+      introTitle: 'En balade',
+      introText: 'Repérez le lieu sur la carte, puis consultez rapidement les espèces observées et leurs images animées.',
+      mapTitle: 'Carte pratique',
+      mapText: 'La carte réelle du secteur pour vous orienter sur place.',
+      mapImageAlt: 'Carte du secteur de Champvert',
+      mapMetaLabel: 'Fond de carte © OpenStreetMap contributors',
+      mapMetaLink: 'Licence',
+      listTitle: 'Espèces observées',
+      listText: 'Choisissez un oiseau pour ouvrir sa fiche, puis faites défiler ses images et vidéos.',
+      searchPlaceholder: 'Rechercher une espèce',
+      emptyState: 'Aucune espèce ne correspond à cette recherche.',
+      loading: 'Chargement en cours...',
+      desktopNote: 'Pour une expérience immersive de balade, visitez le site depuis votre ordinateur.',
+      desktopLink: 'Version immersive',
+      filterAll: 'Tout',
+      filterBirds: 'Oiseaux',
+      filterMammals: 'Mammifères',
+      viewAction: 'Voir',
+      poeticLabel: 'Regard sensible',
+      scientificLabel: 'Repère naturaliste',
+      linksLabel: 'Pour aller plus loin',
+      openMapLabel: 'Voir sur la carte',
+      noDate: 'Date non renseignée',
+      noLocation: 'Position non renseignée',
+      noPoetic: 'Texte sensible à venir.',
+      noScientific: 'Repère naturaliste à venir.',
+      mediaCount: (index, total) => `${index} / ${total}`,
+      detailMeta: (date, location) => `${date} · ${location}`
+    },
+    US: {
+      pageTitle: 'Field guide',
+      introTitle: 'On the walk',
+      introText: 'Find the place on the map, then quickly browse the observed species and their moving images.',
+      mapTitle: 'Practical map',
+      mapText: 'The real map of the area to help you orient yourself on site.',
+      mapImageAlt: 'Map of the Champvert area',
+      mapMetaLabel: 'Map data © OpenStreetMap contributors',
+      mapMetaLink: 'License',
+      listTitle: 'Observed species',
+      listText: 'Choose a bird to open its card, then browse its images and videos.',
+      searchPlaceholder: 'Search a species',
+      emptyState: 'No species matches this search.',
+      loading: 'Loading...',
+      desktopNote: 'For an immersive walking experience, visit the site from your computer.',
+      desktopLink: 'Immersive version',
+      filterAll: 'All',
+      filterBirds: 'Birds',
+      filterMammals: 'Mammals',
+      viewAction: 'Open',
+      poeticLabel: 'Sensitive view',
+      scientificLabel: 'Naturalist note',
+      linksLabel: 'To go further',
+      openMapLabel: 'View on map',
+      noDate: 'Date not provided',
+      noLocation: 'Position not provided',
+      noPoetic: 'Sensitive text coming soon.',
+      noScientific: 'Naturalist note coming soon.',
+      mediaCount: (index, total) => `${index} / ${total}`,
+      detailMeta: (date, location) => `${date} · ${location}`
+    }
+  };
+
+  const MAP_LINK_BASE = 'https://www.openstreetmap.org/';
+  const DATA_PATH = 'data/data.json';
+  const MEDIA_PREFIX = 'data/';
+  const VIEW_PREF_KEY = 'siteBaladeChampvertPreferredView';
+
+  const langFrBtn = document.getElementById('langFrBtn');
+  const langEnBtn = document.getElementById('langEnBtn');
+  const filterChips = document.getElementById('filterChips');
+  const searchInput = document.getElementById('searchInput');
+  const speciesList = document.getElementById('speciesList');
+  const emptyState = document.getElementById('emptyState');
+  const loadingState = document.getElementById('loadingState');
+  const viewer = document.getElementById('viewer');
+  const viewerTitle = document.getElementById('viewerTitle');
+  const viewerMeta = document.getElementById('viewerMeta');
+  const viewerVideo = document.getElementById('viewerVideo');
+  const viewerImage = document.getElementById('viewerImage');
+  const prevVariantBtn = document.getElementById('prevVariantBtn');
+  const nextVariantBtn = document.getElementById('nextVariantBtn');
+  const variantCount = document.getElementById('variantCount');
+  const poeticLabel = document.getElementById('poeticLabel');
+  const poeticText = document.getElementById('poeticText');
+  const scientificLabel = document.getElementById('scientificLabel');
+  const scientificText = document.getElementById('scientificText');
+  const linksBlock = document.getElementById('linksBlock');
+  const linksLabel = document.getElementById('linksLabel');
+  const linksList = document.getElementById('linksList');
+  const desktopLink = document.getElementById('desktopLink');
+
+  let currentLocale = 'FR';
+  let activeFilter = 'oiseau';
+  let speciesEntries = [];
+  let selectedId = null;
+  let activeVariantIndex = 0;
+
+  function getStrings() {
+    return STRINGS[currentLocale] || STRINGS.FR;
+  }
+
+  function setPreferredView(view) {
+    try {
+      localStorage.setItem(VIEW_PREF_KEY, view);
+    } catch (error) {}
+  }
+
+  function getPreferredText(list, fallback = '') {
+    if (!Array.isArray(list)) return fallback;
+    const match = list.find((entry) => Object.prototype.hasOwnProperty.call(entry, currentLocale) && entry[currentLocale] && entry[currentLocale] !== '_');
+    if (match) return match[currentLocale];
+    const fr = list.find((entry) => Object.prototype.hasOwnProperty.call(entry, 'FR') && entry.FR && entry.FR !== '_');
+    if (fr) return fr.FR;
+    return fallback;
+  }
+
+  function getScientificName(list) {
+    if (!Array.isArray(list)) return '';
+    const match = list.find((entry) => Object.prototype.hasOwnProperty.call(entry, 'SC') && entry.SC && entry.SC !== '_');
+    return match ? match.SC : '';
+  }
+
+  function normalizeVariants(image) {
+    const mainVariant = {
+      webm: image.webm && image.webm !== '_' ? `${MEDIA_PREFIX}${image.webm}` : '',
+      jpeg: image.jpeg && image.jpeg !== '_' ? `${MEDIA_PREFIX}${image.jpeg}` : '',
+      poeticText: getPreferredText(image.poeticText, ''),
+      scientificText: getPreferredText(image.scientificText, ''),
+      latitude: image.latitude,
+      longitude: image.longitude,
+      date: image.date
+    };
+    const variants = [mainVariant];
+    if (Array.isArray(image.otherImage)) {
+      image.otherImage.forEach((other) => {
+        if (!other || typeof other !== 'object') return;
+        variants.push({
+          webm: other.webm && other.webm !== '_' ? `${MEDIA_PREFIX}${other.webm}` : '',
+          jpeg: other.jpeg && other.jpeg !== '_' ? `${MEDIA_PREFIX}${other.jpeg}` : mainVariant.jpeg,
+          poeticText: getPreferredText(other.poeticText, mainVariant.poeticText),
+          scientificText: getPreferredText(other.scientificText, mainVariant.scientificText),
+          latitude: other.latitude,
+          longitude: other.longitude,
+          date: other.date
+        });
+      });
+    }
+    return variants;
+  }
+
+  function normalizeEntries(images) {
+    return images.map((image, index) => ({
+      id: `species-${index}`,
+      category: image.category || '',
+      title: getPreferredText(image.name, 'Observation'),
+      scientific: getScientificName(image.name),
+      thumb: image.jpeg && image.jpeg !== '_' ? `${MEDIA_PREFIX}${image.jpeg}` : '',
+      links: Array.isArray(image.liensSon) ? image.liensSon.filter((link) => typeof link === 'string' && link && link !== '_') : [],
+      variants: normalizeVariants(image)
+    }));
+  }
+
+  function formatDate(value) {
+    const strings = getStrings();
+    if (!value || value === '_') return strings.noDate;
+    return value;
+  }
+
+  function formatLocation(latitude, longitude) {
+    const strings = getStrings();
+    if (!latitude || !longitude || latitude === '_' || longitude === '_') {
+      return strings.noLocation;
+    }
+    return `${latitude}, ${longitude}`;
+  }
+
+  function getMapLink(latitude, longitude) {
+    if (!latitude || !longitude || latitude === '_' || longitude === '_') return '';
+    return `${MAP_LINK_BASE}?mlat=${encodeURIComponent(latitude)}&mlon=${encodeURIComponent(longitude)}#map=18/${encodeURIComponent(latitude)}/${encodeURIComponent(longitude)}`;
+  }
+
+  function applyStaticStrings() {
+    const strings = getStrings();
+    document.documentElement.lang = currentLocale === 'FR' ? 'fr' : 'en';
+    document.title = currentLocale === 'FR' ? 'Champvert - Guide naturaliste mobile' : 'Champvert - Mobile field guide';
+    document.getElementById('pageTitle').textContent = strings.pageTitle;
+    document.getElementById('introTitle').textContent = strings.introTitle;
+    document.getElementById('introText').textContent = strings.introText;
+    document.getElementById('mapTitle').textContent = strings.mapTitle;
+    document.getElementById('mapText').textContent = strings.mapText;
+    document.getElementById('mapImage').alt = strings.mapImageAlt;
+    document.getElementById('mapMetaLabel').textContent = strings.mapMetaLabel;
+    document.getElementById('mapMetaLink').textContent = strings.mapMetaLink;
+    document.getElementById('listTitle').textContent = strings.listTitle;
+    document.getElementById('listText').textContent = strings.listText;
+    document.getElementById('desktopNote').textContent = strings.desktopNote;
+    desktopLink.textContent = strings.desktopLink;
+    desktopLink.href = 'index.html?view=desktop';
+    searchInput.placeholder = strings.searchPlaceholder;
+    emptyState.textContent = strings.emptyState;
+    loadingState.textContent = strings.loading;
+    poeticLabel.textContent = strings.poeticLabel;
+    scientificLabel.textContent = strings.scientificLabel;
+    linksLabel.textContent = strings.linksLabel;
+    langFrBtn.classList.toggle('active', currentLocale === 'FR');
+    langFrBtn.setAttribute('aria-pressed', String(currentLocale === 'FR'));
+    langEnBtn.classList.toggle('active', currentLocale === 'US');
+    langEnBtn.setAttribute('aria-pressed', String(currentLocale === 'US'));
+  }
+
+  function renderFilters() {
+    const strings = getStrings();
+    const filters = [
+      { id: 'oiseau', label: strings.filterBirds },
+      { id: 'mammifère', label: strings.filterMammals },
+      { id: 'all', label: strings.filterAll }
+    ];
+    filterChips.innerHTML = '';
+    filters.forEach((filter) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = filter.label;
+      button.classList.toggle('active', activeFilter === filter.id);
+      button.addEventListener('click', () => {
+        activeFilter = filter.id;
+        renderFilters();
+        renderSpeciesList();
+      });
+      filterChips.appendChild(button);
+    });
+  }
+
+  function getFilteredEntries() {
+    const query = searchInput.value.trim().toLowerCase();
+    return speciesEntries.filter((entry) => {
+      const categoryMatch = activeFilter === 'all' || entry.category === activeFilter;
+      if (!categoryMatch) return false;
+      if (!query) return true;
+      return `${entry.title} ${entry.scientific}`.toLowerCase().includes(query);
+    });
+  }
+
+  function selectEntry(id) {
+    selectedId = id;
+    activeVariantIndex = 0;
+    renderSpeciesList();
+    renderViewer();
+  }
+
+  function renderSpeciesList() {
+    const strings = getStrings();
+    const entries = getFilteredEntries();
+    speciesList.innerHTML = '';
+    emptyState.hidden = entries.length > 0;
+    loadingState.hidden = true;
+
+    entries.forEach((entry) => {
+      const card = document.createElement('article');
+      card.className = 'species-card';
+      if (entry.id === selectedId) {
+        card.classList.add('active');
+      }
+
+      const thumb = document.createElement('div');
+      thumb.className = 'species-thumb';
+      const thumbImg = document.createElement('img');
+      thumbImg.src = entry.thumb || 'openStreetViewcarte.png';
+      thumbImg.alt = entry.title;
+      thumb.appendChild(thumbImg);
+
+      const text = document.createElement('div');
+      const title = document.createElement('h3');
+      title.textContent = entry.title;
+      const meta = document.createElement('p');
+      meta.textContent = entry.scientific || entry.category;
+      text.appendChild(title);
+      text.appendChild(meta);
+
+      const action = document.createElement('button');
+      action.type = 'button';
+      action.textContent = strings.viewAction;
+      action.addEventListener('click', () => selectEntry(entry.id));
+
+      card.appendChild(thumb);
+      card.appendChild(text);
+      card.appendChild(action);
+      speciesList.appendChild(card);
+    });
+
+    if (!selectedId && entries.length > 0) {
+      selectedId = entries[0].id;
+      activeVariantIndex = 0;
+      renderSpeciesList();
+      return;
+    }
+
+    if (selectedId && !entries.some((entry) => entry.id === selectedId)) {
+      selectedId = entries[0] ? entries[0].id : null;
+      activeVariantIndex = 0;
+    }
+
+    renderViewer();
+  }
+
+  function renderViewer() {
+    const strings = getStrings();
+    const entry = speciesEntries.find((item) => item.id === selectedId);
+    if (!entry) {
+      viewer.classList.add('hidden');
+      return;
+    }
+
+    const variant = entry.variants[activeVariantIndex] || entry.variants[0];
+    const dateText = formatDate(variant.date);
+    const locationText = formatLocation(variant.latitude, variant.longitude);
+    viewer.classList.remove('hidden');
+    viewerTitle.textContent = entry.scientific ? `${entry.title} - ${entry.scientific}` : entry.title;
+    viewerMeta.textContent = strings.detailMeta(dateText, locationText);
+    poeticText.textContent = variant.poeticText || strings.noPoetic;
+    scientificText.textContent = variant.scientificText || strings.noScientific;
+
+    if (variant.webm) {
+      viewerVideo.hidden = false;
+      viewerImage.hidden = true;
+      if (viewerVideo.src !== new URL(variant.webm, window.location.href).href) {
+        viewerVideo.src = variant.webm;
+      }
+      viewerVideo.play().catch(() => {});
+    } else {
+      viewerVideo.pause();
+      viewerVideo.removeAttribute('src');
+      viewerVideo.load();
+      viewerVideo.hidden = true;
+      viewerImage.hidden = false;
+      viewerImage.src = variant.jpeg || entry.thumb || '';
+      viewerImage.alt = entry.title;
+    }
+
+    if (!variant.webm && variant.jpeg) {
+      viewerImage.hidden = false;
+      viewerImage.src = variant.jpeg;
+      viewerImage.alt = entry.title;
+    } else if (variant.webm) {
+      viewerImage.hidden = true;
+    }
+
+    const total = entry.variants.length;
+    variantCount.textContent = strings.mediaCount(activeVariantIndex + 1, total);
+    prevVariantBtn.disabled = activeVariantIndex <= 0;
+    nextVariantBtn.disabled = activeVariantIndex >= total - 1;
+
+    linksList.innerHTML = '';
+    const mapLink = getMapLink(variant.latitude, variant.longitude);
+    const allLinks = mapLink ? [mapLink, ...entry.links] : entry.links.slice();
+    if (allLinks.length > 0) {
+      linksBlock.hidden = false;
+      allLinks.forEach((href, index) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = href;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = index === 0 && mapLink ? strings.openMapLabel : href;
+        li.appendChild(a);
+        linksList.appendChild(li);
+      });
+    } else {
+      linksBlock.hidden = true;
+    }
+  }
+
+  async function loadEntries() {
+    const response = await fetch(DATA_PATH);
+    if (!response.ok) {
+      throw new Error(`Data loading failed: ${response.status}`);
+    }
+    const payload = await response.json();
+    const images = Array.isArray(payload.images) ? payload.images : [];
+    speciesEntries = normalizeEntries(images);
+    speciesEntries.sort((a, b) => a.title.localeCompare(b.title, currentLocale === 'FR' ? 'fr' : 'en'));
+  }
+
+  async function initialize() {
+    setPreferredView('mobile');
+    applyStaticStrings();
+    renderFilters();
+
+    try {
+      await loadEntries();
+      renderSpeciesList();
+    } catch (error) {
+      loadingState.hidden = true;
+      emptyState.hidden = false;
+      emptyState.textContent = currentLocale === 'FR'
+        ? 'Impossible de charger les espèces pour le moment.'
+        : 'Unable to load species at the moment.';
+      console.error(error);
+    }
+  }
+
+  langFrBtn.addEventListener('click', () => {
+    currentLocale = 'FR';
+    applyStaticStrings();
+    renderFilters();
+    const savedSelectedId = selectedId;
+    initializeFromCurrentData(savedSelectedId);
+  });
+
+  langEnBtn.addEventListener('click', () => {
+    currentLocale = 'US';
+    applyStaticStrings();
+    renderFilters();
+    const savedSelectedId = selectedId;
+    initializeFromCurrentData(savedSelectedId);
+  });
+
+  function initializeFromCurrentData(savedSelectedId = null) {
+    loadEntries()
+      .then(() => {
+        selectedId = savedSelectedId && speciesEntries.some((entry) => entry.id === savedSelectedId)
+          ? savedSelectedId
+          : null;
+        renderSpeciesList();
+      })
+      .catch((error) => console.error(error));
+  }
+
+  searchInput.addEventListener('input', () => {
+    renderSpeciesList();
+  });
+
+  prevVariantBtn.addEventListener('click', () => {
+    const entry = speciesEntries.find((item) => item.id === selectedId);
+    if (!entry) return;
+    activeVariantIndex = Math.max(0, activeVariantIndex - 1);
+    renderViewer();
+  });
+
+  nextVariantBtn.addEventListener('click', () => {
+    const entry = speciesEntries.find((item) => item.id === selectedId);
+    if (!entry) return;
+    activeVariantIndex = Math.min(entry.variants.length - 1, activeVariantIndex + 1);
+    renderViewer();
+  });
+
+  initialize();
+</script>
+</body>
+</html>

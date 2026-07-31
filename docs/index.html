@@ -13,6 +13,45 @@
 <meta name="twitter:title" content="Nature en ville – Balade interactive à Champvert (Lyon 5)" />
 <meta name="twitter:description" content="Découvrez la biodiversité urbaine à Champvert, une balade interactive à Lyon 5 avec photos animées, sons et cartes." />
 <title>Nature en ville – Balade interactive à Champvert (Lyon 5)</title>
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const requestedView = params.get('view');
+    const prefKey = 'siteBaladeChampvertPreferredView';
+
+    if (requestedView === 'desktop') {
+      try {
+        localStorage.setItem(prefKey, 'desktop');
+      } catch (error) {}
+      return;
+    }
+
+    if (requestedView === 'mobile') {
+      try {
+        localStorage.setItem(prefKey, 'mobile');
+      } catch (error) {}
+      window.location.replace('mobile.html?view=mobile');
+      return;
+    }
+
+    let storedPreference = '';
+    try {
+      storedPreference = localStorage.getItem(prefKey) || '';
+    } catch (error) {}
+
+    if (storedPreference === 'desktop') {
+      return;
+    }
+
+    const isSmallScreen = window.matchMedia('(max-width: 900px)').matches;
+    const ua = navigator.userAgent || '';
+    const isMobileAgent = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua);
+
+    if (storedPreference === 'mobile' || isSmallScreen || isMobileAgent) {
+      window.location.replace('mobile.html?view=mobile');
+    }
+  })();
+</script>
 <style>
   :root {
     --bg: #edf1e7;
