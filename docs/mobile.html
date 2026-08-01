@@ -417,7 +417,8 @@
 </style>
 <script>
   (function () {
-    const params = new URLSearchParams(window.location.search);
+    const currentUrl = new URL(window.location.href);
+    const params = currentUrl.searchParams;
     if (params.get('view') === 'desktop') {
       try {
         localStorage.setItem('siteBaladeChampvertPreferredView', 'desktop');
@@ -429,6 +430,9 @@
       try {
         localStorage.setItem('siteBaladeChampvertPreferredView', 'mobile');
       } catch (error) {}
+      params.delete('view');
+      const nextUrl = `${currentUrl.pathname}${params.toString() ? `?${params.toString()}` : ''}${currentUrl.hash}`;
+      window.history.replaceState({}, '', nextUrl);
     }
   })();
 </script>
