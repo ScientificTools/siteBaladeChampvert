@@ -316,6 +316,9 @@
 
   .media-frame {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     overflow: hidden;
     border-radius: 18px;
@@ -328,12 +331,21 @@
     width: 100%;
     height: auto;
     max-height: 52vh;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   .media-frame video[hidden],
   .media-frame img[hidden] {
     display: none;
+  }
+
+  @media (orientation: landscape) {
+    .media-frame video,
+    .media-frame img {
+      width: auto;
+      max-width: 100%;
+      max-height: min(70vh, 420px);
+    }
   }
 
   .viewer-head {
