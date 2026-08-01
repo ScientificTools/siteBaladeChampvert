@@ -43,14 +43,6 @@
       return;
     }
 
-    let storedPreference = '';
-    try {
-      storedPreference = localStorage.getItem(prefKey) || '';
-    } catch (error) {}
-
-    if (storedPreference === 'mobile') {
-      window.location.replace('mobile.html?view=mobile');
-    }
   })();
 </script>
 <style>
