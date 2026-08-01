@@ -190,18 +190,20 @@
     font-size: 0.84rem;
   }
 
-  .map-meta-copy {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    min-width: 0;
-  }
-
   #ecoindex-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
+  }
+
+  .ecoindex-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 0.84rem;
   }
 
   .chip-row {
@@ -465,10 +467,7 @@
         </svg>
       </div>
       <div class="map-meta">
-        <div class="map-meta-copy">
-          <div id="ecoindex-badge" data-theme="dark"></div>
-          <span id="mapMetaLabel">Fond de carte © OpenStreetMap contributors</span>
-        </div>
+        <span id="mapMetaLabel">Fond de carte © OpenStreetMap contributors</span>
         <a class="map-link" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" id="mapMetaLink">Licence</a>
       </div>
     </section>
@@ -515,7 +514,9 @@
 
     <section class="panel desktop-note">
       <p id="desktopNote">Pour une expérience immersive de balade, visitez le site depuis votre ordinateur.</p>
-      <a id="desktopLink" class="ghost-link" href="../index.html?view=desktop">Version immersive</a>
+      <div class="ecoindex-note">
+        <div id="ecoindex-badge" data-theme="dark"></div>
+      </div>
     </section>
   </main>
 
@@ -612,8 +613,6 @@
   const linksBlock = document.getElementById('linksBlock');
   const linksLabel = document.getElementById('linksLabel');
   const linksList = document.getElementById('linksList');
-  const desktopLink = document.getElementById('desktopLink');
-
   let currentLocale = 'FR';
   let activeFilter = 'oiseau';
   let speciesEntries = [];
@@ -719,8 +718,6 @@
     document.getElementById('listTitle').textContent = strings.listTitle;
     document.getElementById('listText').textContent = strings.listText;
     document.getElementById('desktopNote').textContent = strings.desktopNote;
-    desktopLink.textContent = strings.desktopLink;
-    desktopLink.href = '../index.html?view=desktop';
     searchInput.placeholder = strings.searchPlaceholder;
     emptyState.textContent = strings.emptyState;
     loadingState.textContent = strings.loading;
