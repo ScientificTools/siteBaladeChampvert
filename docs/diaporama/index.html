@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<title>Redirection diaporama</title>
+<script>
+  (function () {
+    const currentUrl = new URL(window.location.href);
+    const targetUrl = new URL('../index.html', currentUrl);
+    targetUrl.searchParams.set('autostart', '1');
+    targetUrl.searchParams.set('view', 'desktop');
+    window.location.replace(targetUrl.toString());
+  })();
+</script>
+</head>
+<body>
+</body>
+</html>

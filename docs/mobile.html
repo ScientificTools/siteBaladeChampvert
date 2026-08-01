@@ -299,6 +299,7 @@
   }
 
   .media-frame {
+    position: relative;
     width: 100%;
     overflow: hidden;
     border-radius: 18px;
@@ -312,6 +313,11 @@
     height: auto;
     max-height: 52vh;
     object-fit: cover;
+  }
+
+  .media-frame video[hidden],
+  .media-frame img[hidden] {
+    display: none;
   }
 
   .viewer-head {
@@ -737,11 +743,21 @@
     });
   }
 
+  function scrollViewerIntoView() {
+    if (viewer.classList.contains('hidden')) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    viewer.scrollIntoView({
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      block: 'start'
+    });
+  }
+
   function selectEntry(id) {
     selectedId = id;
     activeVariantIndex = 0;
     renderSpeciesList();
     renderViewer();
+    requestAnimationFrame(scrollViewerIntoView);
   }
 
   function renderSpeciesList() {
@@ -816,29 +832,24 @@
     poeticText.textContent = variant.poeticText || strings.noPoetic;
     scientificText.textContent = variant.scientificText || strings.noScientific;
 
+    viewerVideo.pause();
+    viewerVideo.hidden = true;
+    viewerImage.hidden = true;
+
     if (variant.webm) {
-      viewerVideo.hidden = false;
-      viewerImage.hidden = true;
       if (viewerVideo.src !== new URL(variant.webm, window.location.href).href) {
         viewerVideo.src = variant.webm;
       }
+      viewerImage.removeAttribute('src');
+      viewerImage.alt = '';
+      viewerVideo.hidden = false;
       viewerVideo.play().catch(() => {});
     } else {
-      viewerVideo.pause();
       viewerVideo.removeAttribute('src');
       viewerVideo.load();
-      viewerVideo.hidden = true;
-      viewerImage.hidden = false;
       viewerImage.src = variant.jpeg || entry.thumb || '';
       viewerImage.alt = entry.title;
-    }
-
-    if (!variant.webm && variant.jpeg) {
       viewerImage.hidden = false;
-      viewerImage.src = variant.jpeg;
-      viewerImage.alt = entry.title;
-    } else if (variant.webm) {
-      viewerImage.hidden = true;
     }
 
     const total = entry.variants.length;

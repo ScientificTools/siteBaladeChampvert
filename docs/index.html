@@ -34,20 +34,21 @@
       return;
     }
 
+    const isSmallScreen = window.matchMedia('(max-width: 900px)').matches;
+    const ua = navigator.userAgent || '';
+    const isMobileAgent = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua);
+
+    if (isSmallScreen || isMobileAgent) {
+      window.location.replace('mobile.html?view=mobile');
+      return;
+    }
+
     let storedPreference = '';
     try {
       storedPreference = localStorage.getItem(prefKey) || '';
     } catch (error) {}
 
-    if (storedPreference === 'desktop') {
-      return;
-    }
-
-    const isSmallScreen = window.matchMedia('(max-width: 900px)').matches;
-    const ua = navigator.userAgent || '';
-    const isMobileAgent = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua);
-
-    if (storedPreference === 'mobile' || isSmallScreen || isMobileAgent) {
+    if (storedPreference === 'mobile') {
       window.location.replace('mobile.html?view=mobile');
     }
   })();
@@ -634,6 +635,7 @@
   body.diaporama-active .top-left-controls,
   body.diaporama-active .map-controls,
   body.diaporama-active .site-info-button,
+  body.diaporama-active .map-hint,
   body.diaporama-active .caption,
   body.diaporama-active .poi-layer,
   body.diaporama-active #poiTooltip {
@@ -1497,6 +1499,9 @@
   const poiMediaPathPrefix = 'data/';
   const backgroundManifestPath = 'background/backgroundList.json';
   const backgroundCycleMs = 10000;
+  const currentUrl = new URL(window.location.href);
+  const autoStartDiaporamaValues = new Set(['1', 'true', 'yes', 'on']);
+  const autoStartDiaporamaRequested = autoStartDiaporamaValues.has((currentUrl.searchParams.get('autostart') || '').toLowerCase());
   const pointVariants = new WeakMap();
   const pointMotionStates = new WeakMap();
   const langFrBtn = document.getElementById('langFrBtn');
@@ -1581,6 +1586,10 @@
   let diaporamaActive = false;
   let diaporamaWasMapMode = false;
   let diaporamaEntries = [];
+  let poiDataLoaded = false;
+  let backgroundListLoaded = false;
+  let introComplete = false;
+  let autoStartDiaporamaAttempted = false;
   const poiIdleHighlightDelay = 20000;
   const poiMotionRestMs = 6000;
   const poiMotionBaseTravelMs = 4000;
@@ -2438,6 +2447,9 @@
       refreshPoiLayer();
     } catch (error) {
       console.error('Impossible de charger ou traiter data/data.json :', error);
+    } finally {
+      poiDataLoaded = true;
+      tryAutoStartDiaporama();
     }
   }
 
@@ -2463,6 +2475,9 @@
     } catch (error) {
       backgroundEntries = [];
       console.error('Impossible de charger ou traiter background/backgroundList.json :', error);
+    } finally {
+      backgroundListLoaded = true;
+      tryAutoStartDiaporama();
     }
   }
 
@@ -2662,6 +2677,23 @@
       });
     });
     return entries;
+  }
+
+  function consumeAutoStartDiaporamaParam() {
+    if (!autoStartDiaporamaRequested || !currentUrl.searchParams.has('autostart')) return;
+    currentUrl.searchParams.delete('autostart');
+    currentUrl.searchParams.delete('view');
+    const nextUrl = `${currentUrl.pathname}${currentUrl.searchParams.toString() ? `?${currentUrl.searchParams.toString()}` : ''}${currentUrl.hash}`;
+    window.history.replaceState({}, '', nextUrl);
+  }
+
+  function tryAutoStartDiaporama() {
+    if (!autoStartDiaporamaRequested || autoStartDiaporamaAttempted) return;
+    if (!introComplete || !poiDataLoaded || !backgroundListLoaded) return;
+
+    autoStartDiaporamaAttempted = true;
+    consumeAutoStartDiaporamaParam();
+    enterDiaporamaMode();
   }
 
   function handleDiaporamaExit(event) {
@@ -2908,6 +2940,7 @@
 
     window.setTimeout(() => {
       body.classList.add('intro-complete');
+      introComplete = true;
       syncMapVisibility();
       syncBackgroundPlayback();
       showMapHintTemporarily(20000);
@@ -2916,6 +2949,7 @@
       playTemporaryHighlight(audioToggleBtn, 'audio-button-intro');
       playTemporaryHighlight(diaToggleBtn, 'dia-toggle-intro');
       syncPoiMotionLifecycle();
+      tryAutoStartDiaporama();
     }, 4000);
   }
 
