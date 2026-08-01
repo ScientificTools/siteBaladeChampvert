@@ -461,6 +461,9 @@
   }
 
   .caption {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     position: fixed;
     right: 18px;
     bottom: 18px;
@@ -484,6 +487,13 @@
   .caption a:hover,
   .caption a:focus-visible {
     text-decoration: underline;
+  }
+
+  #ecoindex-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
   }
 
   .audio-control {
@@ -1327,7 +1337,7 @@
           <div class="map-scene" id="mapScene">
             <img
               class="layer layer-map"
-              src="openStreetViewcarte.png"
+              src="openStreetViewcarte.jpg"
               alt="Capture OpenStreetMap servant de fond de carte"
               draggable="false"
             />
@@ -1355,6 +1365,7 @@
         </div>
 
         <div class="caption">
+          <div id="ecoindex-badge" data-theme="dark"></div>
           Fond de carte © OpenStreetMap contributors
           <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">openstreetmap.org/copyright</a>
         </div>
@@ -2694,6 +2705,7 @@
     autoStartDiaporamaAttempted = true;
     consumeAutoStartDiaporamaParam();
     enterDiaporamaMode();
+    setBackgroundAudioEnabled(true);
   }
 
   function handleDiaporamaExit(event) {
@@ -3729,10 +3741,10 @@
     saveAudioVolume(normalized);
   }
 
-  function toggleBackgroundAudio() {
+  function setBackgroundAudioEnabled(shouldEnable) {
     if (!audioToggleBtn || !audioVolumeControl || !audioVolumeRange || !backgroundAudio) return;
 
-    const isActive = !audioToggleBtn.classList.contains('active');
+    const isActive = !!shouldEnable;
     audioToggleBtn.classList.toggle('active', isActive);
     audioToggleBtn.setAttribute('aria-pressed', String(isActive));
     audioToggleBtn.setAttribute('aria-label', isActive ? 'Désactiver le son de fond' : 'Activer le son de fond');
@@ -3747,6 +3759,11 @@
     } else {
       backgroundAudio.pause();
     }
+  }
+
+  function toggleBackgroundAudio() {
+    if (!audioToggleBtn) return;
+    setBackgroundAudioEnabled(!audioToggleBtn.classList.contains('active'));
   }
 
   function initializeBackgroundAudioControls() {
@@ -3852,5 +3869,6 @@
   initializeSiteInfoControls();
   runIntro();
 </script>
+<script src="https://cdn.jsdelivr.net/gh/cnumr/ecoindex_badge@3/assets/js/ecoindex-badge.js" defer></script>
 </body>
 </html>

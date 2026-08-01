@@ -1,0 +1,29 @@
+/index.html
+  Cache-Control: no-cache
+
+/mobile.html
+  Cache-Control: no-cache
+
+/diaporama/
+  Cache-Control: no-cache
+
+/openStreetViewcarte.jpg
+  Cache-Control: public, max-age=2592000
+
+/data/*.jpg
+  Cache-Control: public, max-age=2592000
+
+/data/*.jpeg
+  Cache-Control: public, max-age=2592000
+
+/data/*.png
+  Cache-Control: public, max-age=2592000
+
+/data/*.webm
+  Cache-Control: public, max-age=2592000
+
+/background/*.webm
+  Cache-Control: public, max-age=2592000
+
+/song/*.m4a
+  Cache-Control: public, max-age=2592000
