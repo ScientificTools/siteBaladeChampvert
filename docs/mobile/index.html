@@ -307,8 +307,7 @@
   }
 
   .viewer {
-    position: sticky;
-    top: 12px;
+    position: relative;
   }
 
   .viewer.hidden {
@@ -342,7 +341,7 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 12px;
+    margin-top: 12px;
   }
 
   .viewer-head h2 {
@@ -483,12 +482,6 @@
     </section>
 
     <section id="viewer" class="panel viewer hidden" aria-live="polite">
-      <div class="viewer-head">
-        <div>
-          <h2 id="viewerTitle">Observation</h2>
-          <p id="viewerMeta"></p>
-        </div>
-      </div>
       <div class="media-frame">
         <video id="viewerVideo" controls autoplay loop muted playsinline hidden></video>
         <img id="viewerImage" alt="" hidden />
@@ -497,6 +490,12 @@
         <button id="prevVariantBtn" type="button">←</button>
         <span id="variantCount" class="media-count">1 / 1</span>
         <button id="nextVariantBtn" type="button">→</button>
+      </div>
+      <div class="viewer-head">
+        <div>
+          <h2 id="viewerTitle">Observation</h2>
+          <p id="viewerMeta"></p>
+        </div>
       </div>
       <div class="info-block">
         <span class="info-label" id="poeticLabel">Regard sensible</span>
@@ -551,7 +550,7 @@
       noPoetic: 'Texte sensible à venir.',
       noScientific: 'Repère naturaliste à venir.',
       mediaCount: (index, total) => `${index} / ${total}`,
-      detailMeta: (date, location) => `${date} · ${location}`
+      detailMeta: (date) => date
     },
     US: {
       pageTitle: 'Field guide',
@@ -582,7 +581,7 @@
       noPoetic: 'Sensitive text coming soon.',
       noScientific: 'Naturalist note coming soon.',
       mediaCount: (index, total) => `${index} / ${total}`,
-      detailMeta: (date, location) => `${date} · ${location}`
+      detailMeta: (date) => date
     }
   };
 
@@ -688,14 +687,6 @@
     const strings = getStrings();
     if (!value || value === '_') return strings.noDate;
     return value;
-  }
-
-  function formatLocation(latitude, longitude) {
-    const strings = getStrings();
-    if (!latitude || !longitude || latitude === '_' || longitude === '_') {
-      return strings.noLocation;
-    }
-    return `${latitude}, ${longitude}`;
   }
 
   function getMapLink(latitude, longitude) {
@@ -844,10 +835,9 @@
 
     const variant = entry.variants[activeVariantIndex] || entry.variants[0];
     const dateText = formatDate(variant.date);
-    const locationText = formatLocation(variant.latitude, variant.longitude);
     viewer.classList.remove('hidden');
     viewerTitle.textContent = entry.scientific ? `${entry.title} - ${entry.scientific}` : entry.title;
-    viewerMeta.textContent = strings.detailMeta(dateText, locationText);
+    viewerMeta.textContent = strings.detailMeta(dateText);
     poeticText.textContent = variant.poeticText || strings.noPoetic;
     scientificText.textContent = variant.scientificText || strings.noScientific;
 
