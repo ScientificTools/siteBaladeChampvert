@@ -12,7 +12,7 @@
       "date": "2026-03-08",
       "category": "oiseau",
       "webm": "corneille.webm",
-      "jpeg": "corneille.png",
+      "jpeg": "corneille.jpg",
       "game": "",
       "otherImage": [
         {
@@ -20,7 +20,7 @@
           "longitude": "4.804311111111111",
           "date": "2026-05-23",
           "webm": "corneille2.webm",
-          "jpeg": "corneille2.png",
+          "jpeg": "corneille2.jpg",
           "game": "filou",
           "poeticText": [
             {"FR": "Elle claque et bruisse autour de ses compagnes, chaque appel vibrant comme un signal puissant qui affirme sa place dans le groupe."},
@@ -69,7 +69,7 @@
       "date": "2026-03-08",
       "category": "oiseau",
       "webm": "geais.webm",
-      "jpeg": "geais.png",
+      "jpeg": "geais.jpg",
       "game": "",
  
       "poeticText": [
@@ -94,7 +94,7 @@
       "date": "2026-05-30",
       "category": "oiseau",
       "webm": "etourneau.webm",
-      "jpeg": "etourneau.png",
+      "jpeg": "etourneau.jpg",
       "game": "",
  
       "poeticText": [
@@ -119,7 +119,7 @@
       "date": "2026-03-21",
       "category": "oiseau",
       "webm": "rougeGorgesFamilier.webm",
-      "jpeg": "rougeGorgesFamilier.png",
+      "jpeg": "rougeGorgesFamilier.jpg",
       "game": "",
  
       "poeticText": [
@@ -139,20 +139,20 @@
         {"US": "Eurasian blackcap"},
         {"SC": "Sylvia atricapilla"}
       ],
-      "latitude": "45.759908333333335",
-      "longitude": "4.790691666666667",
-      "date": "2026-07-19",
+      "latitude": "45.761408333333335",
+      "longitude": "4.790238888888889",
+      "date": "2026-03-21",
       "category": "oiseau",
       "webm": "fauvetteATeteNoire.webm",
-      "jpeg": "fauvetteATeteNoire.png",
+      "jpeg": "fauvetteATeteNoire.jpg",
       "game": "cachecache",
       "otherImage": [
         {
           "latitude": "45.760469444444446",
           "longitude": "4.804311111111111",
-          "date": "2026-05-23",
+          "date": "2025-12-06",
           "webm": "fauvette2.webm",
-          "jpeg": "fauvette2.png",
+          "jpeg": "fauvette2.jpg",
           "game": "filou",
           "poeticText": [
             {"FR": "La femelle à tête brune gonfle doucement son plumage, laissant circuler l'air, puis fuse comme un éclair au travers du buisson."},
@@ -162,6 +162,22 @@
             {"FR": "Très étudiée pour ses migrations impressionnantes, elle franchit souvent montagnes et étendues d'eau lors de ses longs trajets."},
             {"US": "Highly studied for its impressive migrations, it often crosses mountain ranges and open water during its long journeys."}
           ]
+        },
+        {
+          "latitude": "45.761408333333335",
+          "longitude": "4.790238888888889",
+          "date": "2026-03-21",
+          "webm": "fauvetteATeteNoire3.webm",
+          "jpeg": "fauvetteATeteNoire3.jpg",
+          "game": "filou"
+        },
+        {
+          "latitude": "45.759908333333335",
+          "longitude": "4.790691666666667",
+          "date": "2025-12-15",
+          "webm": "fauvetteATeteNoire4.webm",
+          "jpeg": "fauvetteATeteNoire4.jpg",
+          "game": "filou"
         }
       ],
       "poeticText": [
@@ -181,12 +197,12 @@
         {"US": "Common chiffchaff"},
         {"SC": "Phylloscopus collybita"}
       ],
-      "latitude": "_",
-      "longitude": "_",
-      "date": "_",
+      "latitude": "45.76005555555555",
+      "longitude": "4.790483333333333",
+      "date": "2025-12-21",
       "category": "oiseau",
       "webm": "pouillotVeloce.webm",
-      "jpeg": "pouillotVeloce.png",
+      "jpeg": "pouillotVeloce.jpg",
       "game": "chant",
      "poeticText": [
         {"FR": "Un chant vif coud le matin à la lisière, invisible et pourtant présent."},
@@ -205,12 +221,12 @@
         {"US": "Red squirrel"},
         {"SC": "Sciurus vulgaris"}
       ],
-      "latitude": "_",
-      "longitude": "_",
-      "date": "_",
+      "latitude": "45.75983055555555",
+      "longitude": "4.7905194444444446",
+      "date": "2025-11-18",
       "category": "mammifère",
       "webm": "ecureuil.webm",
-      "jpeg": "ecureuil.png",
+      "jpeg": "ecureuil.jpg",
       "game": "filou",
       "poeticText": [
         {"FR": "Une étincelle rousse bondit, comme une note vive au milieu du vert."},
