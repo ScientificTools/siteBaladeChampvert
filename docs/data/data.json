@@ -428,7 +428,7 @@
       "category": "oiseau",
       "webm": "mesangeBleue1.webm",
       "jpeg": "mesangeBleue1.jpg",
-      "game": "cachecache",
+      "game": "",
       "otherImage": [
         {
           "latitude": "45.76188333333333",
@@ -449,6 +449,116 @@
       ],
       "liensSon": ["https://www.chant-oiseaux.fr/mesange-bleue/?type=chant-718"],
       "fichierSon": ""
+    },
+    {
+      "name": [
+        {"FR": "Mésange charbonnière"},
+        {"US": "Great tit"},
+        {"SC": "Parus major"}
+      ],
+      "latitude": "45.763061111111114",
+      "longitude": "4.789233333333333",
+      "date": "2026-03-08",
+      "category": "oiseau",
+      "jpeg": "mesangeCharbonniere2.jpg",
+      "game": "",
+      "otherImage": [
+        {
+          "date": "2026-05-30",
+          "webm": "mesangeCharbonniere1.webm",
+          "jpeg": "mesangeCharbonniere1.jpg",
+          "game": ""
+         },
+         {
+          "latitude": "45.75941666666667",
+          "longitude": "4.803302777777778",
+          "date": "2025-11-11",
+          "webm": "mesangeCharbonniere3.webm",
+          "game": ""
+         }
+      ],
+      "poeticText": [
+        {"FR": "Familiarière et facile à reconnaître, avec sa calotte noire et son torse jaune, la mésange charbonnière passe souvent en petites bandes, apportant dans les branches une vive animation familière."},
+        {"US": "Familiar and easy to recognize, with its black cap and yellow breast, the great tit often moves in small flocks, bringing a lively and familiar bustle to the branches."}
+      ],
+      "scientificText": [
+        {"FR": "Parus major est constamment en mouvement dans les arbres et les haies. Mâles et femelles se ressemblent beaucoup, et l'espèce montre souvent une forte fidélité à son site de nidification d'une année à l'autre."},
+        {"US": "Parus major is constantly in motion through trees and hedges. Males and females look very similar, and the species often shows strong fidelity to its nesting site from one year to the next."}
+      ],
+      "liensSon": ["https://www.chant-oiseaux.fr/mesange-charbonniere/?type=chant-721"],
+      "fichierSon": ""
+    },
+    {
+      "name": [
+        {"FR": "Pic épeiche"},
+        {"US": "Great spotted woodpecker"},
+        {"SC": "Dendrocopos major"}
+      ],
+      "date": "2026-05-15",
+      "category": "oiseau",
+      "webm": "picEpeiche1.webm",
+      "jpeg": "picEpeiche1.jpg",
+      "game": "",
+      "poeticText": [
+        {"FR": "Grimpeur acharné, il s’agrippe au tronc et le martèle avec maîtrise, arrachant sa nourriture à l’écorce et creusant dans le bois la loge où grandira sa nichée."},
+        {"US": "A tireless climber, it clings to the trunk and hammers with precision, pulling food from the bark and carving in the wood the chamber where its brood will grow."}
+      ],
+      "scientificText": [
+        {"FR": "Dendrocopos major possède un crâne, des muscles du cou et un bec spécialement adaptés pour absorber les chocs répétés. Chaque coup, porté à grande vitesse avec une force remarquable, lui permet d’extraire des insectes et de creuser sa cavité de nidification."},
+        {"US": "Dendrocopos major has a skull, neck muscles, and bill specially adapted to absorb repeated impacts. Each strike, delivered at high speed with remarkable force, helps it extract insects and excavate its nesting cavity."}
+      ],
+      "liensSon": ["https://www.chant-oiseaux.fr/pic-epeiche/?type=tambourinage-1552"],
+      "fichierSon": ""
+    },
+    {
+      "name": [
+        {"FR": "Pic vert"},
+        {"US": "Green woodpecker"},
+        {"SC": "Picus viridis"}
+      ],
+      "latitude": "45.761672222222224",
+      "longitude": "4.789780555555556",
+      "date": "2026-03-08",
+      "category": "oiseau",
+      "webm": "picVert.webm",
+      "jpeg": "picVert.jpg",
+      "game": "",
+      "poeticText": [
+        {"FR": "Moins forgeron que glaneur, il descend dans l’herbe et fouille la terre avec patience, comme un promeneur vert venu dénicher les fourmis sous le silence du pré."},
+        {"US": "Less a blacksmith than a forager, it comes down into the grass and probes the ground with patience, like a green wanderer seeking ants beneath the meadow’s quiet hush."}
+      ],
+      "scientificText": [
+        {"FR": "Picus viridis se nourrit surtout de fourmis, qu’il capture au sol grâce à sa longue langue protractile enduite de salive collante. Son bec robuste lui sert aussi à ouvrir fourmilières et bois tendre, mais l’espèce exploite bien davantage les prairies et pelouses que le Pic épeiche."},
+        {"US": "Picus viridis feeds mainly on ants, which it captures on the ground with its long protrusible tongue coated in sticky saliva. Its strong bill also helps open anthills and soft wood, but the species relies far more on lawns and meadows than the great spotted woodpecker does."}
+      ],
+      "liensSon": ["https://www.chant-oiseaux.fr/pic-vert/?type=tambourinage-1543"],
+      "fichierSon": ""
+    }
+    ,
+    {
+      "name": [
+        {"FR": "Pigeon ramier"},
+        {"US": "Common wood pigeon"},
+        {"SC": "Columba palumbus"}
+      ],
+      "latitude": "45.759394444444446",
+      "longitude": "4.803258333333333",
+      "date": "2025-12-13",
+      "category": "oiseau",
+      "webm": "palombe.webm",
+      "jpeg": "palombe.jpg",
+      "game": "",
+      "poeticText": [
+        {"FR": "Ils vont souvent à deux, fidèles et calmes, puis s’élèvent d’un vol large et battu, aux grands flaps un peu lourds, qui n’enlèvent rien à la majesté de leur silhouette."},
+        {"US": "They often move as a calm, faithful pair, then rise on broad wings with heavy flapping beats that do nothing to diminish the majesty of their silhouette."}
+      ],
+      "scientificText": [
+        {"FR": "Columba palumbus se nourrit surtout de graines, de jeunes pousses, de bourgeons, de baies et de fruits. Il construit un nid sommaire de brindilles, le plus souvent dans un arbre ou un grand arbuste, où le couple élève généralement deux jeunes."},
+        {"US": "Columba palumbus feeds mainly on seeds, young shoots, buds, berries, and fruits. It builds a simple twig nest, most often in a tree or large shrub, where the pair usually raises two chicks."}
+      ],
+      "liensSon": ["https://www.chant-oiseaux.fr/pigeon-ramier/?type=chant-658"],
+      "fichierSon": ""
     }
   ]
 }
+
