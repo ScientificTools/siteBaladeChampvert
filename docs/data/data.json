@@ -21,7 +21,7 @@
           "date": "2026-05-23",
           "webm": "corneille2.webm",
           "jpeg": "corneille2.jpg",
-          "game": "filou",
+          "game": "",
           "poeticText": [
             {"FR": "Elle claque et bruisse autour de ses compagnes, chaque appel vibrant comme un signal puissant qui affirme sa place dans le groupe."},
             {"US": "It snaps and rustles amid its companions, each call vibrating like a strong signal that asserts its place in the group."}
@@ -36,7 +36,7 @@
           "longitude": "4.804311111111111",
           "date": "2026-05-23",
           "jpeg": "corneille3.jpg",
-          "game": "filou",
+          "game": "",
           "poeticText": [
             {"FR": "Elle claque et bruisse autour de ses compagnes, chaque appel vibrant comme un signal puissant qui affirme sa place dans le groupe."},
             {"US": "It snaps and rustles amid its companions, each call vibrating like a strong signal that asserts its place in the group."}
@@ -56,7 +56,7 @@
         {"US": "Corvus corone is a highly social bird, often living in tight-knit groups where play and mutual vigilance strengthen the flock’s cohesion."}
       ],
       "liensSon": ["https://www.chant-oiseaux.fr/corneille-noire/?type=cris-1432"],
-      "fichierSon": "none"
+      "fichierSon": ""
     },
     {
       "name": [
@@ -81,7 +81,7 @@
         {"US": "Sturnus vulgaris feeds mainly on the ground, probing grass and leaf litter for worms, insects and seeds."}
       ],
       "liensSon": ["https://www.chant-oiseaux.fr/geai-des-chenes/?type=cris-1547"],
-      "fichierSon": "none"
+      "fichierSon": ""
     },
     {
       "name": [
@@ -106,7 +106,7 @@
         {"US": "Sturnus vulgaris feeds mainly on the ground, probing grass and leaf litter for worms, insects and seeds."}
       ],
       "liensSon": ["https://www.chant-oiseaux.fr/etourneau-sansonnet/?type=chant-788"],
-      "fichierSon": "none"
+      "fichierSon": ""
     },
     {
       "name": [
@@ -131,7 +131,7 @@
         {"US": "Erithacus rubecula frequents gardens and woodland edges, identifiable by its orange breast and alert posture."}
       ],
       "liensSon": ["https://www.chant-oiseaux.fr/rougegorge-familier/?type=chant-644"],
-      "fichierSon": "none"
+      "fichierSon": ""
     },
     {
       "name": [
@@ -145,7 +145,7 @@
       "category": "oiseau",
       "webm": "fauvetteATeteNoire.webm",
       "jpeg": "fauvetteATeteNoire.jpg",
-      "game": "cachecache",
+      "game": "",
       "otherImage": [
         {
           "latitude": "45.760469444444446",
@@ -153,7 +153,7 @@
           "date": "2025-12-06",
           "webm": "fauvette2.webm",
           "jpeg": "fauvette2.jpg",
-          "game": "filou",
+          "game": "",
           "poeticText": [
             {"FR": "La femelle à tête brune gonfle doucement son plumage, laissant circuler l'air, puis fuse comme un éclair au travers du buisson."},
             {"US": "The brown-headed female spreads her feathers softly, letting air flow beneath her throat and tracing a light silhouette through the undergrowth."}
@@ -169,7 +169,7 @@
           "date": "2026-03-21",
           "webm": "fauvetteATeteNoire3.webm",
           "jpeg": "fauvetteATeteNoire3.jpg",
-          "game": "filou"
+          "game": ""
         },
         {
           "latitude": "45.759908333333335",
@@ -177,7 +177,7 @@
           "date": "2025-12-15",
           "webm": "fauvetteATeteNoire4.webm",
           "jpeg": "fauvetteATeteNoire4.jpg",
-          "game": "filou"
+          "game": ""
         }
       ],
       "poeticText": [
@@ -189,7 +189,7 @@
         {"US": "Sylvia atricapilla frequents woods and edges, identifiable by its dark cap, and is also a great traveler."}
       ],
       "liensSon": ["https://www.chant-oiseaux.fr/fauvette-a-tete-noire/?type=chant-1497"],
-      "fichierSon": "sample1.mp3"
+      "fichierSon": ""
     },
     {
       "name": [
@@ -203,7 +203,7 @@
       "category": "oiseau",
       "webm": "pouillotVeloce.webm",
       "jpeg": "pouillotVeloce.jpg",
-      "game": "chant",
+      "game": "",
      "poeticText": [
         {"FR": "Un chant vif coud le matin à la lisière, invisible et pourtant présent."},
         {"US": "A bright song stitches the morning at the edge, invisible yet present."}
@@ -213,7 +213,7 @@
         {"US": "Phylloscopus collybita is a small migrant that inhabits scrub and groves."}
       ],
       "liensSon": ["https://www.chant-oiseaux.fr/pouillot-veloce/?type=chant-769"],
-      "fichierSon": "sample2.mp3"
+      "fichierSon": ""
     },
     {
       "name": [
@@ -227,7 +227,7 @@
       "category": "mammifère",
       "webm": "ecureuil.webm",
       "jpeg": "ecureuil.jpg",
-      "game": "filou",
+      "game": "",
       "poeticText": [
         {"FR": "Une étincelle rousse bondit, comme une note vive au milieu du vert."},
         {"US": "A russet spark leaps, like a bright note amid the green."}
@@ -237,7 +237,147 @@
         {"US": "Sciurus vulgaris moves with vigor through the branches, agile and alert."}
       ],
       "liensSon": [],
-      "fichierSon": "sample3.mp3"
+      "fichierSon": ""
+    },
+    {
+      "name": [
+        {"FR": "Martinet"},
+        {"US": "Common swift"},
+        {"SC": "Apus apus"}
+      ],
+      "latitude": "45.759191666666666",
+      "longitude": "4.802191666666666",
+      "date": "2025-05-23",
+      "category": "oiseau",
+      "jpeg": "martinet.jpg",
+      "game": "",
+      "otherImage": [
+        {
+          "latitude": "45.759191666666666",
+          "longitude": "4.802191666666666",
+          "date": "2025-05-23",
+          "webm": "martinet2.webm",
+          "jpeg": "martinet2.jpg",
+          "game": "",
+          "poeticText": [
+            {"FR": "Il fend l'air en arabesques vives, joueur du ciel, lançant ses cris joyeux et stridents comme des éclats d'été entre les toits."},
+            {"US": "It slices the air in lively arabesques, a playful flyer of the sky, tossing its bright, piercing calls like flashes of summer between the rooftops."}
+          ],
+          "scientificText": [
+            {"FR": "Apus apus niche volontiers dans les cavités des bâtiments. Presque toute sa vie se déroule en vol : il capture des insectes aériens, boit en rasant l'eau et peut migrer sur de très longues distances avec très peu de repos."},
+            {"US": "Apus apus often nests in cavities in buildings. Nearly its whole life is spent on the wing: it catches airborne insects, drinks by skimming water, and can migrate over very long distances with very little rest."}
+          ]
+        }
+      ],
+          "poeticText": [
+            {"FR": "Flèche noire et joyeuse, il joue dans la lumière à toute vitesse, et ses cris stridents cousent le ciel de fils vivants."},
+            {"US": "A dark and joyful arrow, it plays at full speed in the light, its sharp calls stitching the sky with living threads."}
+          ],
+          "scientificText": [
+            {"FR": "Le Martinet noir, Apus apus, est un insectivore presque exclusivement aérien. Il se nourrit en vol, niche dans des cavités élevées et accomplit une migration remarquable entre l'Europe et l'Afrique sans longues haltes."},
+            {"US": "The Common Swift, Apus apus, is an almost entirely aerial insectivore. It feeds in flight, nests in high cavities, and makes a remarkable migration between Europe and Africa without long stopovers."}
+          ],
+      "liensSon": ["https://www.chant-oiseaux.fr/martinet-noir/?type=chant-836"],
+      "fichierSon": ""
+    },
+    {
+      "name": [
+        {"FR": "Merle noir"},
+        {"US": "Blackbird"},
+        {"SC": "Turdus merula"}
+      ],
+      "latitude": "45.76069722222222",
+      "longitude": "4.789933333333333",
+      "date": "2026-03-21",
+      "category": "oiseau",
+      "webm": "merle.webm",
+      "jpeg": "merle.jpg",
+      "game": "",
+      "otherImage": [
+        {
+          "latitude": "45.76069722222222",
+          "longitude": "4.789933333333333",
+          "date": "2026-03-21",
+          "webm": "merlette.webm",
+          "jpeg": "merlette.jpg",
+          "game": "",
+          "poeticText": [
+            {"FR": "Peu farouche, la femelle glisse près de nous avec une douceur sûre, gardienne discrète du couple dans le calme des haies."},
+            {"US": "Not very shy, the female moves close to us with quiet confidence, a discreet guardian of the pair in the calm of the hedges."}
+          ],
+          "scientificText": [
+            {"FR": "La femelle de Turdus merula construit un nid solide de tiges, d'herbes et de boue, souvent à faible hauteur dans un arbuste, une haie ou un jardin proche des habitations."},
+            {"US": "The female Turdus merula builds a sturdy nest of stems, grasses, and mud, often low in a shrub, hedge, or garden close to homes."}
+          ]
+        },
+        {
+          "latitude": "45.76222777777778",
+          "longitude": "4.7904527777777774",
+          "date": "2026-04-25",
+          "webm": "merleCouple.webm",
+          "jpeg": "merleCouple.jpg",
+          "game": "",
+          "poeticText": [
+            {"FR": "Ils vivent à deux dans une familiarité paisible, avançant côte à côte comme si le jardin entier se réglait sur leur entente."},
+            {"US": "They live as a pair in easy familiarity, moving side by side as if the whole garden were tuned to their companionship."}
+          ],
+          "scientificText": [
+            {"FR": "Chez le Merle noir, le couple défend un territoire autour du site de nidification. Cette proximité durable favorise l'élevage des jeunes dans les parcs, haies et jardins fréquentés par l'homme."},
+            {"US": "In the Common Blackbird, the pair defends a territory around the nesting site. This lasting bond helps raise the young in parks, hedges, and gardens shaped by human presence."}
+          ]
+        }
+      ],
+      "poeticText": [
+        {"FR": "Le mâle, peu farouche, laisse couler son chant fluté en phrases complexes, comme une source mélodieuse offerte au matin."},
+        {"US": "The male, little afraid of us, lets his fluting song flow in complex phrases, like a melodic spring offered to the morning."}
+      ],
+      "scientificText": [
+        {"FR": "Turdus merula est l'un des oiseaux les plus familiers des jardins et des parcs. Très adaptable à la proximité humaine, le mâle chante depuis un perchoir dégagé pour défendre son territoire et attirer sa partenaire."},
+        {"US": "Turdus merula is one of the most familiar birds in gardens and parks. Highly adaptable to life near people, the male sings from an open perch to defend his territory and attract a mate."}
+        ],
+      "liensSon": ["https://www.chant-oiseaux.fr/merle-noir/?type=chant-653"],
+      "fichierSon": ""
+    },
+    {
+      "name": [
+        {"FR": "Cache cache"},
+        {"US": "Hide and seek"},
+        {"SC": "Avis invisibilis"}
+      ],
+      "latitude": "45.76007777777778",
+      "longitude": "4.790594444444444",
+      "date": "2025-12-13",
+      "category": "oiseau",
+      "jpeg": "cacheCache1.jpg",
+      "game": "cachecache",
+      "otherImage": [
+        {
+          "latitude": "45.76007777777778",
+          "longitude": "4.790594444444444",
+          "date": "2025-12-13",
+          "webm": "cacheCache1.webm",
+          "jpeg": "cacheCache1.jpg",
+          "game": "",
+          "poeticText": [
+            {"FR": "La vidéo trahit enfin la présence discrète: une merlette se nourrit dans l'arbre fruitier, profitant des derniers fruits d'hiver, trésor rare accroché aux branches nues."},
+            {"US": "The video finally gives away the hidden presence: a female blackbird feeds in the fruit tree, taking advantage of the last winter fruits, a rare treasure hanging on bare branches."}
+          ],
+          "scientificText": [
+            {"FR": "Le mouvement révèle ici une merlette en quête de nourriture. En hiver, les fruits encore présents sur certains arbres deviennent une ressource précieuse pour de nombreux oiseaux, quand insectes et baies fraîches se font rares."},
+            {"US": "Movement reveals a female blackbird here as it searches for food. In winter, fruit still remaining on certain trees becomes a valuable resource for many birds, when insects and fresh berries are scarce."}
+          ]
+        }
+      ],
+      "poeticText": [
+        {"FR": "On m'entend chanter, tout près peut-être, et pourtant je me fonds si bien dans les branches qu'immobile, je deviens presque introuvable."},
+        {"US": "You can hear me singing, perhaps quite nearby, and yet I blend so well into the branches that when I stay still, I become almost impossible to find."}
+      ],
+      "scientificText": [
+        {"FR": "De nombreux oiseaux profitent d'un plumage aux teintes et motifs qui les confondent avec leur environnement. Ce mimétisme visuel réduit le risque d'être repérés par les prédateurs, surtout lorsqu'ils restent parfaitement immobiles."},
+        {"US": "Many birds benefit from plumage colors and patterns that merge with their surroundings. This visual camouflage reduces the risk of being spotted by predators, especially when they remain perfectly still."}
+      ],
+      "liensSon": [],
+      "fichierSon": ""
     }
   ]
 }
