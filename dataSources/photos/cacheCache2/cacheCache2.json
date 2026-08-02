@@ -1,0 +1,378 @@
+{
+  "InputFilePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER.jpg",
+  "WorkingDirectory": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work",
+  "Frames": [
+    {
+      "Index": 0,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0001.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 882.622,
+        "Y": 784.7028
+      },
+      "OffsetX": -732.622,
+      "OffsetY": -634.7028
+    },
+    {
+      "Index": 1,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0002.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 867,
+        "Y": 780
+      },
+      "OffsetX": -717,
+      "OffsetY": -630
+    },
+    {
+      "Index": 2,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0003.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 860,
+        "Y": 770
+      },
+      "OffsetX": -710,
+      "OffsetY": -620
+    },
+    {
+      "Index": 3,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0004.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 848,
+        "Y": 758
+      },
+      "OffsetX": -698,
+      "OffsetY": -608
+    },
+    {
+      "Index": 4,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0005.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 842,
+        "Y": 739
+      },
+      "OffsetX": -692,
+      "OffsetY": -589
+    },
+    {
+      "Index": 5,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0006.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 846,
+        "Y": 719
+      },
+      "OffsetX": -696,
+      "OffsetY": -569
+    },
+    {
+      "Index": 6,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0007.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 845,
+        "Y": 702
+      },
+      "OffsetX": -695,
+      "OffsetY": -552
+    },
+    {
+      "Index": 7,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0008.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 843,
+        "Y": 682
+      },
+      "OffsetX": -693,
+      "OffsetY": -532
+    },
+    {
+      "Index": 8,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0009.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 844,
+        "Y": 666
+      },
+      "OffsetX": -694,
+      "OffsetY": -516
+    },
+    {
+      "Index": 9,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0010.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 931,
+        "Y": 514
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 10,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0011.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 941,
+        "Y": 504
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 11,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0012.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 951,
+        "Y": 500
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 12,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0013.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 965,
+        "Y": 496
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 13,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0014.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 982,
+        "Y": 494
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 14,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0015.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 902.18054,
+        "Y": 637.0715
+      },
+      "OffsetX": -752.18054,
+      "OffsetY": -487.07147
+    },
+    {
+      "Index": 15,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0016.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 923.1458,
+        "Y": 640.7005
+      },
+      "OffsetX": -773.1458,
+      "OffsetY": -490.7005
+    },
+    {
+      "Index": 16,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0017.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 939.13904,
+        "Y": 652.20636
+      },
+      "OffsetX": -789.13904,
+      "OffsetY": -502.20636
+    },
+    {
+      "Index": 17,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0018.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 938.344,
+        "Y": 663.4274
+      },
+      "OffsetX": -788.344,
+      "OffsetY": -513.4274
+    },
+    {
+      "Index": 18,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0019.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 944.4034,
+        "Y": 669.7017
+      },
+      "OffsetX": -794.4034,
+      "OffsetY": -519.7017
+    },
+    {
+      "Index": 19,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0020.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 950.54456,
+        "Y": 681.016
+      },
+      "OffsetX": -800.54456,
+      "OffsetY": -531.016
+    },
+    {
+      "Index": 20,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0021.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 947.56006,
+        "Y": 691.8503
+      },
+      "OffsetX": -797.56006,
+      "OffsetY": -541.8503
+    },
+    {
+      "Index": 21,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0022.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 936.0653,
+        "Y": 684.198
+      },
+      "OffsetX": -786.0653,
+      "OffsetY": -534.198
+    },
+    {
+      "Index": 22,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0023.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 921.0278,
+        "Y": 680.3159
+      },
+      "OffsetX": -771.0278,
+      "OffsetY": -530.3159
+    },
+    {
+      "Index": 23,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0024.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 904.1526,
+        "Y": 677.98846
+      },
+      "OffsetX": -754.1526,
+      "OffsetY": -527.98846
+    },
+    {
+      "Index": 24,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0025.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 904.9907,
+        "Y": 677.1443
+      },
+      "OffsetX": -754.9907,
+      "OffsetY": -527.1443
+    },
+    {
+      "Index": 25,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0026.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 902.9389,
+        "Y": 680.2192
+      },
+      "OffsetX": -752.9389,
+      "OffsetY": -530.2192
+    },
+    {
+      "Index": 26,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0027.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 902.6206,
+        "Y": 696.06067
+      },
+      "OffsetX": -752.6206,
+      "OffsetY": -546.06067
+    },
+    {
+      "Index": 27,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260425_071816397.MACRO_FOCUS.RAW-01.MP.COVER_work\\frames\\frame_0028.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 911.82825,
+        "Y": 696.904
+      },
+      "OffsetX": -761.82825,
+      "OffsetY": -546.904
+    }
+  ],
+  "Adjustments": {
+    "Brightness": 0,
+    "Contrast": 0,
+    "Saturation": 0,
+    "Temperature": 0,
+    "Sharpness": 0,
+    "Highlights": 0,
+    "Shadows": 0
+  },
+  "TargetAnchor": {
+    "IsEmpty": false,
+    "X": 150,
+    "Y": 150
+  },
+  "OutputCrop": {
+    "Location": {
+      "IsEmpty": false,
+      "X": -692,
+      "Y": -487
+    },
+    "Size": {
+      "IsEmpty": false,
+      "Width": 1241,
+      "Height": 931
+    },
+    "X": -692,
+    "Y": -487,
+    "Width": 1241,
+    "Height": 931,
+    "Left": -692,
+    "Top": -487,
+    "Right": 549,
+    "Bottom": 444,
+    "IsEmpty": false
+  },
+  "VideoFps": 20
+}

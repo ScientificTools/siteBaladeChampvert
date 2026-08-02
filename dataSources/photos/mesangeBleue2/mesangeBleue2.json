@@ -1,0 +1,1098 @@
+{
+  "InputFilePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER.jpg",
+  "WorkingDirectory": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work",
+  "Frames": [
+    {
+      "Index": 0,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0001.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 689.54614,
+        "Y": 663.37305
+      },
+      "OffsetX": -539.54614,
+      "OffsetY": -513.37305
+    },
+    {
+      "Index": 1,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0002.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 695,
+        "Y": 670
+      },
+      "OffsetX": -545,
+      "OffsetY": -520
+    },
+    {
+      "Index": 2,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0003.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 701,
+        "Y": 675
+      },
+      "OffsetX": -551,
+      "OffsetY": -525
+    },
+    {
+      "Index": 3,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0004.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 709,
+        "Y": 679
+      },
+      "OffsetX": -559,
+      "OffsetY": -529
+    },
+    {
+      "Index": 4,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0005.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 719,
+        "Y": 681
+      },
+      "OffsetX": -569,
+      "OffsetY": -531
+    },
+    {
+      "Index": 5,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0006.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 731,
+        "Y": 682
+      },
+      "OffsetX": -581,
+      "OffsetY": -532
+    },
+    {
+      "Index": 6,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0007.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 743,
+        "Y": 684
+      },
+      "OffsetX": -593,
+      "OffsetY": -534
+    },
+    {
+      "Index": 7,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0008.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 755,
+        "Y": 688
+      },
+      "OffsetX": -605,
+      "OffsetY": -538
+    },
+    {
+      "Index": 8,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0009.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 766,
+        "Y": 692
+      },
+      "OffsetX": -616,
+      "OffsetY": -542
+    },
+    {
+      "Index": 9,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0010.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 777,
+        "Y": 695
+      },
+      "OffsetX": -627,
+      "OffsetY": -545
+    },
+    {
+      "Index": 10,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0011.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 787,
+        "Y": 698
+      },
+      "OffsetX": -637,
+      "OffsetY": -548
+    },
+    {
+      "Index": 11,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0012.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 795,
+        "Y": 700
+      },
+      "OffsetX": -645,
+      "OffsetY": -550
+    },
+    {
+      "Index": 12,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0013.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 801,
+        "Y": 702
+      },
+      "OffsetX": -651,
+      "OffsetY": -552
+    },
+    {
+      "Index": 13,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0014.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 807,
+        "Y": 704
+      },
+      "OffsetX": -657,
+      "OffsetY": -554
+    },
+    {
+      "Index": 14,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0015.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 813,
+        "Y": 705
+      },
+      "OffsetX": -663,
+      "OffsetY": -555
+    },
+    {
+      "Index": 15,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0016.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 818,
+        "Y": 706
+      },
+      "OffsetX": -668,
+      "OffsetY": -556
+    },
+    {
+      "Index": 16,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0017.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 822,
+        "Y": 705
+      },
+      "OffsetX": -672,
+      "OffsetY": -555
+    },
+    {
+      "Index": 17,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0018.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 824,
+        "Y": 702
+      },
+      "OffsetX": -674,
+      "OffsetY": -552
+    },
+    {
+      "Index": 18,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0019.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 825,
+        "Y": 698
+      },
+      "OffsetX": -675,
+      "OffsetY": -548
+    },
+    {
+      "Index": 19,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0020.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 824,
+        "Y": 692
+      },
+      "OffsetX": -674,
+      "OffsetY": -542
+    },
+    {
+      "Index": 20,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0021.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 821,
+        "Y": 684
+      },
+      "OffsetX": -671,
+      "OffsetY": -534
+    },
+    {
+      "Index": 21,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0022.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 818,
+        "Y": 675
+      },
+      "OffsetX": -668,
+      "OffsetY": -525
+    },
+    {
+      "Index": 22,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0023.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 815,
+        "Y": 665
+      },
+      "OffsetX": -665,
+      "OffsetY": -515
+    },
+    {
+      "Index": 23,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0024.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 813,
+        "Y": 653
+      },
+      "OffsetX": -663,
+      "OffsetY": -503
+    },
+    {
+      "Index": 24,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0025.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 808,
+        "Y": 641
+      },
+      "OffsetX": -658,
+      "OffsetY": -491
+    },
+    {
+      "Index": 25,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0026.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 802,
+        "Y": 628
+      },
+      "OffsetX": -652,
+      "OffsetY": -478
+    },
+    {
+      "Index": 26,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0027.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 796,
+        "Y": 615
+      },
+      "OffsetX": -646,
+      "OffsetY": -465
+    },
+    {
+      "Index": 27,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0028.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 786,
+        "Y": 602
+      },
+      "OffsetX": -636,
+      "OffsetY": -452
+    },
+    {
+      "Index": 28,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0029.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 774,
+        "Y": 589
+      },
+      "OffsetX": -624,
+      "OffsetY": -439
+    },
+    {
+      "Index": 29,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0030.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 762,
+        "Y": 578
+      },
+      "OffsetX": -612,
+      "OffsetY": -428
+    },
+    {
+      "Index": 30,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0031.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 750,
+        "Y": 568
+      },
+      "OffsetX": -600,
+      "OffsetY": -418
+    },
+    {
+      "Index": 31,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0032.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 738,
+        "Y": 560
+      },
+      "OffsetX": -588,
+      "OffsetY": -410
+    },
+    {
+      "Index": 32,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0033.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 727,
+        "Y": 553
+      },
+      "OffsetX": -577,
+      "OffsetY": -403
+    },
+    {
+      "Index": 33,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0034.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 717,
+        "Y": 548
+      },
+      "OffsetX": -567,
+      "OffsetY": -398
+    },
+    {
+      "Index": 34,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0035.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 710,
+        "Y": 546
+      },
+      "OffsetX": -560,
+      "OffsetY": -396
+    },
+    {
+      "Index": 35,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0036.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 705,
+        "Y": 544
+      },
+      "OffsetX": -555,
+      "OffsetY": -394
+    },
+    {
+      "Index": 36,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0037.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 700,
+        "Y": 543
+      },
+      "OffsetX": -550,
+      "OffsetY": -393
+    },
+    {
+      "Index": 37,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0038.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 697,
+        "Y": 542
+      },
+      "OffsetX": -547,
+      "OffsetY": -392
+    },
+    {
+      "Index": 38,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0039.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 696,
+        "Y": 543
+      },
+      "OffsetX": -546,
+      "OffsetY": -393
+    },
+    {
+      "Index": 39,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0040.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 697,
+        "Y": 544
+      },
+      "OffsetX": -547,
+      "OffsetY": -394
+    },
+    {
+      "Index": 40,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0041.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 700,
+        "Y": 546
+      },
+      "OffsetX": -550,
+      "OffsetY": -396
+    },
+    {
+      "Index": 41,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0042.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 708,
+        "Y": 549
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 42,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0043.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 724,
+        "Y": 553
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 43,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0044.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 748,
+        "Y": 553
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 44,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0045.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 770,
+        "Y": 552
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 45,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0046.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 786,
+        "Y": 553
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 46,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0047.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 801,
+        "Y": 553
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 47,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0048.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 816,
+        "Y": 552
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 48,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0049.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 830,
+        "Y": 550
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 49,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0050.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 844,
+        "Y": 547
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 50,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0051.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 857,
+        "Y": 544
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 51,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0052.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 871,
+        "Y": 542
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 52,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0053.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 885,
+        "Y": 540
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 53,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0054.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 901,
+        "Y": 540
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 54,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0055.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 912,
+        "Y": 539
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 55,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0056.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 912,
+        "Y": 539
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 56,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0057.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 920,
+        "Y": 536
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 57,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0058.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 926,
+        "Y": 530
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 58,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0059.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 928,
+        "Y": 521
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 59,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0060.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 926,
+        "Y": 506
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 60,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0061.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 926,
+        "Y": 506
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 61,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0062.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 921,
+        "Y": 484
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 62,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0063.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 911,
+        "Y": 459
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 63,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0064.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 900,
+        "Y": 438
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 64,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0065.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 889,
+        "Y": 421
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 65,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0066.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 889,
+        "Y": 421
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 66,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0067.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 879,
+        "Y": 409
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 67,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0068.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 868,
+        "Y": 401
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 68,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0069.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 859,
+        "Y": 396
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 69,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0070.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 852,
+        "Y": 394
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 70,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0071.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 852,
+        "Y": 394
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 71,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0072.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 845,
+        "Y": 394
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 72,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0073.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 840,
+        "Y": 397
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 73,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0074.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 839,
+        "Y": 402
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 74,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0075.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 843,
+        "Y": 412
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 75,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0076.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 843,
+        "Y": 412
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 76,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0077.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 851,
+        "Y": 431
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 77,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0078.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 858,
+        "Y": 455
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 78,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0079.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 864,
+        "Y": 482
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 79,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0080.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 870,
+        "Y": 505
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 80,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0081.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 870,
+        "Y": 505
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 81,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0082.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 875,
+        "Y": 523
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 82,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0083.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 882,
+        "Y": 536
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 83,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0084.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 888,
+        "Y": 547
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 84,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0085.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 893,
+        "Y": 561
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 85,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0086.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 893,
+        "Y": 561
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 86,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0087.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 895,
+        "Y": 574
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    },
+    {
+      "Index": 87,
+      "SourcePath": "C:\\temp\\travail\\PXL_20260308_075249896.RAW-01.MP.COVER_work\\frames\\frame_0088.png",
+      "IsKept": false,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 895,
+        "Y": 588
+      },
+      "OffsetX": 0,
+      "OffsetY": 0
+    }
+  ],
+  "Adjustments": {
+    "Brightness": 0,
+    "Contrast": 0,
+    "Saturation": 0,
+    "Temperature": 0,
+    "Sharpness": 0,
+    "Highlights": 0,
+    "Shadows": 0
+  },
+  "TargetAnchor": {
+    "IsEmpty": false,
+    "X": 150,
+    "Y": 150
+  },
+  "OutputCrop": {
+    "Location": {
+      "IsEmpty": false,
+      "X": -540,
+      "Y": -118
+    },
+    "Size": {
+      "IsEmpty": false,
+      "Width": 689,
+      "Height": 500
+    },
+    "X": -540,
+    "Y": -118,
+    "Width": 689,
+    "Height": 500,
+    "Left": -540,
+    "Top": -118,
+    "Right": 149,
+    "Bottom": 382,
+    "IsEmpty": false
+  },
+  "VideoFps": 20
+}

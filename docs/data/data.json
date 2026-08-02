@@ -121,6 +121,24 @@
       "webm": "rougeGorgesFamilier.webm",
       "jpeg": "rougeGorgesFamilier.jpg",
       "game": "",
+      "otherImage": [
+        {
+          "latitude": "45.76218333333333",
+          "longitude": "4.7893083333333335",
+          "date": "2026-03-08",
+          "webm": "rougeGorgeSol.webm",
+          "jpeg": "rougeGorgeSol.jpg",
+          "game": "",
+          "poeticText": [
+            {"FR": "Il peut rester longtemps immobile, comme posé hors du temps, offrant au regard patient la chance rare de l’observer. Puis monte son chant riche, fluté, presque mélancolique, comme une confidence dans l’air frais."},
+            {"US": "It can remain still for a long time, as if set outside time, giving a patient watcher the rare chance to observe it. Then rises its rich, fluting, almost melancholy song, like a confidence carried in the cool air."}
+          ],
+          "scientificText": [
+            {"FR": "Le Rouge gorge familier entretient souvent un dialogue territorial nuancé avec ses congénères. Chacun répond par de longues phrases musicales, en alternance, sans se couper, ce qui limite l’escalade du conflit tout en affirmant sa présence."},
+            {"US": "The European robin often maintains a nuanced territorial dialogue with its own kind. Each bird answers with long musical phrases in turn, without interrupting, which helps limit conflict while still asserting its presence."}
+          ]
+        }
+      ],
  
       "poeticText": [
         {"FR": "Un petit soleil roux chante au cœur du sous-bois, ses notes vives sont comme des perles d’or sur l’air du matin."},
@@ -366,6 +384,25 @@
             {"FR": "Le mouvement révèle ici une merlette en quête de nourriture. En hiver, les fruits encore présents sur certains arbres deviennent une ressource précieuse pour de nombreux oiseaux, quand insectes et baies fraîches se font rares."},
             {"US": "Movement reveals a female blackbird here as it searches for food. In winter, fruit still remaining on certain trees becomes a valuable resource for many birds, when insects and fresh berries are scarce."}
           ]
+        },
+        {
+          "date": "2026-04-25",
+          "jpeg": "cacheCache2.jpg",
+          "game": ""
+        },
+        {
+          "date": "2026-04-25",
+          "webm": "cacheCache2.webm",
+          "jpeg": "cacheCache2.jpg",
+          "game": "",
+          "poeticText": [
+            {"FR": "Dans ce frémissement soudain, il me semble reconnaître une mésange charbonnière, petite présence vive surgie du feuillage comme une pensée familière."},
+            {"US": "In that sudden flutter, I think I recognize a great tit, a small lively presence rising from the leaves like a familiar thought."}
+          ],
+          "scientificText": [
+            {"FR": "Le poids plume et la petite taille des passereaux sont parfaitement adaptés à la vie sylvestre. Ils se déplacent avec agilité dans les rameaux les plus fins, exploitant fruits, bourgeons et insectes là où des oiseaux plus lourds seraient gênés."},
+            {"US": "The featherlight weight and small size of passerines are perfectly suited to woodland life. They move with agility through the finest twigs, making use of fruits, buds, and insects where heavier birds would be hindered."}
+          ]
         }
       ],
       "poeticText": [
@@ -377,6 +414,40 @@
         {"US": "Many birds benefit from plumage colors and patterns that merge with their surroundings. This visual camouflage reduces the risk of being spotted by predators, especially when they remain perfectly still."}
       ],
       "liensSon": [],
+      "fichierSon": ""
+    },
+    {
+      "name": [
+        {"FR": "Mésange bleue"},
+        {"US": "Blue tit"},
+        {"SC": "Cyanistes caeruleus"}
+      ],
+      "latitude": "45.76188333333333",
+      "longitude": "4.792677777777778",
+      "date": "2026-03-06",
+      "category": "oiseau",
+      "webm": "mesangeBleue1.webm",
+      "jpeg": "mesangeBleue1.jpg",
+      "game": "cachecache",
+      "otherImage": [
+        {
+          "latitude": "45.76188333333333",
+          "longitude": "4.792677777777778",
+          "date": "2026-03-06",
+          "webm": "mesangeBleue2.webm",
+          "jpeg": "mesangeBleue2.jpg",
+          "game": ""
+         }
+      ],
+      "poeticText": [
+        {"FR": "Au printemps, le temps du nid revient, et chaque bonne cachette devient promesse: un trou, une fente, une boîte oubliée, tout peut accueillir ce petit foyer de mousse et de plumes."},
+        {"US": "In spring, nesting time returns, and every good hiding place becomes a promise: a hole, a crack, a forgotten box, anything can cradle this little home of moss and feathers."}
+      ],
+      "scientificText": [
+        {"FR": "Cyanistes caeruleus se déplace souvent en petites bandes, surtout hors période de reproduction. Agile et très active, elle explore sans cesse branches et feuillages, toujours en mouvement à la recherche de nourriture."},
+        {"US": "Cyanistes caeruleus often moves in small flocks, especially outside the breeding season. Agile and very active, it constantly explores branches and foliage, always in motion as it searches for food."}
+      ],
+      "liensSon": ["https://www.chant-oiseaux.fr/mesange-bleue/?type=chant-718"],
       "fichierSon": ""
     }
   ]
