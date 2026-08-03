@@ -185,9 +185,26 @@
   }
 
   .map-toggle strong {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: 0.92rem;
     line-height: 1.1;
+  }
+
+  .map-toggle-mode {
+    font-weight: 500;
+    transition: color 180ms ease, font-weight 180ms ease, opacity 180ms ease;
+  }
+
+  .map-toggle-mode.is-active {
+    font-weight: 800;
+    color: #1b2719;
+  }
+
+  .map-toggle-separator {
+    color: rgba(95, 112, 92, 0.8);
+    font-weight: 500;
   }
 
   .map-toggle span {
@@ -208,15 +225,21 @@
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
-    pointer-events: auto;
+    color: #c62828;
+    opacity: 0.88;
+    transition: opacity 180ms ease, transform 180ms ease;
   }
 
-  .map-toggle-pin input {
-    width: 14px;
-    height: 14px;
-    margin: 0;
-    accent-color: #54724d;
-    cursor: pointer;
+  .map-toggle.is-previewing .map-toggle-pin {
+    opacity: 0.45;
+    transform: translateY(1px);
+  }
+
+  .map-toggle-pin svg {
+    width: 18px;
+    height: 18px;
+    overflow: visible;
+    filter: drop-shadow(0 1px 1px rgba(73, 17, 17, 0.28));
   }
 
   .stage {
@@ -1379,12 +1402,20 @@
         <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/>
       </svg>
       <div class="map-toggle-copy">
-        <strong>Carte ou immersion</strong>
-        <span>Alternez entre la vue sensible et la carte réelle</span>
+        <strong>
+          <span class="map-toggle-mode" data-view-label="map">Carte</span>
+          <span class="map-toggle-separator">ou</span>
+          <span class="map-toggle-mode" data-view-label="immersion">immersion</span>
+        </strong>
+        <span class="map-toggle-subtitle">Survolez pour apercevoir l’autre mode, cliquez pour le fixer</span>
       </div>
-      <label class="map-toggle-pin" aria-label="Garder la carte affichée">
-        <input id="mapPinToggle" type="checkbox" checked />
-      </label>
+      <span class="map-toggle-pin" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path fill="#d32f2f" d="M5 5.4c0-.77.63-1.4 1.4-1.4h11.2c.77 0 1.4.63 1.4 1.4 0 2.48-2.26 4.48-5.18 4.73l1.56 6.26c.12.51-.26 1-.78 1H9.4c-.52 0-.9-.49-.78-1l1.56-6.26C7.26 9.88 5 7.88 5 5.4Z"/>
+          <path fill="#b71c1c" d="M11.15 17.43h1.7l-.1 5.3c0 .15-.19.22-.29.11l-1.21-1.41c-.14-.17-.22-.37-.2-.59l.1-3.41Z"/>
+          <path fill="#8e1717" d="M10.2 8.9h3.6l1.1 4.35H9.1l1.1-4.35Z"/>
+        </svg>
+      </span>
     </div>
 
     <div class="audio-control" aria-label="Contrôle du son de fond" role="region">
@@ -1464,7 +1495,6 @@
   const mapViewport = document.getElementById('mapViewport');
   const mapScene = document.getElementById('mapScene');
   const layerSvg = document.querySelector('.layer-svg');
-  const mapPinToggle = document.getElementById('mapPinToggle');
   const zoomInBtn = document.getElementById('zoomInBtn');
   const zoomOutBtn = document.getElementById('zoomOutBtn');
   const resetViewBtn = document.getElementById('resetViewBtn');
@@ -1518,16 +1548,22 @@
     });
   }
   const mapToggleTitleElement = document.querySelector('.map-toggle-copy strong');
-  const mapToggleSubtitleElement = document.querySelector('.map-toggle-copy span');
+  const mapToggleSubtitleElement = document.querySelector('.map-toggle-subtitle');
+  const mapToggleModeMapElement = document.querySelector('[data-view-label="map"]');
+  const mapToggleModeImmersionElement = document.querySelector('[data-view-label="immersion"]');
   let points = [];
   let rawImages = [];
   let currentLocale = 'FR';
   const localeStrings = {
     FR: {
-      toggleTitle: 'Carte ou immersion',
-      toggleSubtitle: 'Alternez entre la vue sensible et la carte réelle',
-      mapToggleAria: 'Afficher l’ancrage géographique sur la carte OpenStreetMap',
-      mapToggleTitle: 'Afficher l’ancrage géographique',
+      toggleMapLabel: 'Carte',
+      toggleImmersionLabel: 'immersion',
+      toggleSeparator: 'ou',
+      toggleSubtitle: 'Survolez pour apercevoir l’autre mode, cliquez pour le fixer',
+      mapToggleAriaMap: 'Basculer vers le mode immersion',
+      mapToggleAriaImmersion: 'Basculer vers le mode carte',
+      mapToggleTitleMap: 'Passer en immersion',
+      mapToggleTitleImmersion: 'Passer en mode carte',
       mapHintTitle: 'Commencer',
       mapHintText: 'Explorez la carte, cliquez sur les points, écoutez, regardez.',
       poeticLabel: 'Regard sensible',
@@ -1539,10 +1575,14 @@
       infoTooltipText: 'Bienvenue à Champvert.\n\nUn endroit où la nature tient sa place, sans forcer, au cœur de la ville.\n\nDes sons, des images, des passages à traverser lentement.\n\nToutes les images et observations présentées ici ont été captées à Champvert.\n\nTout a été saisi dans la grâce d’un instant vivant.\n\nAucun suivi, aucune publicité, aucune collecte de données. Prenez votre temps. Regardez. Écoutez. Essayez.\n\nContact : albouille69@gmail.com'
     },
     US: {
-      toggleTitle: 'Map or immersion',
-      toggleSubtitle: 'Switch between the sensory view and the real map',
-      mapToggleAria: 'Show the geographic anchor on the OpenStreetMap map',
-      mapToggleTitle: 'Show the geographic anchor',
+      toggleMapLabel: 'Map',
+      toggleImmersionLabel: 'Immersion',
+      toggleSeparator: 'or',
+      toggleSubtitle: 'Hover to preview the other mode, click to keep it',
+      mapToggleAriaMap: 'Switch to immersion mode',
+      mapToggleAriaImmersion: 'Switch to map mode',
+      mapToggleTitleMap: 'Switch to immersion mode',
+      mapToggleTitleImmersion: 'Switch to map mode',
       mapHintTitle: 'Start here',
       mapHintText: 'Explore the map, click the points, listen, look.',
       poeticLabel: 'Sensitive view',
@@ -1571,7 +1611,9 @@
   let hasOpenedPoiVideo = false;
   let poiIdleHighlightTimerId = null;
   let poiIdleHighlightDue = false;
-  let mapPinned = mapPinToggle.checked;
+  let committedView = 'map';
+  let previewView = null;
+  let suppressPreviewUntilPointerExit = false;
   let openingPoint = false;
   let lastActivatedPoint = null;
   let activeVariants = [];
@@ -1699,6 +1741,19 @@
     return scientific ? `${name} - ${scientific}` : name;
   }
 
+  function getLocalizedName(list, localeKey, fallback = '') {
+    return getTextByLocale(list, localeKey) || getPreferredText(list, fallback);
+  }
+
+  function getMultilingualName(list, fallback = 'Observation') {
+    const french = getLocalizedName(list, 'FR', fallback);
+    const english = getLocalizedName(list, 'US', french || fallback);
+    const scientific = getTextByLocale(list, 'SC');
+    return [french, english, scientific]
+      .filter((value, index, values) => value && values.indexOf(value) === index)
+      .join(' / ') || fallback;
+  }
+
   function normalizeVariants(image) {
     const mainWebm = (image.webm && image.webm !== '_') ? `${poiMediaPathPrefix}${image.webm}` : '_';
     const mainJpeg = (image.jpeg && image.jpeg !== '_') ? `${poiMediaPathPrefix}${image.jpeg}` : '_';
@@ -1765,7 +1820,21 @@
 
   function updateMapToggleText() {
     const strings = localeStrings[currentLocale] || localeStrings.FR;
-    if (mapToggleTitleElement) mapToggleTitleElement.textContent = strings.toggleTitle;
+    const effectiveView = previewView || committedView;
+    const isMapView = effectiveView === 'map';
+    const separatorElement = mapToggleTitleElement?.querySelector('.map-toggle-separator');
+
+    if (mapToggleModeMapElement) {
+      mapToggleModeMapElement.textContent = strings.toggleMapLabel;
+      mapToggleModeMapElement.classList.toggle('is-active', isMapView);
+    }
+    if (mapToggleModeImmersionElement) {
+      mapToggleModeImmersionElement.textContent = strings.toggleImmersionLabel;
+      mapToggleModeImmersionElement.classList.toggle('is-active', !isMapView);
+    }
+    if (separatorElement) {
+      separatorElement.textContent = strings.toggleSeparator;
+    }
     if (mapToggleSubtitleElement) mapToggleSubtitleElement.textContent = strings.toggleSubtitle;
     if (mapHint) {
       const title = mapHint.querySelector('strong');
@@ -1774,8 +1843,9 @@
       if (text) text.textContent = strings.mapHintText;
     }
     if (mapToggle) {
-      mapToggle.setAttribute('aria-label', strings.mapToggleAria);
-      mapToggle.setAttribute('title', strings.mapToggleTitle);
+      mapToggle.classList.toggle('is-previewing', previewView !== null);
+      mapToggle.setAttribute('aria-label', isMapView ? strings.mapToggleAriaMap : strings.mapToggleAriaImmersion);
+      mapToggle.setAttribute('title', isMapView ? strings.mapToggleTitleMap : strings.mapToggleTitleImmersion);
     }
     if (diaToggleBtn) {
       diaToggleBtn.textContent = strings.diaLabel;
@@ -1852,6 +1922,7 @@
       video: pointEl.dataset.video,
       jpeg: pointEl.dataset.jpeg,
       title: pointEl.dataset.title || 'Observation',
+      titleMultilingual: pointEl.dataset.titleMultilingual || pointEl.dataset.title || 'Observation',
       text: pointEl.dataset.text || 'Texte à venir.',
       poetic,
       scientific,
@@ -1920,7 +1991,7 @@
     updateVariantControls();
     if (bubbleVisible && activePointData) {
       const activeInfo = getActiveVariantInfo();
-      infoTitle.textContent = activePointData.title;
+      infoTitle.textContent = activePointData.titleMultilingual || activePointData.title;
       infoText.innerHTML = activeInfo.html || escapeHtml(activePointData.text);
     }
   }
@@ -1964,7 +2035,7 @@
         if (variantPrevBtn) variantPrevBtn.disabled = true;
         if (variantNextBtn) variantNextBtn.disabled = true;
         if (variantPositionLabel) variantPositionLabel.textContent = '1 / 1';
-        infoTitle.textContent = activePointData.title;
+        infoTitle.textContent = activePointData.titleMultilingual || activePointData.title;
         const activeInfo = getActiveVariantInfo();
         infoText.innerHTML = activeInfo.html || activePointData.html || escapeHtml(activePointData.text);
       }
@@ -2415,6 +2486,7 @@
     pointGroup.dataset.video = (image.webm && image.webm !== '_') ? `${poiMediaPathPrefix}${image.webm}` : '_';
     pointGroup.dataset.jpeg = (image.jpeg && image.jpeg !== '_') ? `${poiMediaPathPrefix}${image.jpeg}` : '_';
     pointGroup.dataset.title = getPreferredNameWithScientific(image.name, 'Observation');
+    pointGroup.dataset.titleMultilingual = getMultilingualName(image.name, 'Observation');
     pointGroup.dataset.poetic = getPreferredText(image.poeticText, '');
     pointGroup.dataset.scientific = getPreferredText(image.scientificText, '');
     pointGroup.dataset.text = getPreferredText(image.poeticText, getPreferredText(image.scientificText, 'Texte à venir.'));
@@ -2709,7 +2781,9 @@
   function enterDiaporamaMode() {
     if (diaporamaActive || isOpen) return;
 
-    diaporamaWasMapMode = body.classList.contains('show-map');
+    diaporamaWasMapMode = committedView === 'map';
+    previewView = null;
+    suppressPreviewUntilPointerExit = false;
     diaporamaEntries = buildDiaporamaEntries();
     if (!diaporamaEntries.length) return;
 
@@ -2964,51 +3038,56 @@
   }
 
   function showMap() {
-    body.classList.add('show-map');
-    syncBackgroundPlayback();
+    previewView = committedView === 'map' ? 'immersion' : 'map';
+    applyViewMode();
   }
 
   function hideMap() {
-    if (mapPinned) return;
-    body.classList.remove('show-map');
+    previewView = null;
+    suppressPreviewUntilPointerExit = false;
+    applyViewMode();
+  }
+
+  function applyViewMode() {
+    const effectiveView = previewView || committedView;
+    body.classList.toggle('show-map', effectiveView === 'map');
     syncBackgroundPlayback();
+    updateMapToggleText();
   }
 
   function syncMapVisibility() {
-    body.classList.toggle('show-map', mapPinned);
-    syncBackgroundPlayback();
+    previewView = null;
+    applyViewMode();
   }
 
-  mapToggle.addEventListener('mouseenter', showMap);
+  function toggleCommittedView() {
+    committedView = committedView === 'map' ? 'immersion' : 'map';
+    previewView = null;
+    suppressPreviewUntilPointerExit = true;
+    applyViewMode();
+  }
+
+  mapToggle.addEventListener('mouseenter', () => {
+    if (suppressPreviewUntilPointerExit) return;
+    showMap();
+  });
   mapToggle.addEventListener('mouseleave', hideMap);
-  mapToggle.addEventListener('focus', showMap);
+  mapToggle.addEventListener('focus', () => {
+    if (suppressPreviewUntilPointerExit) return;
+    showMap();
+  });
   mapToggle.addEventListener('blur', hideMap);
   mapToggle.addEventListener('keydown', (event) => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
-    if (event.target === mapPinToggle) return;
     event.preventDefault();
-    if (mapPinned) {
-      showMap();
-      return;
-    }
-    body.classList.toggle('show-map');
+    toggleCommittedView();
   });
   mapToggle.addEventListener('pointerdown', (event) => {
     event.stopPropagation();
   });
-  mapToggle.addEventListener('touchstart', (event) => {
-    if (event.target === mapPinToggle) return;
-    body.classList.toggle('show-map', mapPinned ? true : !body.classList.contains('show-map'));
-  }, { passive: true });
-  mapPinToggle.addEventListener('pointerdown', (event) => {
+  mapToggle.addEventListener('click', (event) => {
     event.stopPropagation();
-  });
-  mapPinToggle.addEventListener('click', (event) => {
-    event.stopPropagation();
-  });
-  mapPinToggle.addEventListener('change', () => {
-    mapPinned = mapPinToggle.checked;
-    syncMapVisibility();
+    toggleCommittedView();
   });
 
   zoomInBtn.addEventListener('click', () => {
@@ -3427,7 +3506,7 @@
     const region = event ? pickRegionFromPointer(event, rect, activeRegions) : (activeRegion || activeRegions[0]);
     const resolvedRegion = region || activeRegions[0] || {
       label: 'Observation',
-      title: activePointData.title,
+      title: activePointData.titleMultilingual || activePointData.title,
       text: activePointData.text,
       y: 0.5,
       _zoneKey: 'default-zone'
@@ -3440,7 +3519,7 @@
     activeZoneKey = resolvedRegion._zoneKey;
 
     infoZoneLabel.textContent = resolvedRegion.label || 'Observation';
-    infoTitle.textContent = resolvedRegion.title || activePointData.title;
+    infoTitle.textContent = resolvedRegion.title || activePointData.titleMultilingual || activePointData.title;
     const activeInfo = getActiveVariantInfo();
     infoText.innerHTML = resolvedRegion.html || activeInfo.html || activePointData.html || escapeHtml(resolvedRegion.text || activePointData.text);
 
