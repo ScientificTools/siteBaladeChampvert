@@ -61,8 +61,8 @@
     {
       "name": [
         {"FR": "Geai des chênes"},
-        {"US": "Common starling"},
-        {"SC": "Sturnus vulgaris"}
+        {"US": "Eurasian Jay"},
+        {"SC": "Garrulus glandarius"}
       ],
       "latitude": "45.76170555555556",
       "longitude": "4.789488888888889",
@@ -77,8 +77,8 @@
         {"US": "It lifts its foot carefully, rubs it against its beak, as if clearing earth and twigs stuck beneath its toes."}
       ],
       "scientificText": [
-        {"FR": "Sturnus vulgaris se nourrit surtout au sol, fouillant l’herbe et la litière à la recherche de vers, d’insectes et de graines."},
-        {"US": "Sturnus vulgaris feeds mainly on the ground, probing grass and leaf litter for worms, insects and seeds."}
+        {"FR": "Garrulus glandarius se nourrit surtout au sol, fouillant l’herbe et la litière à la recherche de vers, d’insectes et de graines."},
+        {"US": "Garrulus glandarius feeds mainly on the ground, probing grass and leaf litter for worms, insects and seeds."}
       ],
       "liensSon": ["https://www.chant-oiseaux.fr/geai-des-chenes/?type=cris-1547"],
       "fichierSon": ""
@@ -223,12 +223,12 @@
       "jpeg": "pouillotVeloce.jpg",
       "game": "",
      "poeticText": [
-        {"FR": "Un chant vif coud le matin à la lisière, invisible et pourtant présent."},
-        {"US": "A bright song stitches the morning at the edge, invisible yet present."}
+        {"FR": "Poids plume dans les broussailles, il file de brindille en brindille, si vif et discret qu'on le devine plus qu'on ne le voit."},
+        {"US": "A featherweight in the thickets, it slips from twig to twig, so quick and discreet that you sense it more than you see it."}
       ],
       "scientificText": [
-        {"FR": "Phylloscopus collybita est un petit migrateur qui habite friches et bosquets."},
-        {"US": "Phylloscopus collybita is a small migrant that inhabits scrub and groves."}
+        {"FR": "Phylloscopus collybita est un très petit passereau au poids léger, difficile à repérer dans les broussailles où il se déplace avec des mouvements vifs et furtifs."},
+        {"US": "Phylloscopus collybita is a very small, lightweight warbler that is hard to spot in thickets, where it moves with quick, discreet motions."}
       ],
       "liensSon": ["https://www.chant-oiseaux.fr/pouillot-veloce/?type=chant-769"],
       "fichierSon": ""
