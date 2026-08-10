@@ -1625,6 +1625,9 @@
   let backgroundEntries = [];
   let activeBackgroundVideoIndex = 0;
   let activeBackgroundEntryIndex = -1;
+  let backgroundCycleOrder = [];
+  let backgroundCycleCursor = 0;
+  let backgroundCycleKey = '';
   let backgroundSwitchTimerId = null;
   let backgroundTransitionToken = 0;
   let backgroundPlaybackPaused = false;
@@ -2579,17 +2582,62 @@
     return backgroundVideos[1 - activeBackgroundVideoIndex];
   }
 
+  function shuffleIndices(length) {
+    const indices = Array.from({ length }, (_, index) => index);
+    for (let index = indices.length - 1; index > 0; index -= 1) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [indices[index], indices[swapIndex]] = [indices[swapIndex], indices[index]];
+    }
+    return indices;
+  }
+
+  function getBackgroundCycleKey(entries) {
+    return entries.map((entry) => entry.id).join('|');
+  }
+
+  function resetBackgroundCycle() {
+    backgroundCycleOrder = [];
+    backgroundCycleCursor = 0;
+    backgroundCycleKey = '';
+  }
+
+  function ensureBackgroundCycle(entries) {
+    if (!entries.length) {
+      resetBackgroundCycle();
+      return;
+    }
+
+    const nextCycleKey = getBackgroundCycleKey(entries);
+    if (backgroundCycleKey !== nextCycleKey) {
+      backgroundCycleOrder = [];
+      backgroundCycleCursor = 0;
+      backgroundCycleKey = nextCycleKey;
+    }
+
+    if (backgroundCycleCursor < backgroundCycleOrder.length) {
+      return;
+    }
+
+    backgroundCycleOrder = shuffleIndices(entries.length);
+    backgroundCycleCursor = 0;
+
+    if (entries.length > 1 && backgroundCycleOrder[0] === activeBackgroundEntryIndex) {
+      const swapIndex = backgroundCycleOrder.findIndex((entryIndex) => entryIndex !== activeBackgroundEntryIndex);
+      if (swapIndex > 0) {
+        [backgroundCycleOrder[0], backgroundCycleOrder[swapIndex]] = [backgroundCycleOrder[swapIndex], backgroundCycleOrder[0]];
+      }
+    }
+  }
+
   function pickNextBackgroundEntryIndex() {
     const entries = getBackgroundEntries();
     if (!entries.length) return -1;
     if (entries.length === 1) return 0;
 
-    let nextIndex = activeBackgroundEntryIndex;
-    while (nextIndex === activeBackgroundEntryIndex) {
-      nextIndex = Math.floor(Math.random() * entries.length);
-    }
-
-    return nextIndex;
+    ensureBackgroundCycle(entries);
+    const nextIndex = backgroundCycleOrder[backgroundCycleCursor];
+    backgroundCycleCursor += 1;
+    return typeof nextIndex === 'number' ? nextIndex : -1;
   }
 
   function waitForBackgroundVideoReady(videoEl) {
@@ -2788,6 +2836,7 @@
     if (!diaporamaEntries.length) return;
 
     diaporamaActive = true;
+    resetBackgroundCycle();
     body.classList.add('diaporama-active');
 
     if (diaporamaWasMapMode) {
@@ -2807,6 +2856,7 @@
     document.removeEventListener('click', handleDiaporamaExit, true);
 
     body.classList.remove('diaporama-active');
+    resetBackgroundCycle();
 
     if (diaporamaWasMapMode) {
       activeBackgroundEntryIndex = -1;
