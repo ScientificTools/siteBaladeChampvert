@@ -436,6 +436,120 @@
     text-align: center;
     padding: 28px 0 8px;
   }
+
+  .topbar-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: -4px 0 14px;
+  }
+
+  .sound-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.82);
+    box-shadow: 0 8px 20px var(--shadow);
+  }
+
+  .sound-control button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 999px;
+    background: #fcfdf7;
+    color: var(--accent);
+    cursor: pointer;
+    transition: background 180ms ease;
+  }
+
+  .sound-control button.active {
+    background: var(--accent-soft);
+  }
+
+  .sound-control svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    pointer-events: none;
+  }
+
+  .sound-volume {
+    display: inline-flex;
+    align-items: center;
+    transition: opacity 180ms ease, visibility 180ms ease;
+  }
+
+  .sound-volume.hidden {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    overflow: hidden;
+  }
+
+  .sound-volume input[type="range"] {
+    width: 88px;
+    accent-color: var(--accent);
+  }
+
+  #backgroundAudio {
+    display: none;
+  }
+
+  .dia-btn {
+    padding: 0 14px;
+    height: 34px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--text);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: 0 8px 20px var(--shadow);
+    cursor: pointer;
+  }
+
+  .diaporama-stage {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  body.diaporama-active {
+    overflow: hidden;
+  }
+
+  body.diaporama-active .diaporama-stage {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .diaporama-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  .diaporama-video.is-active {
+    opacity: 1;
+  }
 </style>
 <script>
   (function () {
@@ -460,6 +574,10 @@
 </script>
 </head>
 <body>
+  <div id="diaporamaStage" class="diaporama-stage" aria-hidden="true">
+    <video id="diaporamaVideoA" class="diaporama-video is-active" muted loop playsinline preload="metadata"></video>
+    <video id="diaporamaVideoB" class="diaporama-video" muted loop playsinline preload="metadata"></video>
+  </div>
   <main class="shell">
     <div class="topbar">
       <div class="brand">
@@ -470,6 +588,22 @@
         <button id="langFrBtn" type="button" class="active" aria-pressed="true">FR</button>
         <button id="langEnBtn" type="button" aria-pressed="false">EN</button>
       </div>
+    </div>
+
+    <div class="topbar-tools">
+      <div class="sound-control" aria-label="Contrôle du son de fond" role="region">
+        <button id="audioToggleBtn" type="button" aria-pressed="false" aria-label="Activer le son de fond">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 9v6h4l5 5V4L7 9H3z" />
+            <path d="M16.5 12c0-1.77-.77-3.37-2-4.47v8.94c1.23-1.1 2-2.7 2-4.47z" />
+          </svg>
+        </button>
+        <div id="audioVolumeControl" class="sound-volume hidden" aria-hidden="true">
+          <input id="audioVolumeRange" type="range" min="0" max="1" step="0.01" value="0.55" aria-label="Volume du son de fond" />
+        </div>
+        <audio id="backgroundAudio" loop preload="none" src="../song/fond.m4a"></audio>
+      </div>
+      <button id="diaToggleBtn" class="dia-btn" type="button" aria-label="Lancer le diaporama" title="Diaporama">Diaporama</button>
     </div>
 
     <section class="panel intro">
@@ -558,6 +692,7 @@
       loading: 'Chargement en cours...',
       desktopNote: 'Pour une expérience immersive de balade, visitez le site depuis votre ordinateur.',
       desktopLink: 'Version immersive',
+      diaLabel: 'Diaporama',
       filterAll: 'Tout',
       filterBirds: 'Oiseaux',
       filterMammals: 'Mammifères',
@@ -589,6 +724,7 @@
       loading: 'Loading...',
       desktopNote: 'For an immersive walking experience, visit the site from your computer.',
       desktopLink: 'Immersive version',
+      diaLabel: 'Slideshow',
       filterAll: 'All',
       filterBirds: 'Birds',
       filterMammals: 'Mammals',
@@ -633,11 +769,34 @@
   const linksBlock = document.getElementById('linksBlock');
   const linksLabel = document.getElementById('linksLabel');
   const linksList = document.getElementById('linksList');
+  const audioToggleBtn = document.getElementById('audioToggleBtn');
+  const audioVolumeControl = document.getElementById('audioVolumeControl');
+  const audioVolumeRange = document.getElementById('audioVolumeRange');
+  const backgroundAudio = document.getElementById('backgroundAudio');
+  const diaToggleBtn = document.getElementById('diaToggleBtn');
+  const diaporamaStage = document.getElementById('diaporamaStage');
+  const diaporamaVideoA = document.getElementById('diaporamaVideoA');
+  const diaporamaVideoB = document.getElementById('diaporamaVideoB');
+  const diaporamaVideos = [diaporamaVideoA, diaporamaVideoB].filter(Boolean);
+  const body = document.body;
+  const BACKGROUND_MANIFEST_PATH = '../background/backgroundList.json';
+  const DIAPORAMA_CYCLE_MS = 10000;
+  const AUDIO_VOLUME_KEY = 'siteBaladeChampvertAudioVolume';
   let currentLocale = 'FR';
   let activeFilter = 'oiseau';
   let speciesEntries = [];
   let selectedId = null;
   let activeVariantIndex = 0;
+  let backgroundEntries = [];
+  let diaporamaEntries = [];
+  let diaporamaActive = false;
+  let activeDiaporamaVideoIndex = 0;
+  let activeDiaporamaEntryIndex = -1;
+  let diaporamaCycleOrder = [];
+  let diaporamaCycleCursor = 0;
+  let diaporamaCycleKey = '';
+  let diaporamaSwitchTimerId = null;
+  let diaporamaTransitionToken = 0;
 
   function getStrings() {
     return STRINGS[currentLocale] || STRINGS.FR;
@@ -736,6 +895,11 @@
     poeticLabel.textContent = strings.poeticLabel;
     scientificLabel.textContent = strings.scientificLabel;
     linksLabel.textContent = strings.linksLabel;
+    if (diaToggleBtn) {
+      diaToggleBtn.textContent = strings.diaLabel;
+      diaToggleBtn.setAttribute('title', strings.diaLabel);
+      diaToggleBtn.setAttribute('aria-label', currentLocale === 'FR' ? 'Lancer le diaporama' : 'Start slideshow');
+    }
     langFrBtn.classList.toggle('active', currentLocale === 'FR');
     langFrBtn.setAttribute('aria-pressed', String(currentLocale === 'FR'));
     langEnBtn.classList.toggle('active', currentLocale === 'US');
@@ -918,10 +1082,337 @@
     speciesEntries.sort((a, b) => a.title.localeCompare(b.title, currentLocale === 'FR' ? 'fr' : 'en'));
   }
 
+  function getSavedAudioVolume() {
+    const saved = localStorage.getItem(AUDIO_VOLUME_KEY);
+    const parsed = parseFloat(saved);
+    return Number.isFinite(parsed) && parsed >= 0 && parsed <= 1 ? parsed : 0.55;
+  }
+
+  function saveAudioVolume(value) {
+    localStorage.setItem(AUDIO_VOLUME_KEY, String(value));
+  }
+
+  function setBackgroundAudioVolume(value) {
+    const normalized = Math.min(1, Math.max(0, Number(value)));
+    if (backgroundAudio) {
+      backgroundAudio.volume = normalized;
+    }
+    if (audioVolumeRange) {
+      audioVolumeRange.value = String(normalized);
+    }
+    saveAudioVolume(normalized);
+  }
+
+  function setBackgroundAudioEnabled(shouldEnable) {
+    if (!audioToggleBtn || !audioVolumeControl || !audioVolumeRange || !backgroundAudio) return;
+
+    const isActive = !!shouldEnable;
+    audioToggleBtn.classList.toggle('active', isActive);
+    audioToggleBtn.setAttribute('aria-pressed', String(isActive));
+    audioToggleBtn.setAttribute('aria-label', isActive ? 'Désactiver le son de fond' : 'Activer le son de fond');
+    audioVolumeControl.classList.toggle('hidden', !isActive);
+    audioVolumeControl.setAttribute('aria-hidden', String(!isActive));
+
+    if (isActive) {
+      backgroundAudio.volume = Number(audioVolumeRange.value) || getSavedAudioVolume();
+      backgroundAudio.play().catch((error) => {
+        console.warn('Impossible de démarrer le son de fond :', error);
+      });
+    } else {
+      backgroundAudio.pause();
+    }
+  }
+
+  function toggleBackgroundAudio() {
+    if (!audioToggleBtn) return;
+    setBackgroundAudioEnabled(!audioToggleBtn.classList.contains('active'));
+  }
+
+  function initializeBackgroundAudioControls() {
+    if (!audioToggleBtn || !audioVolumeControl || !audioVolumeRange || !backgroundAudio) return;
+
+    const startingVolume = getSavedAudioVolume();
+    audioVolumeRange.value = String(startingVolume);
+    backgroundAudio.volume = startingVolume;
+    audioToggleBtn.classList.remove('active');
+    audioToggleBtn.setAttribute('aria-pressed', 'false');
+    audioToggleBtn.setAttribute('aria-label', 'Activer le son de fond');
+    audioVolumeControl.classList.add('hidden');
+    audioVolumeControl.setAttribute('aria-hidden', 'true');
+
+    audioToggleBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      toggleBackgroundAudio();
+    });
+
+    audioVolumeRange.addEventListener('input', (event) => {
+      setBackgroundAudioVolume(event.target.value);
+    });
+  }
+
+  async function loadBackgroundList() {
+    try {
+      const response = await fetch(BACKGROUND_MANIFEST_PATH);
+      if (!response.ok) {
+        throw new Error(`Échec du chargement du manifeste des fonds : ${response.status}`);
+      }
+      const rawData = await response.json();
+      const manifestEntries = Array.isArray(rawData.backgrounds) ? rawData.backgrounds : [];
+      backgroundEntries = manifestEntries
+        .map((entry, index) => {
+          if (!entry || typeof entry.src !== 'string' || !entry.src.trim()) return null;
+          return {
+            id: typeof entry.id === 'string' && entry.id.trim() ? entry.id.trim() : `background-${index + 1}`,
+            src: `../${entry.src.trim()}`
+          };
+        })
+        .filter(Boolean);
+    } catch (error) {
+      backgroundEntries = [];
+      console.error('Impossible de charger ou traiter background/backgroundList.json :', error);
+    }
+  }
+
+  function buildDiaporamaEntries() {
+    const entries = backgroundEntries.slice();
+    speciesEntries.forEach((entry) => {
+      entry.variants.forEach((variant, variantIndex) => {
+        if (variant.webm) {
+          entries.push({ id: `${entry.id}-${variantIndex}`, src: variant.webm });
+        }
+      });
+    });
+    return entries;
+  }
+
+  function shuffleIndices(length) {
+    const indices = Array.from({ length }, (_, index) => index);
+    for (let index = indices.length - 1; index > 0; index -= 1) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [indices[index], indices[swapIndex]] = [indices[swapIndex], indices[index]];
+    }
+    return indices;
+  }
+
+  function getDiaporamaCycleKey(entries) {
+    return entries.map((entry) => entry.id).join('|');
+  }
+
+  function resetDiaporamaCycle() {
+    diaporamaCycleOrder = [];
+    diaporamaCycleCursor = 0;
+    diaporamaCycleKey = '';
+  }
+
+  function ensureDiaporamaCycle(entries) {
+    if (!entries.length) {
+      resetDiaporamaCycle();
+      return;
+    }
+
+    const nextCycleKey = getDiaporamaCycleKey(entries);
+    if (diaporamaCycleKey !== nextCycleKey) {
+      diaporamaCycleOrder = [];
+      diaporamaCycleCursor = 0;
+      diaporamaCycleKey = nextCycleKey;
+    }
+
+    if (diaporamaCycleCursor < diaporamaCycleOrder.length) {
+      return;
+    }
+
+    diaporamaCycleOrder = shuffleIndices(entries.length);
+    diaporamaCycleCursor = 0;
+
+    if (entries.length > 1 && diaporamaCycleOrder[0] === activeDiaporamaEntryIndex) {
+      const swapIndex = diaporamaCycleOrder.findIndex((entryIndex) => entryIndex !== activeDiaporamaEntryIndex);
+      if (swapIndex > 0) {
+        [diaporamaCycleOrder[0], diaporamaCycleOrder[swapIndex]] = [diaporamaCycleOrder[swapIndex], diaporamaCycleOrder[0]];
+      }
+    }
+  }
+
+  function pickNextDiaporamaEntryIndex() {
+    if (!diaporamaEntries.length) return -1;
+    if (diaporamaEntries.length === 1) return 0;
+
+    ensureDiaporamaCycle(diaporamaEntries);
+    const nextIndex = diaporamaCycleOrder[diaporamaCycleCursor];
+    diaporamaCycleCursor += 1;
+    return typeof nextIndex === 'number' ? nextIndex : -1;
+  }
+
+  function getInactiveDiaporamaVideo() {
+    if (diaporamaVideos.length < 2) return diaporamaVideos[0] || null;
+    return diaporamaVideos[1 - activeDiaporamaVideoIndex];
+  }
+
+  function waitForDiaporamaVideoReady(videoEl) {
+    return new Promise((resolve, reject) => {
+      let settled = false;
+
+      const cleanup = () => {
+        videoEl.removeEventListener('loadeddata', handleReady);
+        videoEl.removeEventListener('canplay', handleReady);
+        videoEl.removeEventListener('error', handleError);
+      };
+
+      const handleReady = () => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        resolve();
+      };
+
+      const handleError = () => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        reject(new Error(`Impossible de lire le fond du diaporama : ${videoEl.currentSrc || videoEl.src || 'source inconnue'}`));
+      };
+
+      if (videoEl.readyState >= 2) {
+        resolve();
+        return;
+      }
+
+      videoEl.addEventListener('loadeddata', handleReady, { once: true });
+      videoEl.addEventListener('canplay', handleReady, { once: true });
+      videoEl.addEventListener('error', handleError, { once: true });
+    });
+  }
+
+  async function prepareDiaporamaVideo(videoEl, entry) {
+    if (!videoEl || !entry) return;
+    if (videoEl.dataset.diaporamaId === entry.id && videoEl.getAttribute('src') === entry.src) {
+      return;
+    }
+
+    videoEl.pause();
+    videoEl.dataset.diaporamaId = entry.id;
+    videoEl.setAttribute('src', entry.src);
+    videoEl.load();
+    await waitForDiaporamaVideoReady(videoEl);
+  }
+
+  async function activateDiaporamaEntry(entryIndex, { immediate = false } = {}) {
+    if (entryIndex < 0 || entryIndex >= diaporamaEntries.length || !diaporamaVideos.length) return;
+
+    const transitionToken = ++diaporamaTransitionToken;
+    const nextVideo = immediate ? (diaporamaVideos[activeDiaporamaVideoIndex] || diaporamaVideos[0]) : getInactiveDiaporamaVideo();
+    const currentVideo = diaporamaVideos[activeDiaporamaVideoIndex] || null;
+    const entry = diaporamaEntries[entryIndex];
+
+    if (!nextVideo || !entry) return;
+
+    try {
+      await prepareDiaporamaVideo(nextVideo, entry);
+      if (transitionToken !== diaporamaTransitionToken) return;
+
+      nextVideo.currentTime = 0;
+      nextVideo.play().catch(() => {});
+      nextVideo.classList.add('is-active');
+      if (currentVideo && currentVideo !== nextVideo) {
+        currentVideo.classList.remove('is-active');
+        currentVideo.pause();
+      }
+
+      activeDiaporamaVideoIndex = diaporamaVideos.indexOf(nextVideo);
+      if (activeDiaporamaVideoIndex < 0) {
+        activeDiaporamaVideoIndex = 0;
+      }
+      activeDiaporamaEntryIndex = entryIndex;
+    } catch (error) {
+      console.error('Impossible d\'activer le fond du diaporama :', error);
+    }
+  }
+
+  function clearDiaporamaSwitchTimer() {
+    if (!diaporamaSwitchTimerId) return;
+    window.clearTimeout(diaporamaSwitchTimerId);
+    diaporamaSwitchTimerId = null;
+  }
+
+  function scheduleDiaporamaSwitch() {
+    clearDiaporamaSwitchTimer();
+    if (!diaporamaActive) return;
+
+    diaporamaSwitchTimerId = window.setTimeout(() => {
+      rotateDiaporama().catch((error) => {
+        console.error('Impossible de faire tourner le diaporama :', error);
+        scheduleDiaporamaSwitch();
+      });
+    }, DIAPORAMA_CYCLE_MS);
+  }
+
+  async function rotateDiaporama() {
+    if (!diaporamaActive) return;
+    const nextEntryIndex = pickNextDiaporamaEntryIndex();
+    if (nextEntryIndex < 0) return;
+    await activateDiaporamaEntry(nextEntryIndex);
+    scheduleDiaporamaSwitch();
+  }
+
+  async function startDiaporamaPlayback() {
+    if (!diaporamaEntries.length || !diaporamaVideos.length) return;
+    activeDiaporamaEntryIndex = -1;
+    const initialEntryIndex = pickNextDiaporamaEntryIndex();
+    await activateDiaporamaEntry(initialEntryIndex, { immediate: true });
+    scheduleDiaporamaSwitch();
+  }
+
+  function stopDiaporamaPlayback() {
+    clearDiaporamaSwitchTimer();
+    diaporamaVideos.forEach((videoEl) => {
+      try {
+        videoEl.pause();
+        videoEl.classList.remove('is-active');
+        videoEl.removeAttribute('src');
+        videoEl.load();
+        delete videoEl.dataset.diaporamaId;
+      } catch (error) {}
+    });
+    resetDiaporamaCycle();
+    activeDiaporamaEntryIndex = -1;
+  }
+
+  function handleDiaporamaExit(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    exitDiaporamaMode();
+  }
+
+  function enterDiaporamaMode() {
+    if (diaporamaActive) return;
+    diaporamaEntries = buildDiaporamaEntries();
+    if (!diaporamaEntries.length) return;
+
+    diaporamaActive = true;
+    body.classList.add('diaporama-active');
+    startDiaporamaPlayback().catch((error) => {
+      console.error('Impossible de démarrer le diaporama :', error);
+    });
+
+    document.addEventListener('keydown', handleDiaporamaExit, true);
+    document.addEventListener('click', handleDiaporamaExit, true);
+  }
+
+  function exitDiaporamaMode() {
+    if (!diaporamaActive) return;
+    diaporamaActive = false;
+    document.removeEventListener('keydown', handleDiaporamaExit, true);
+    document.removeEventListener('click', handleDiaporamaExit, true);
+
+    body.classList.remove('diaporama-active');
+    stopDiaporamaPlayback();
+  }
+
   async function initialize() {
     setPreferredView('mobile');
     applyStaticStrings();
     renderFilters();
+    initializeBackgroundAudioControls();
+    loadBackgroundList();
 
     try {
       await loadEntries();
@@ -980,6 +1471,13 @@
     activeVariantIndex = Math.min(entry.variants.length - 1, activeVariantIndex + 1);
     renderViewer();
   });
+
+  if (diaToggleBtn) {
+    diaToggleBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      enterDiaporamaMode();
+    });
+  }
 
   initialize();
 </script>
