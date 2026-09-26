@@ -269,32 +269,14 @@
       "category": "oiseau",
       "jpeg": "martinet.jpg",
       "game": "",
-      "otherImage": [
-        {
-          "latitude": "45.759191666666666",
-          "longitude": "4.802191666666666",
-          "date": "2025-05-23",
-          "webm": "martinet2.webm",
-          "jpeg": "martinet2.jpg",
-          "game": "",
-          "poeticText": [
-            {"FR": "Il fend l'air en arabesques vives, joueur du ciel, lançant ses cris joyeux et stridents comme des éclats d'été entre les toits."},
-            {"US": "It slices the air in lively arabesques, a playful flyer of the sky, tossing its bright, piercing calls like flashes of summer between the rooftops."}
-          ],
-          "scientificText": [
-            {"FR": "Apus apus niche volontiers dans les cavités des bâtiments. Presque toute sa vie se déroule en vol : il capture des insectes aériens, boit en rasant l'eau et peut migrer sur de très longues distances avec très peu de repos."},
-            {"US": "Apus apus often nests in cavities in buildings. Nearly its whole life is spent on the wing: it catches airborne insects, drinks by skimming water, and can migrate over very long distances with very little rest."}
-          ]
-        }
+      "poeticText": [
+        {"FR": "Flèche noire et joyeuse, il joue dans la lumière à toute vitesse, et ses cris stridents cousent le ciel de fils vivants."},
+        {"US": "A dark and joyful arrow, it plays at full speed in the light, its sharp calls stitching the sky with living threads."}
       ],
-          "poeticText": [
-            {"FR": "Flèche noire et joyeuse, il joue dans la lumière à toute vitesse, et ses cris stridents cousent le ciel de fils vivants."},
-            {"US": "A dark and joyful arrow, it plays at full speed in the light, its sharp calls stitching the sky with living threads."}
-          ],
-          "scientificText": [
-            {"FR": "Le Martinet noir, Apus apus, est un insectivore presque exclusivement aérien. Il se nourrit en vol, niche dans des cavités élevées et accomplit une migration remarquable entre l'Europe et l'Afrique sans longues haltes."},
-            {"US": "The Common Swift, Apus apus, is an almost entirely aerial insectivore. It feeds in flight, nests in high cavities, and makes a remarkable migration between Europe and Africa without long stopovers."}
-          ],
+      "scientificText": [
+        {"FR": "Le Martinet noir, Apus apus, est un insectivore presque exclusivement aérien. Il se nourrit en vol, niche dans des cavités élevées et accomplit une migration remarquable entre l'Europe et l'Afrique sans longues haltes."},
+        {"US": "The Common Swift, Apus apus, is an almost entirely aerial insectivore. It feeds in flight, nests in high cavities, and makes a remarkable migration between Europe and Africa without long stopovers."}
+      ],
       "liensSon": ["https://www.chant-oiseaux.fr/martinet-noir/?type=chant-836"],
       "fichierSon": ""
     },
@@ -308,7 +290,7 @@
       "longitude": "4.789933333333333",
       "date": "2026-03-21",
       "category": "oiseau",
-      "webm": "merle.webm",
+      "webm": "merle_20260926_13.webm",
       "jpeg": "merle.jpg",
       "game": "",
       "otherImage": [
@@ -406,8 +388,8 @@
         }
       ],
       "poeticText": [
-        {"FR": "On m'entend chanter, tout près peut-être, et pourtant je me fonds si bien dans les branches qu'immobile, je deviens presque introuvable."},
-        {"US": "You can hear me singing, perhaps quite nearby, and yet I blend so well into the branches that when I stay still, I become almost impossible to find."}
+        {"FR": "On m'entend chanter, tout près peut-être, et pourtant je me fonds si bien dans les branches qu'immobile, je deviens presque introuvable. Regarde l'image suivante pour me repérer."},
+        {"US": "You can hear me singing, perhaps quite nearby, and yet I blend so well into the branches that when I stay still, I become almost impossible to find. Look at the next image to spot me."}
       ],
       "scientificText": [
         {"FR": "De nombreux oiseaux profitent d'un plumage aux teintes et motifs qui les confondent avec leur environnement. Ce mimétisme visuel réduit le risque d'être repérés par les prédateurs, surtout lorsqu'ils restent parfaitement immobiles."},
