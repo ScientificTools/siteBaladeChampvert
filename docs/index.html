@@ -853,7 +853,10 @@
     left: 18px;
     bottom: 80px;
     z-index: 41;
-    max-width: min(360px, calc(100vw - 36px));
+    max-width: min(720px, calc(100vw - 36px));
+    box-sizing: border-box;
+    max-height: calc(90dvh - 80px);
+    overflow-y: auto;
     padding: 16px 18px;
     border-radius: 18px;
     background: rgba(245, 248, 240, 0.96);
@@ -877,8 +880,10 @@
     margin: 0 0 0.9em;
   }
 
-  .site-info-tooltip p:last-child {
-    margin-bottom: 0;
+  .site-info-tooltip a {
+    color: inherit;
+    text-decoration: underline;
+    overflow-wrap: anywhere;
   }
 
   .site-info-tooltip p:last-child {
@@ -1574,7 +1579,27 @@
       diaLabel: 'Diaporama',
       infoButtonLabel: 'Maison des curiosités',
       infoButtonAriaLabel: 'Ouvrir la Maison des curiosités',
-      infoTooltipText: 'Bienvenue à Champvert.\n\nUn endroit où la nature tient sa place, sans forcer, au cœur de la ville.\n\nDes sons, des images, des passages à traverser lentement.\n\nToutes les images et observations présentées ici ont été captées à Champvert.\n\nTout a été saisi dans la grâce d’un instant vivant.\n\nAucun suivi, aucune publicité, aucune collecte de données. Prenez votre temps. Regardez. Écoutez. Essayez.\n\nContact : albouille69@gmail.com'
+      infoTooltipText: `Bienvenue dans le quartier de Champvert, Lyon, France
+La Nature et la biodiversité y sont bien présentes et appréciées des promeneurs, en plein milieu urbain.
+Les oiseaux, parfois de passage, souvent bien installés, cohabitent avec l'homme, dans un certain équilibre sauvage, au milieu d'une végétation et d'une microfaune bienvenue en pleine ville.
+Sur la carte, la bande verte laisse imaginer un profil d'oiseau, de rouge gorge je dirais, rebondi, noble et équilibré.
+La voie verte dessine son dos et sa queue. Le parc de la garde, son arrière-train. N’hésitez pas à traverser un petit bout de ville, le sympathique quartier de point du jour, pour retrouver le parc de la mairie prolongé du parc de la passerelle qui dessine son torse puis son bec. Tous reliés, ils réalisent la promesse d’une balade verte, calme, ponctuée du chant des oiseaux, au sein d'une végétation riche de feuillus et résineux, d’arbres spectaculaires et de petits bassins biologiques, abreuvoirs appréciés et zones de biodiversité.
+Les deux univers parallèles, humain et sauvage, y cohabitent chacun à son rythme, et ses rites. On y vit, on s'y croise, parfois sans faire attention l'un à l'autre.
+Pour bien ressentir la nature, il faut s'y promener lentement, en prenant le temps de voir et d'écouter, profiter de toutes les saisons et essayer différents moments de la journée, être patients et reconnaissants lorsqu’une rencontre se produit.
+A cette condition, la nature se révèle entièrement avec une richesse insoupçonnée.
+En arrivant sur cette page, n'espérez pas trouver un "inventaire" savant et encyclopédique. La ligne directrice a été plutôt de mettre en avant des "impressions", des "sensations", des "émotions".
+Les images animées et les sons, tous captés ici, donnent vie et relief à des petites scènes éphémères, zoomées à l'instant spontané de rencontres de hasard.
+Depuis l'ordinateur, l'expérience se veut immersive, nos hôtes se déplacent, on ne les voit pas toujours au même emplacement, ils se méritent. Cliquez pour essayer, utilisez la molette, soyez curieux, tout n’est pas expliqué, partez à la découverte.
+Le site, sur mobile, est plus adapté à la taille de l’écran, il vous aidera à apprendre à reconnaître les espèces locales.
+Pour un moment de détente et de méditation, n'hésitez pas à venir ici décompresser un moment. Activez le son, ouvrez le diaporama, en plein écran idéalement, et laissez-vous emporter, avec la promesse de venir profiter prochainement du lieu dans la vraie vie, ou ailleurs avec la même démarche.
+Le site a été conçu avec une attention d'éco-responsabilité numérique. L'écoindex A de la page ne dépasse pas D si vous visualisez l'intégralité des contenus animés. Le site écoindex est intéressant à consulter pour comprendre les enjeux de l’éco-conception (cliquez sur le lien en bas de page).
+Les images animées ont été travaillées avec un outil développé spécifiquement à cet effet (en libre accès) pour alléger au maximum leur poids, tout en gardant leur pertinence esthétique.
+(les techniciens et photographes curieux pourront approfondir le sujet ici : [https://github.com/ScientificTools/MotionPhotoWorkbench/wiki](https://github.com/ScientificTools/MotionPhotoWorkbench/wiki))
+La page s’enrichit régulièrement de nouveaux contenus, au fil du temps, tout en gardant son âme et cœur de montrer que la nature est belle, étonnante et revigorante.
+Dans ces pages, pas de publicité, pas de cookies, pas de score, pas de nombre de vues, pas de vente, pas de médias lourds, pas d'avis, pas de news.
+Vous êtes ici chez vous dans le plus strict respect de votre vie privée. J'espère que vous prendrez plaisir à le visiter.
+Avec curiosité,
+Contact : [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     },
     US: {
       toggleMapLabel: 'Map',
@@ -1593,7 +1618,27 @@
       diaLabel: 'Slideshow',
       infoButtonLabel: 'Cabinet of Curiosities',
       infoButtonAriaLabel: 'Open the Cabinet of Curiosities',
-      infoTooltipText: 'Welcome to Champvert.\n\nA place where nature finds its place without forcing it, at the heart of the city.\n\nSounds, images, paths to cross slowly.\n\nAll the images and observations presented here were captured in Champvert.\n\nEverything was gathered in the grace of a living moment.\n\nNo tracking, no advertising, no data collection. Take your time. Look. Listen. Try.\n\nContact: albouille69@gmail.com'
+      infoTooltipText: `Welcome to the Champvert neighborhood, Lyon, France
+Nature and biodiversity are very much present here, appreciated by walkers right in the heart of the city.
+The birds, sometimes passing through, often well settled, live alongside people in a kind of wild balance, amid vegetation and tiny creatures that are a welcome presence in the city.
+On the map, the green strip suggests the profile of a bird, a robin, I would say: plump, noble and well proportioned.
+The greenway traces its back and tail. The Parc de la Garde forms its rear. Feel free to cross a little stretch of the city, through the friendly Point du Jour neighborhood, to reach the Parc de la Mairie, which continues into the Parc de la Passerelle, tracing its chest and then its beak. All connected, they fulfill the promise of a peaceful green walk, punctuated by birdsong, amid a rich mix of deciduous trees and conifers, spectacular trees and small wildlife ponds, much appreciated drinking spots and havens of biodiversity.
+The two parallel worlds, human and wild, coexist here, each with its own rhythms and rituals. Lives unfold and paths cross, sometimes without either noticing the other.
+To truly feel close to nature, you need to walk slowly, taking the time to look and listen, enjoying every season and trying different times of day, and being patient and grateful when an encounter happens.
+Only then does nature fully reveal its unsuspected richness.
+When you arrive on this page, do not expect a scholarly, encyclopedic "inventory." The guiding idea has instead been to bring out "impressions," "sensations" and "emotions."
+The animated images and sounds, all captured here, bring life and depth to fleeting little scenes, zooming in on the spontaneous moment of a chance encounter.
+On a computer, the experience is designed to be immersive. Our guests move around; you will not always see them in the same place, and finding them takes a little effort. Click to try things out, use the scroll wheel, be curious. Not everything is explained: set off and explore.
+On mobile, the site is adapted to the screen size and will help you learn to recognize local species.
+For a moment of relaxation and meditation, feel free to come here and unwind. Turn on the sound, open the slideshow, ideally in full screen, and let yourself drift away, with a promise to come and enjoy the place in real life soon, or to explore somewhere else in the same spirit.
+The site was designed with digital environmental responsibility in mind. The page's EcoIndex rating starts at A and goes no lower than D if you view all the animated content. The EcoIndex website is worth visiting to understand the issues involved in eco-design (click the link at the bottom of the page).
+The animated images were processed using a freely available tool developed specifically for this purpose, to make their file sizes as small as possible while preserving their aesthetic value.
+(Curious photographers and technically minded visitors can explore the subject further here: [https://github.com/ScientificTools/MotionPhotoWorkbench/wiki](https://github.com/ScientificTools/MotionPhotoWorkbench/wiki))
+New content is regularly added to the page over time, while it keeps its heart and soul: showing that nature is beautiful, surprising and invigorating.
+On these pages, there are no ads, no cookies, no scores, no view counts, nothing for sale, no heavy media files, no reviews and no news.
+Make yourself at home here, with the utmost respect for your privacy. I hope you will enjoy visiting.
+With curiosity,
+Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     }
   };
 
@@ -3937,7 +3982,10 @@
       .split('\n')
       .map((line) => line.trim())
       .filter(Boolean)
-      .map((line) => `<p>${escapeHtml(line)}</p>`)
+      .map((line) => `<p>${escapeHtml(line).replace(
+        /\[([^\]]+)\]\(((?:https:\/\/|mailto:)[^\s)]+)\)/g,
+        '<a href="$2">$1</a>'
+      )}</p>`)
       .join('');
     infoTooltip.innerHTML = paragraphs;
   }

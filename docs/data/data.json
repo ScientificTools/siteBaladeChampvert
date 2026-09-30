@@ -71,7 +71,24 @@
       "webm": "geais.webm",
       "jpeg": "geais.jpg",
       "game": "",
- 
+      "otherImage": [
+        {
+          "latitude": "45.760469444444446",
+          "longitude": "4.804311111111111",
+          "date": "2026-06-12",
+          "webm": "geais2.webm",
+          "jpeg": "geais2.jpg",
+          "game": ""
+        },
+        {
+          "latitude": "45.760469444444446",
+          "longitude": "4.804311111111111",
+          "date": "2026-06-12",
+          "webm": "geais3.webm",
+          "jpeg": "geais3.jpg",
+          "game": ""
+        }
+      ],
       "poeticText": [
         {"FR": "Il toilette soigneusement sa patte, la frotte contre son bec, comme pour dégager la terre et les brindilles collées sous ses doigts."},
         {"US": "It lifts its foot carefully, rubs it against its beak, as if clearing earth and twigs stuck beneath its toes."}

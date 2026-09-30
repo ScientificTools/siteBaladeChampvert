@@ -55,6 +55,14 @@
     {
       "id": "fond14",
       "src": "background/fond14.webm"
+    },
+    {
+      "id": "fond15",
+      "src": "background/fond15.webm"
+    },
+    {
+      "id": "fond16",
+      "src": "background/fond16.webm"
     }
   ]
 }
