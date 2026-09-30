@@ -135,6 +135,14 @@
     opacity: 1;
   }
 
+  body.diaporama-active .background-stage {
+    background: #000;
+  }
+
+  body.diaporama-active .background-video {
+    object-fit: contain;
+  }
+
   .top-left-controls {
     position: fixed;
     top: 18px;
@@ -874,6 +882,11 @@
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
+  }
+
+  .site-info-tooltip.visible.fading-out {
+    opacity: 0;
+    transition: opacity 2s linear;
   }
 
   .site-info-tooltip p {
@@ -3990,8 +4003,13 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     infoTooltip.innerHTML = paragraphs;
   }
 
+  let infoTooltipHideTimer = null;
+
   function setInfoTooltipOpen(isOpen) {
     if (!infoTooltip || !infoToggleBtn) return;
+    window.clearTimeout(infoTooltipHideTimer);
+    infoTooltipHideTimer = null;
+    infoTooltip.classList.remove('fading-out');
     infoTooltip.classList.toggle('visible', isOpen);
     infoTooltip.setAttribute('aria-hidden', String(!isOpen));
     infoToggleBtn.setAttribute('aria-expanded', String(isOpen));
@@ -3999,12 +4017,16 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
 
   function showSiteInfoTooltip() {
     if (!infoTooltip) return;
-    renderSiteInfoText();
+    if (!infoTooltip.classList.contains('visible')) renderSiteInfoText();
     setInfoTooltipOpen(true);
   }
 
   function hideSiteInfoTooltip() {
-    setInfoTooltipOpen(false);
+    if (!infoTooltip || !infoToggleBtn || !infoTooltip.classList.contains('visible')) return;
+    if (infoToggleBtn.matches(':hover') || infoTooltip.matches(':hover')) return;
+    if (infoTooltipHideTimer !== null) return;
+    infoTooltip.classList.add('fading-out');
+    infoTooltipHideTimer = window.setTimeout(() => setInfoTooltipOpen(false), 2000);
   }
 
   function initializeSiteInfoControls() {
@@ -4012,22 +4034,10 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
 
     infoToggleBtn.addEventListener('mouseenter', () => showSiteInfoTooltip());
     infoToggleBtn.addEventListener('focus', () => showSiteInfoTooltip());
-    infoToggleBtn.addEventListener('mouseleave', () => {
-      window.setTimeout(() => {
-        if (!infoToggleBtn.matches(':hover') && !infoTooltip.matches(':hover')) {
-          hideSiteInfoTooltip();
-        }
-      }, 100);
-    });
+    infoToggleBtn.addEventListener('mouseleave', hideSiteInfoTooltip);
 
     infoTooltip.addEventListener('mouseenter', () => showSiteInfoTooltip());
-    infoTooltip.addEventListener('mouseleave', () => {
-      window.setTimeout(() => {
-        if (!infoToggleBtn.matches(':hover') && !infoTooltip.matches(':hover')) {
-          hideSiteInfoTooltip();
-        }
-      }, 100);
-    });
+    infoTooltip.addEventListener('mouseleave', hideSiteInfoTooltip);
   }
 
   updateMapToggleText();
