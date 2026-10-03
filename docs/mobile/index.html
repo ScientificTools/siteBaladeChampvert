@@ -287,6 +287,7 @@
     border-radius: 14px;
     overflow: hidden;
     background: #dfe8d6;
+    cursor: pointer;
   }
 
   .species-thumb img {
@@ -976,6 +977,7 @@
       thumbImg.src = entry.thumb || '../openStreetViewcarte.jpg';
       thumbImg.alt = entry.title;
       thumb.appendChild(thumbImg);
+      thumb.addEventListener('click', () => selectEntry(entry.id));
 
       const text = document.createElement('div');
       const title = document.createElement('h3');

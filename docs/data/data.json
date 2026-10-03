@@ -563,9 +563,34 @@
       "webm": "palombe.webm",
       "jpeg": "palombe.jpg",
       "game": "",
+      "otherImage": [
+        {
+          "webm": "pigeon2.webm",
+          "jpeg": "pigeon2.jpg",
+          "latitude": "45.75989444444444",
+          "longitude": "4.790497222222222",
+          "date": "2026-09-19",
+          "category": "oiseau",
+          "game": "",
+          "poeticText": [
+            {"FR": "Ils vont souvent en couple, fidèles et calmes, puis s’élèvent d’un vol large et battu, aux grands flaps un peu lourds, qui n’enlèvent rien à la majesté de leur silhouette."},
+            {"US": "They often go as a couple, calm and faithful, then rise on broad wings with heavy flapping beats that do nothing to diminish the majesty of their silhouette."}
+          ]
+
+        },
+        {
+          "webm": "pigeon3.webm",
+          "jpeg": "pigeon3.jpg",
+          "latitude": "45.75989444444444",
+          "longitude": "4.790497222222222",
+          "date": "2026-09-19",
+          "category": "oiseau",
+          "game": ""
+        }
+      ],
       "poeticText": [
-        {"FR": "Ils vont souvent à deux, fidèles et calmes, puis s’élèvent d’un vol large et battu, aux grands flaps un peu lourds, qui n’enlèvent rien à la majesté de leur silhouette."},
-        {"US": "They often move as a calm, faithful pair, then rise on broad wings with heavy flapping beats that do nothing to diminish the majesty of their silhouette."}
+        {"FR": "Noble et digne, il porte sa collerette blanche comme un col d’apparat, et d’un coup d’aile dévoile sa marque blanche, éclat soudain sur le gris de son plumage."},
+        {"US": "Noble and dignified, it wears its white collar like a ceremonial ruff, and with a beat of its wings reveals a white wing patch, a sudden flash against its grey plumage."}
       ],
       "scientificText": [
         {"FR": "Columba palumbus se nourrit surtout de graines, de jeunes pousses, de bourgeons, de baies et de fruits. Il construit un nid sommaire de brindilles, le plus souvent dans un arbre ou un grand arbuste, où le couple élève généralement deux jeunes."},
@@ -607,6 +632,29 @@
         {"US": "Pica pica belongs to the corvid family, like crows and ravens. Highly adaptable, it readily inhabits towns and becomes accustomed to people. Its loud calls are distinctive, and during the breeding season it actively defends its territory and nest."}
       ],
       "liensSon": ["https://www.chant-oiseaux.fr/pie-bavarde/?type=cris-1564"],
+      "fichierSon": ""
+    },
+    {
+      "name": [
+        {"FR": "Faucon crécerelle"},
+        {"US": "Common kestrel"},
+        {"SC": "Falco tinnunculus"}
+      ],
+      "latitude": "45.761808333333335",
+      "longitude": "4.789861111111111",
+      "date": "2026-08-21",
+      "category": "oiseau",
+      "jpeg": "faucon1.jpg",
+      "game": "",
+      "poeticText": [
+        {"FR": "Queue effilée en vol, déployée en éventail quand il fait du sur-place, il guette la prairie, son plastron moucheté et duveteux au vent. Souvent chassé par les corneilles, il ne s’attarde pas."},
+        {"US": "Tail slender in flight and fanned out when it hovers, it scans the meadow, its soft speckled breast ruffled by the wind. Often chased off by crows, it never lingers."}
+      ],
+      "scientificText": [
+        {"FR": "Falco tinnunculus pratique le vol du Saint-Esprit : il reste immobile face au vent pour repérer ses proies, surtout des campagnols, mais aussi des insectes et de petits oiseaux. Il niche dans des cavités de falaises, de bâtiments ou dans d’anciens nids de corvidés."},
+        {"US": "Falco tinnunculus hovers into the wind to spot its prey, mainly voles, but also insects and small birds. It nests in cliff or building cavities, or in old corvid nests."}
+      ],
+      "liensSon": ["https://www.chant-oiseaux.fr/faucon-crecerelle/?type=cris-1537"],
       "fichierSon": ""
     }
   ]
