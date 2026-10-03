@@ -154,6 +154,22 @@
             {"FR": "Le Rouge gorge familier entretient souvent un dialogue territorial nuancé avec ses congénères. Chacun répond par de longues phrases musicales, en alternance, sans se couper, ce qui limite l’escalade du conflit tout en affirmant sa présence."},
             {"US": "The European robin often maintains a nuanced territorial dialogue with its own kind. Each bird answers with long musical phrases in turn, without interrupting, which helps limit conflict while still asserting its presence."}
           ]
+        },
+        {
+          "latitude": "45.761561111111114",
+          "longitude": "4.7902499999999995",
+          "date": "2026-06-06",
+          "webm": "rougeGorge3.webm",
+          "jpeg": "rougeGorge3.jpg",
+          "game": "",
+          "poeticText": [
+            {"FR": "Il peut rester longtemps immobile, comme posé hors du temps, offrant au regard patient la chance rare de l’observer. Puis monte son chant riche, fluté, presque mélancolique, comme une confidence dans l’air frais."},
+            {"US": "It can remain still for a long time, as if set outside time, giving a patient watcher the rare chance to observe it. Then rises its rich, fluting, almost melancholy song, like a confidence carried in the cool air."}
+          ],
+          "scientificText": [
+            {"FR": "Le Rouge gorge familier entretient souvent un dialogue territorial nuancé avec ses congénères. Chacun répond par de longues phrases musicales, en alternance, sans se couper, ce qui limite l’escalade du conflit tout en affirmant sa présence."},
+            {"US": "The European robin often maintains a nuanced territorial dialogue with its own kind. Each bird answers with long musical phrases in turn, without interrupting, which helps limit conflict while still asserting its presence."}
+          ]
         }
       ],
  
@@ -557,7 +573,41 @@
       ],
       "liensSon": ["https://www.chant-oiseaux.fr/pigeon-ramier/?type=chant-658"],
       "fichierSon": ""
+    },
+    {
+      "name": [
+        {"FR": "Pie bavarde"},
+        {"US": "Eurasian magpie"},
+        {"SC": "Pica pica"}
+      ],
+      "latitude": "45.76216111111111",
+      "longitude": "4.788633333333333",
+      "date": "2026-06-12",
+      "category": "oiseau",
+      "webm": "pie2.webm",
+      "jpeg": "pie2.jpg",
+      "game": "",
+      "otherImage": [
+        {
+          "webm": "pie1.webm",
+          "jpeg": "pie1.jpg",
+          "latitude": "45.75794166666667",
+          "longitude": "4.802911111111111",
+          "date": "2026-06-12",
+          "category": "oiseau",
+          "game": ""
+        }
+      ],
+      "poeticText": [
+        {"FR": "Dans le tumulte de la ville, elle avance sans se laisser troubler. Son cri claque au-dessus des toits : ici, elle connaît chaque recoin et veille farouchement sur son territoire."},
+        {"US": "Amid the city's bustle, she moves without a trace of unease. Her call snaps above the rooftops: she knows every corner here and guards her territory fiercely."}
+      ],
+      "scientificText": [
+        {"FR": "Pica pica appartient à la famille des Corvidés, comme les corneilles et les corbeaux. Très adaptable, elle fréquente volontiers les villes, où elle s’habitue à la présence humaine. Ses cris puissants sont caractéristiques et, pendant la reproduction, elle défend activement son territoire et son nid."},
+        {"US": "Pica pica belongs to the corvid family, like crows and ravens. Highly adaptable, it readily inhabits towns and becomes accustomed to people. Its loud calls are distinctive, and during the breeding season it actively defends its territory and nest."}
+      ],
+      "liensSon": ["https://www.chant-oiseaux.fr/pie-bavarde/?type=cris-1564"],
+      "fichierSon": ""
     }
   ]
 }
-

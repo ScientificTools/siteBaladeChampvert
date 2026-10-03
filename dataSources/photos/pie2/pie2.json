@@ -1,0 +1,438 @@
+{
+  "InputFilePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER.jpg",
+  "IsFolderSource": false,
+  "SourceImageNames": [],
+  "WorkingDirectory": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work",
+  "Frames": [
+    {
+      "Index": 0,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0001.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 955.88116,
+        "Y": 589.0803
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -805.88116,
+      "OffsetY": -439.08032
+    },
+    {
+      "Index": 1,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0002.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 969,
+        "Y": 593
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -819,
+      "OffsetY": -443
+    },
+    {
+      "Index": 2,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0003.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 993,
+        "Y": 601
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -843,
+      "OffsetY": -451
+    },
+    {
+      "Index": 3,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0004.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1026,
+        "Y": 612
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -876,
+      "OffsetY": -462
+    },
+    {
+      "Index": 4,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0005.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1062.5217,
+        "Y": 627.7041
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -912.5217,
+      "OffsetY": -477.7041
+    },
+    {
+      "Index": 5,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0006.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1102.2408,
+        "Y": 648.18854
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -952.24084,
+      "OffsetY": -498.18854
+    },
+    {
+      "Index": 6,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0007.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1137,
+        "Y": 666
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -987,
+      "OffsetY": -516
+    },
+    {
+      "Index": 7,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0008.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1162,
+        "Y": 683
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -1012,
+      "OffsetY": -533
+    },
+    {
+      "Index": 8,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0009.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1183,
+        "Y": 694
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -1033,
+      "OffsetY": -544
+    },
+    {
+      "Index": 9,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0010.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1196,
+        "Y": 701
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -1046,
+      "OffsetY": -551
+    },
+    {
+      "Index": 10,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0011.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1204,
+        "Y": 708
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -1054,
+      "OffsetY": -558
+    },
+    {
+      "Index": 11,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0012.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1206,
+        "Y": 712
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -1056,
+      "OffsetY": -562
+    },
+    {
+      "Index": 12,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0013.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1204,
+        "Y": 708
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -1054,
+      "OffsetY": -558
+    },
+    {
+      "Index": 13,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0014.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1203,
+        "Y": 679
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -1053,
+      "OffsetY": -529
+    },
+    {
+      "Index": 14,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0015.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1197,
+        "Y": 646
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -1047,
+      "OffsetY": -496
+    },
+    {
+      "Index": 15,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0016.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1179.8954,
+        "Y": 599.9372
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -1029.8954,
+      "OffsetY": -449.9372
+    },
+    {
+      "Index": 16,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0017.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1153.3625,
+        "Y": 552.01984
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -1003.36255,
+      "OffsetY": -402.01984
+    },
+    {
+      "Index": 17,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0018.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1123.9298,
+        "Y": 501.43518
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -973.9298,
+      "OffsetY": -351.43518
+    },
+    {
+      "Index": 18,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0019.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1097.3914,
+        "Y": 463.61304
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -947.39136,
+      "OffsetY": -313.61304
+    },
+    {
+      "Index": 19,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0020.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1077,
+        "Y": 435
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -927,
+      "OffsetY": -285
+    },
+    {
+      "Index": 20,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0021.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1063,
+        "Y": 411
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -913,
+      "OffsetY": -261
+    },
+    {
+      "Index": 21,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0022.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1054,
+        "Y": 397
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -904,
+      "OffsetY": -247
+    },
+    {
+      "Index": 22,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0023.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1049,
+        "Y": 386
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -899,
+      "OffsetY": -236
+    },
+    {
+      "Index": 23,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0024.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1049,
+        "Y": 386
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -899,
+      "OffsetY": -236
+    },
+    {
+      "Index": 24,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0025.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1053,
+        "Y": 383
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -903,
+      "OffsetY": -233
+    },
+    {
+      "Index": 25,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0026.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1066,
+        "Y": 385
+      },
+      "IsAnchorUncertain": true,
+      "OffsetX": -916,
+      "OffsetY": -235
+    },
+    {
+      "Index": 26,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0027.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1102,
+        "Y": 392
+      },
+      "IsAnchorUncertain": true,
+      "OffsetX": -952,
+      "OffsetY": -242
+    },
+    {
+      "Index": 27,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0028.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1149.0808,
+        "Y": 407.58627
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -999.0808,
+      "OffsetY": -257.58627
+    },
+    {
+      "Index": 28,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0029.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1149,
+        "Y": 408
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -999,
+      "OffsetY": -258
+    },
+    {
+      "Index": 29,
+      "SourcePath": "C:\\temp\\fond\\PXL_20260612_044343170.RAW-01.MP.COVER_work\\frames\\frame_0030.png",
+      "IsKept": true,
+      "AnchorPoint": {
+        "IsEmpty": false,
+        "X": 1199.8663,
+        "Y": 435.07996
+      },
+      "IsAnchorUncertain": false,
+      "OffsetX": -1049.8663,
+      "OffsetY": -285.07996
+    }
+  ],
+  "Adjustments": {
+    "Brightness": 0,
+    "Contrast": 0,
+    "Saturation": 0,
+    "Temperature": 0,
+    "Sharpness": 0,
+    "Highlights": 0,
+    "Shadows": 0
+  },
+  "TargetAnchor": {
+    "IsEmpty": false,
+    "X": 150,
+    "Y": 150
+  },
+  "OutputCrop": {
+    "Location": {
+      "IsEmpty": false,
+      "X": -709,
+      "Y": -180
+    },
+    "Size": {
+      "IsEmpty": false,
+      "Width": 919,
+      "Height": 689
+    },
+    "X": -709,
+    "Y": -180,
+    "Width": 919,
+    "Height": 689,
+    "Left": -709,
+    "Top": -180,
+    "Right": 210,
+    "Bottom": 509,
+    "IsEmpty": false
+  },
+  "VideoFps": 20,
+  "AutoAnchorStopConfidence": 0.82,
+  "AutoAnchorDoubtConfidence": 0.95,
+  "PingPongPlayback": true,
+  "HalfFrameRate": false
+}
