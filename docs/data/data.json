@@ -55,9 +55,10 @@
         {"FR": "Corvus corone est un oiseau très social, vivant souvent en groupes soudés où jeu et vigilance mutuelle renforcent la cohésion du groupe."},
         {"US": "Corvus corone is a highly social bird, often living in tight-knit groups where play and mutual vigilance strengthen the flock’s cohesion."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/corneille-noire/?type=cris-1432"],
-      "fichierSon": ""
-    },
+      "liensSon": ["https://xeno-canto.org/species/Corvus-corone","xeno-canto"],
+      "provenanceExterne": "yes",
+      "fichierSon": "XC881570 - Corneille noire - Corvus corone.m4a",
+      "detailsProvenanceExterne": "https://xeno-canto.org/881570"    },
     {
       "name": [
         {"FR": "Geai des chênes"},
@@ -97,8 +98,10 @@
         {"FR": "Garrulus glandarius se nourrit surtout au sol, fouillant l’herbe et la litière à la recherche de vers, d’insectes et de graines."},
         {"US": "Garrulus glandarius feeds mainly on the ground, probing grass and leaf litter for worms, insects and seeds."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/geai-des-chenes/?type=cris-1547"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Garrulus-glandarius","xeno-canto"],
+      "provenanceExterne": "yes",
+      "fichierSon": "XC1089333 - Geai des chênes - Garrulus glandarius.m4a",
+      "detailsProvenanceExterne": "https://xeno-canto.org/1089333"
     },
     {
       "name": [
@@ -122,8 +125,10 @@
         {"FR": "Sturnus vulgaris se nourrit surtout au sol, fouillant l’herbe et la litière à la recherche de vers, d’insectes et de graines."},
         {"US": "Sturnus vulgaris feeds mainly on the ground, probing grass and leaf litter for worms, insects and seeds."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/etourneau-sansonnet/?type=chant-788"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Sturnus-vulgaris","xeno-canto"],
+      "provenanceExterne": "yes",
+      "fichierSon": "XC712625 - Étourneau sansonnet - Sturnus vulgaris.m4a",
+      "detailsProvenanceExterne": "https://xeno-canto.org/712625"
     },
     {
       "name": [
@@ -181,8 +186,10 @@
         {"FR": "Erithacus rubecula fréquente les jardins et les lisières, identifiable à sa poitrine orange et sa posture alerte."},
         {"US": "Erithacus rubecula frequents gardens and woodland edges, identifiable by its orange breast and alert posture."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/rougegorge-familier/?type=chant-644"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Erithacus-rubecula","xeno-canto"],
+      "provenanceExterne": "no",
+      "fichierSon": "champvert_rougeGorge.m4a",
+      "detailsProvenanceExterne": ""
     },
     {
       "name": [
@@ -239,8 +246,10 @@
         {"FR": "Sylvia atricapilla fréquente les bois et les lisières, reconnaissable à sa calotte sombre, c'est aussi une grande voyageuse."},
         {"US": "Sylvia atricapilla frequents woods and edges, identifiable by its dark cap, and is also a great traveler."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/fauvette-a-tete-noire/?type=chant-1497"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Sylvia-atricapilla","xeno-canto"],
+      "fichierSon": "XC1153795 - Fauvette à tête noire - Sylvia atricapilla.m4a",
+      "provenanceExterne": "yes",
+      "detailsProvenanceExterne": "https://xeno-canto.org/1153795"
     },
     {
       "name": [
@@ -263,8 +272,10 @@
         {"FR": "Phylloscopus collybita est un très petit passereau au poids léger, difficile à repérer dans les broussailles où il se déplace avec des mouvements vifs et furtifs."},
         {"US": "Phylloscopus collybita is a very small, lightweight warbler that is hard to spot in thickets, where it moves with quick, discreet motions."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/pouillot-veloce/?type=chant-769"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Phylloscopus-collybita","xeno-canto"],
+      "fichierSon": "XC1148639 - Pouillot véloce - Phylloscopus collybita.m4a",
+      "provenanceExterne": "yes",
+      "detailsProvenanceExterne": "https://xeno-canto.org/1148639"
     },
     {
       "name": [
@@ -287,8 +298,10 @@
         {"FR": "Sciurus vulgaris se déplace avec vigueur dans les branches, agile et alerte."},
         {"US": "Sciurus vulgaris moves with vigor through the branches, agile and alert."}
       ],
-      "liensSon": [],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Sciurus-vulgaris","xeno-canto"],
+      "fichierSon": "XC961016 - Eurasian Red Squirrel - Sciurus vulgaris.m4a",
+      "provenanceExterne": "yes",
+      "detailsProvenanceExterne": "https://xeno-canto.org/961016"
     },
     {
       "name": [
@@ -310,8 +323,10 @@
         {"FR": "Le Martinet noir, Apus apus, est un insectivore presque exclusivement aérien. Il se nourrit en vol, niche dans des cavités élevées et accomplit une migration remarquable entre l'Europe et l'Afrique sans longues haltes."},
         {"US": "The Common Swift, Apus apus, is an almost entirely aerial insectivore. It feeds in flight, nests in high cavities, and makes a remarkable migration between Europe and Africa without long stopovers."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/martinet-noir/?type=chant-836"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Apus-apus","xeno-canto"],
+      "fichierSon": "XC724477 - Martinet noir - Apus apus.m4a",
+      "provenanceExterne": "yes",
+      "detailsProvenanceExterne": "https://xeno-canto.org/724477"
     },
     {
       "name": [
@@ -368,8 +383,10 @@
         {"FR": "Turdus merula est l'un des oiseaux les plus familiers des jardins et des parcs. Très adaptable à la proximité humaine, le mâle chante depuis un perchoir dégagé pour défendre son territoire et attirer sa partenaire."},
         {"US": "Turdus merula is one of the most familiar birds in gardens and parks. Highly adaptable to life near people, the male sings from an open perch to defend his territory and attract a mate."}
         ],
-      "liensSon": ["https://www.chant-oiseaux.fr/merle-noir/?type=chant-653"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Turdus-merula","xeno-canto"],
+      "fichierSon": "XC1165101 - Merle noir - Turdus merula.m4a",
+      "provenanceExterne": "yes",
+      "detailsProvenanceExterne": "https://xeno-canto.org/1165101"
     },
     {
       "name": [
@@ -462,8 +479,10 @@
         {"FR": "Cyanistes caeruleus se déplace souvent en petites bandes, surtout hors période de reproduction. Agile et très active, elle explore sans cesse branches et feuillages, toujours en mouvement à la recherche de nourriture."},
         {"US": "Cyanistes caeruleus often moves in small flocks, especially outside the breeding season. Agile and very active, it constantly explores branches and foliage, always in motion as it searches for food."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/mesange-bleue/?type=chant-718"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Cyanistes-caeruleus","xeno-canto"],
+      "fichierSon": "XC1129115 - Mésange bleue - Cyanistes caeruleus.m4a",
+      "provenanceExterne": "yes",
+      "detailsProvenanceExterne": "https://xeno-canto.org/1129115"
     },
     {
       "name": [
@@ -500,8 +519,10 @@
         {"FR": "Parus major est constamment en mouvement dans les arbres et les haies. Mâles et femelles se ressemblent beaucoup, et l'espèce montre souvent une forte fidélité à son site de nidification d'une année à l'autre."},
         {"US": "Parus major is constantly in motion through trees and hedges. Males and females look very similar, and the species often shows strong fidelity to its nesting site from one year to the next."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/mesange-charbonniere/?type=chant-721"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Parus-major","xeno-canto"],
+      "fichierSon": "XC1092231 - Mésange charbonnière - Parus major.m4a",
+      "provenanceExterne": "yes",
+      "detailsProvenanceExterne": "https://xeno-canto.org/1092231"
     },
     {
       "name": [
@@ -522,8 +543,11 @@
         {"FR": "Dendrocopos major possède un crâne, des muscles du cou et un bec spécialement adaptés pour absorber les chocs répétés. Chaque coup, porté à grande vitesse avec une force remarquable, lui permet d’extraire des insectes et de creuser sa cavité de nidification."},
         {"US": "Dendrocopos major has a skull, neck muscles, and bill specially adapted to absorb repeated impacts. Each strike, delivered at high speed with remarkable force, helps it extract insects and excavate its nesting cavity."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/pic-epeiche/?type=tambourinage-1552"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Dendrocopos-major","xeno-canto"],
+      "fichierSon": "XC1151735 - Pic épeiche - Dendrocopos major.m4a",
+      "provenanceExterne": "yes",
+      "detailsProvenanceExterne": "https://xeno-canto.org/1151735"
+
     },
     {
       "name": [
@@ -546,8 +570,10 @@
         {"FR": "Picus viridis se nourrit surtout de fourmis, qu’il capture au sol grâce à sa longue langue protractile enduite de salive collante. Son bec robuste lui sert aussi à ouvrir fourmilières et bois tendre, mais l’espèce exploite bien davantage les prairies et pelouses que le Pic épeiche."},
         {"US": "Picus viridis feeds mainly on ants, which it captures on the ground with its long protrusible tongue coated in sticky saliva. Its strong bill also helps open anthills and soft wood, but the species relies far more on lawns and meadows than the great spotted woodpecker does."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/pic-vert/?type=tambourinage-1543"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Picus-viridis","xeno-canto"],
+      "fichierSon": "XC927450 - Pic vert - Picus viridis.m4a",
+      "provenanceExterne": "yes",
+      "detailsProvenanceExterne": "https://xeno-canto.org/927450"
     }
     ,
     {
@@ -596,8 +622,10 @@
         {"FR": "Columba palumbus se nourrit surtout de graines, de jeunes pousses, de bourgeons, de baies et de fruits. Il construit un nid sommaire de brindilles, le plus souvent dans un arbre ou un grand arbuste, où le couple élève généralement deux jeunes."},
         {"US": "Columba palumbus feeds mainly on seeds, young shoots, buds, berries, and fruits. It builds a simple twig nest, most often in a tree or large shrub, where the pair usually raises two chicks."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/pigeon-ramier/?type=chant-658"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Columba-palumbus","xeno-canto"],
+      "fichierSon": "XC376904 - Pigeon ramier - Columba palumbus.m4a",
+      "provenanceExterne": "yes",
+      "detailsProvenanceExterne": "https://xeno-canto.org/376904"
     },
     {
       "name": [
@@ -631,8 +659,10 @@
         {"FR": "Pica pica appartient à la famille des Corvidés, comme les corneilles et les corbeaux. Très adaptable, elle fréquente volontiers les villes, où elle s’habitue à la présence humaine. Ses cris puissants sont caractéristiques et, pendant la reproduction, elle défend activement son territoire et son nid."},
         {"US": "Pica pica belongs to the corvid family, like crows and ravens. Highly adaptable, it readily inhabits towns and becomes accustomed to people. Its loud calls are distinctive, and during the breeding season it actively defends its territory and nest."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/pie-bavarde/?type=cris-1564"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Pica-pica","xeno-canto"],
+      "fichierSon": "XC1148526 - Pie bavarde - Pica pica.m4a",
+      "provenanceExterne": "yes",
+      "detailsProvenanceExterne": "https://xeno-canto.org/1148526"
     },
     {
       "name": [
@@ -654,8 +684,10 @@
         {"FR": "Falco tinnunculus pratique le vol du Saint-Esprit : il reste immobile face au vent pour repérer ses proies, surtout des campagnols, mais aussi des insectes et de petits oiseaux. Il niche dans des cavités de falaises, de bâtiments ou dans d’anciens nids de corvidés."},
         {"US": "Falco tinnunculus hovers into the wind to spot its prey, mainly voles, but also insects and small birds. It nests in cliff or building cavities, or in old corvid nests."}
       ],
-      "liensSon": ["https://www.chant-oiseaux.fr/faucon-crecerelle/?type=cris-1537"],
-      "fichierSon": ""
+      "liensSon": ["https://xeno-canto.org/species/Falco-tinnunculus","xeno-canto"],
+      "fichierSon": "XC1165266 - Faucon crécerelle - Falco tinnunculus.m4a",
+      "provenanceExterne": "yes",
+      "detailsProvenanceExterne": "https://xeno-canto.org/1165266"
     }
   ]
 }

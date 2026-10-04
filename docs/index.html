@@ -1168,6 +1168,56 @@
     text-transform: uppercase;
   }
 
+  #infoBubble .info-label-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  #infoBubble .info-label-row .info-section-label {
+    margin-bottom: 0;
+  }
+
+  #infoBubble .species-sound-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid rgba(85, 113, 80, 0.45);
+    border-radius: 999px;
+    background: transparent;
+    color: #557150;
+    cursor: pointer;
+  }
+
+  #infoBubble .species-sound-btn:hover,
+  #infoBubble .species-sound-btn:focus-visible {
+    background: rgba(85, 113, 80, 0.14);
+  }
+
+  #infoBubble .species-sound-btn.active {
+    background: #557150;
+    color: #fff;
+  }
+
+  #infoBubble .species-sound-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  #infoBubble .info-sound-source {
+    margin: 8px 0 0;
+    font-size: 0.78rem;
+  }
+
+  #infoBubble .info-sound-source a {
+    color: #486544;
+  }
+
   #infoBubble .info-section + .info-section {
     margin-top: 14px;
   }
@@ -1449,6 +1499,7 @@
         <input id="audioVolumeRange" type="range" min="0" max="1" step="0.01" value="0.55" aria-label="Volume du son de fond" />
       </div>
       <audio id="backgroundAudio" loop preload="none" src="song/fond.m4a"></audio>
+      <audio id="speciesAudio" loop preload="none"></audio>
     </div>
   </div>
 
@@ -1545,11 +1596,16 @@
   const audioVolumeControl = document.getElementById('audioVolumeControl');
   const audioVolumeRange = document.getElementById('audioVolumeRange');
   const backgroundAudio = document.getElementById('backgroundAudio');
+  const speciesAudio = document.getElementById('speciesAudio');
   const backgroundStage = document.getElementById('backgroundStage');
   const backgroundVideoA = document.getElementById('backgroundVideoA');
   const backgroundVideoB = document.getElementById('backgroundVideoB');
   const sessionHighlightPrefix = 'siteBaladeChampvertHighlight:';
   const poiMediaPathPrefix = 'data/';
+  const speciesSoundPathPrefix = 'Sounds/';
+  let speciesSoundActive = false;
+  // null tant que l'utilisateur n'a pas choisi : on suit alors le son global à l'ouverture d'une espèce
+  let speciesSoundUserChoice = null;
   const backgroundManifestPath = 'background/backgroundList.json';
   const backgroundCycleMs = 10000;
   const currentUrl = new URL(window.location.href);
@@ -1589,6 +1645,10 @@
       poeticLabel: 'Regard sensible',
       scientificLabel: 'Repère naturaliste',
       learnMoreLabel: 'Pour aller plus loin :',
+      speciesSoundOn: 'Désactiver le son de l\'espèce',
+      speciesSoundOff: 'Activer le son de l\'espèce',
+      soundSourceLabel: 'Enregistrement :',
+      soundOwnSource: 'Balade de Champvert',
       diaLabel: 'Diaporama',
       infoButtonLabel: 'Maison des curiosités',
       infoButtonAriaLabel: 'Ouvrir la Maison des curiosités',
@@ -1628,6 +1688,10 @@ Contact : [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       poeticLabel: 'Sensitive view',
       scientificLabel: 'Naturalist note',
       learnMoreLabel: 'To go further:',
+      speciesSoundOn: 'Turn off the species sound',
+      speciesSoundOff: 'Turn on the species sound',
+      soundSourceLabel: 'Recording:',
+      soundOwnSource: 'Balade de Champvert',
       diaLabel: 'Slideshow',
       infoButtonLabel: 'Cabinet of Curiosities',
       infoButtonAriaLabel: 'Open the Cabinet of Curiosities',
@@ -1817,6 +1881,22 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       .join(' / ') || fallback;
   }
 
+  function parseSoundInfo(image) {
+    const isUsable = (value) => typeof value === 'string' && value.trim() && value.trim() !== '_';
+    const raw = Array.isArray(image.liensSon) ? image.liensSon : [];
+    const href = isUsable(raw[0]) ? raw[0].trim() : '';
+    const label = isUsable(raw[1]) ? raw[1].trim() : href;
+    const file = isUsable(image.fichierSon) ? image.fichierSon.trim() : '';
+    const external = String(image.provenanceExterne || '').trim().toLowerCase() === 'yes';
+    return {
+      links: href ? [{ href, label }] : [],
+      file,
+      src: file ? `${speciesSoundPathPrefix}${encodeURIComponent(file)}` : '',
+      external,
+      details: external && isUsable(image.detailsProvenanceExterne) ? image.detailsProvenanceExterne.trim() : ''
+    };
+  }
+
   function normalizeVariants(image) {
     const mainWebm = (image.webm && image.webm !== '_') ? `${poiMediaPathPrefix}${image.webm}` : '_';
     const mainJpeg = (image.jpeg && image.jpeg !== '_') ? `${poiMediaPathPrefix}${image.jpeg}` : '_';
@@ -1877,7 +1957,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     return {
       poetic,
       scientific,
-      html: buildInfoHtml(poetic, scientific, activePointData?.links || [])
+      html: buildInfoHtml(poetic, scientific, activePointData?.links || [], activePointData?.sound || null)
     };
   }
 
@@ -1949,7 +2029,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       .replace(/'/g, '&#39;');
   }
 
-  function buildInfoHtml(poetic, scientific, links) {
+  function buildInfoHtml(poetic, scientific, links, sound = null) {
     const strings = localeStrings[currentLocale] || localeStrings.FR;
     const htmlParts = [];
     if (poetic) {
@@ -1958,15 +2038,28 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     if (scientific) {
       htmlParts.push(`<section class="info-section"><span class="info-section-label">${escapeHtml(strings.scientificLabel)}</span><p>${escapeHtml(scientific)}</p></section>`);
     }
-    if (Array.isArray(links) && links.length > 0) {
+    const hasLinks = Array.isArray(links) && links.length > 0;
+    if (hasLinks || sound) {
       const label = strings.learnMoreLabel;
-      const linkItems = links
-        .map((href) => {
-          const safeHref = escapeHtml(href);
-          return `<li><a href="${safeHref}" target="_blank" rel="noopener noreferrer">${safeHref}</a></li>`;
+      const linkItems = (hasLinks ? links : [])
+        .map((link) => {
+          const safeHref = escapeHtml(link.href);
+          return `<li><a href="${safeHref}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label || link.href)}</a></li>`;
         })
         .join('');
-      htmlParts.push(`<section class="info-section"><span class="info-section-label">${escapeHtml(label)}</span><ul class="info-links">${linkItems}</ul></section>`);
+      let soundButton = '';
+      let sourceHtml = '';
+      if (sound) {
+        const active = speciesSoundActive;
+        soundButton = `<button type="button" class="species-sound-btn${active ? ' active' : ''}" aria-pressed="${active}" aria-label="${escapeHtml(active ? strings.speciesSoundOn : strings.speciesSoundOff)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg></button>`;
+        const sourceValue = sound.external && sound.details
+          ? `<a href="${escapeHtml(sound.details)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sound.details)}</a>`
+          : (sound.external ? '' : escapeHtml(strings.soundOwnSource));
+        if (sourceValue) {
+          sourceHtml = `<p class="info-sound-source">${escapeHtml(strings.soundSourceLabel)} ${sourceValue}</p>`;
+        }
+      }
+      htmlParts.push(`<section class="info-section"><div class="info-label-row"><span class="info-section-label">${escapeHtml(label)}</span>${soundButton}</div>${linkItems ? `<ul class="info-links">${linkItems}</ul>` : ''}${sourceHtml}</section>`);
     }
     return htmlParts.join('');
   }
@@ -1975,11 +2068,17 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     const poetic = pointEl.dataset.poetic || '';
     const scientific = pointEl.dataset.scientific || '';
     let links = [];
+    let sound = null;
     let variants = pointVariants.get(pointEl) || [];
     try {
       links = JSON.parse(pointEl.dataset.links || '[]');
     } catch (error) {
       links = [];
+    }
+    try {
+      sound = JSON.parse(pointEl.dataset.sound || 'null');
+    } catch (error) {
+      sound = null;
     }
     return {
       video: pointEl.dataset.video,
@@ -1990,8 +2089,9 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       poetic,
       scientific,
       links,
+      sound,
       variants,
-      html: buildInfoHtml(poetic, scientific, links)
+      html: buildInfoHtml(poetic, scientific, links, sound)
     };
   }
 
@@ -2553,7 +2653,9 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     pointGroup.dataset.poetic = getPreferredText(image.poeticText, '');
     pointGroup.dataset.scientific = getPreferredText(image.scientificText, '');
     pointGroup.dataset.text = getPreferredText(image.poeticText, getPreferredText(image.scientificText, 'Texte à venir.'));
-    pointGroup.dataset.links = JSON.stringify(Array.isArray(image.liensSon) ? image.liensSon.filter((link) => typeof link === 'string' && link && link !== '_') : []);
+    const soundInfo = parseSoundInfo(image);
+    pointGroup.dataset.links = JSON.stringify(soundInfo.links);
+    pointGroup.dataset.sound = JSON.stringify(soundInfo.file ? { src: soundInfo.src, external: soundInfo.external, details: soundInfo.details } : null);
     pointGroup.dataset.regions = JSON.stringify([]);
     pointVariants.set(pointGroup, normalizeVariants(image));
     pointGroup.appendChild(pulse);
@@ -2779,6 +2881,11 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
         activeBackgroundVideoIndex = 0;
       }
       activeBackgroundEntryIndex = entryIndex;
+      if (diaporamaActive && entry.sound && isGlobalAudioActive()) {
+        playSpeciesSound(entry.sound);
+      } else if (!isOpen) {
+        stopSpeciesSound();
+      }
     } catch (error) {
       console.error('Impossible d\'activer le fond vidéo :', error);
     }
@@ -2853,9 +2960,10 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   function buildDiaporamaEntries() {
     const entries = backgroundEntries.slice();
     rawImages.forEach((image, imageIndex) => {
+      const soundSrc = parseSoundInfo(image).src;
       normalizeVariants(image).forEach((variant, variantIndex) => {
         if (variant.webm && variant.webm !== '_') {
-          entries.push({ id: `data-${imageIndex}-${variantIndex}`, src: variant.webm });
+          entries.push({ id: `data-${imageIndex}-${variantIndex}`, src: variant.webm, sound: soundSrc });
         }
       });
     });
@@ -2916,6 +3024,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     document.removeEventListener('click', handleDiaporamaExit, true);
 
     body.classList.remove('diaporama-active');
+    if (!isOpen) stopSpeciesSound();
     resetBackgroundCycle();
 
     if (diaporamaWasMapMode) {
@@ -3703,6 +3812,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       console.log('openVideo variants', activeVariants);
       const hasVariantNavigator = activeVariants.length > 1;
       activeVariantIndex = 0;
+      applySpeciesSoundForActivePoint();
       setActiveVariant(0);
 
       requestAnimationFrame(() => {
@@ -3746,6 +3856,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     if (!isOpen || !activePointRect) return;
 
     pendingInitialBubble = false;
+    stopSpeciesSound();
     hideBubble(true);
     viewer.classList.remove('open');
     body.classList.remove('video-open');
@@ -3922,6 +4033,57 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     saveAudioVolume(normalized);
   }
 
+  function isGlobalAudioActive() {
+    return !!audioToggleBtn && audioToggleBtn.classList.contains('active');
+  }
+
+  function stopSpeciesSound() {
+    if (!speciesAudio) return;
+    speciesAudio.pause();
+    speciesAudio.removeAttribute('src');
+    speciesAudio.load();
+  }
+
+  function playSpeciesSound(src) {
+    if (!speciesAudio || !src) return;
+    const absoluteSrc = new URL(src, document.baseURI).href;
+    if (speciesAudio.src !== absoluteSrc) {
+      speciesAudio.src = src;
+    }
+    speciesAudio.volume = backgroundAudio ? backgroundAudio.volume : getSavedAudioVolume();
+    speciesAudio.play().catch((error) => {
+      console.warn('Impossible de démarrer le son de l\'espèce :', error);
+    });
+  }
+
+  function refreshSpeciesSoundButtons() {
+    const strings = localeStrings[currentLocale] || localeStrings.FR;
+    infoBubble.querySelectorAll('.species-sound-btn').forEach((btn) => {
+      btn.classList.toggle('active', speciesSoundActive);
+      btn.setAttribute('aria-pressed', String(speciesSoundActive));
+      btn.setAttribute('aria-label', speciesSoundActive ? strings.speciesSoundOn : strings.speciesSoundOff);
+    });
+  }
+
+  function applySpeciesSoundForActivePoint() {
+    speciesSoundActive = speciesSoundUserChoice !== null ? speciesSoundUserChoice : isGlobalAudioActive();
+    const sound = activePointData?.sound;
+    if (sound && speciesSoundActive) {
+      playSpeciesSound(sound.src);
+    } else {
+      stopSpeciesSound();
+    }
+    refreshSpeciesSoundButtons();
+  }
+
+  infoBubble.addEventListener('click', (event) => {
+    const btn = event.target.closest('.species-sound-btn');
+    if (!btn) return;
+    event.stopPropagation();
+    speciesSoundUserChoice = !speciesSoundActive;
+    applySpeciesSoundForActivePoint();
+  });
+
   function setBackgroundAudioEnabled(shouldEnable) {
     if (!audioToggleBtn || !audioVolumeControl || !audioVolumeRange || !backgroundAudio) return;
 
@@ -3937,8 +4099,11 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       backgroundAudio.play().catch((error) => {
         console.warn('Impossible de démarrer le son de fond :', error);
       });
+      const currentEntry = getBackgroundEntries()[activeBackgroundEntryIndex];
+      if (diaporamaActive && currentEntry?.sound) playSpeciesSound(currentEntry.sound);
     } else {
       backgroundAudio.pause();
+      if (diaporamaActive) stopSpeciesSound();
     }
   }
 

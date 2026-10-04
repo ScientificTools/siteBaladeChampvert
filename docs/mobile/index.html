@@ -317,6 +317,36 @@
     white-space: nowrap;
   }
 
+  .species-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .species-card .card-sound-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--accent);
+  }
+
+  .species-card .card-sound-btn.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .species-card .card-sound-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
   .viewer {
     position: relative;
   }
@@ -425,6 +455,50 @@
 
   .info-block ul {
     padding-left: 18px;
+  }
+
+  .info-label-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .info-label-row .info-label {
+    margin-bottom: 0;
+  }
+
+  .species-sound-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--accent);
+  }
+
+  .species-sound-btn[hidden] {
+    display: none;
+  }
+
+  .species-sound-btn.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .species-sound-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  .sound-source {
+    margin-top: 8px;
+    font-size: 0.82rem;
   }
 
   .map-link {
@@ -663,8 +737,15 @@
         <p id="scientificText"></p>
       </div>
       <div class="info-block" id="linksBlock" hidden>
-        <span class="info-label" id="linksLabel">Pour aller plus loin</span>
+        <div class="info-label-row">
+          <span class="info-label" id="linksLabel">Pour aller plus loin</span>
+          <button id="speciesSoundBtn" class="species-sound-btn" type="button" aria-pressed="false" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg>
+          </button>
+        </div>
         <ul id="linksList"></ul>
+        <p class="sound-source" id="soundSource" hidden></p>
+        <audio id="speciesAudio" preload="none"></audio>
       </div>
     </section>
 
@@ -702,6 +783,10 @@
       poeticLabel: 'Regard sensible',
       scientificLabel: 'Repère naturaliste',
       linksLabel: 'Pour aller plus loin',
+      soundPlay: 'Écouter le son de l\'espèce',
+      soundStop: 'Arrêter le son de l\'espèce',
+      soundSourceLabel: 'Enregistrement :',
+      soundOwnSource: 'Balade de Champvert',
       openMapLabel: 'Voir sur la carte',
       noDate: 'Date non renseignée',
       noLocation: 'Position non renseignée',
@@ -734,6 +819,10 @@
       poeticLabel: 'Sensitive view',
       scientificLabel: 'Naturalist note',
       linksLabel: 'To go further',
+      soundPlay: 'Listen to the species sound',
+      soundStop: 'Stop the species sound',
+      soundSourceLabel: 'Recording:',
+      soundOwnSource: 'Balade de Champvert',
       openMapLabel: 'View on map',
       noDate: 'Date not provided',
       noLocation: 'Position not provided',
@@ -747,6 +836,8 @@
   const MAP_LINK_BASE = 'https://www.openstreetmap.org/';
   const DATA_PATH = '../data/data.json';
   const MEDIA_PREFIX = '../data/';
+  const SOUND_PREFIX = '../Sounds/';
+  const SPEAKER_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg>';
   const VIEW_PREF_KEY = 'siteBaladeChampvertPreferredView';
 
   const langFrBtn = document.getElementById('langFrBtn');
@@ -771,6 +862,9 @@
   const linksBlock = document.getElementById('linksBlock');
   const linksLabel = document.getElementById('linksLabel');
   const linksList = document.getElementById('linksList');
+  const speciesSoundBtn = document.getElementById('speciesSoundBtn');
+  const soundSource = document.getElementById('soundSource');
+  const speciesAudio = document.getElementById('speciesAudio');
   const audioToggleBtn = document.getElementById('audioToggleBtn');
   const audioVolumeControl = document.getElementById('audioVolumeControl');
   const audioVolumeRange = document.getElementById('audioVolumeRange');
@@ -789,6 +883,7 @@
   let speciesEntries = [];
   let selectedId = null;
   let activeVariantIndex = 0;
+  let speciesAudioEntryId = null;
   let backgroundEntries = [];
   let diaporamaEntries = [];
   let diaporamaActive = false;
@@ -853,6 +948,20 @@
     return variants;
   }
 
+  function parseSoundInfo(image) {
+    const isUsable = (value) => typeof value === 'string' && value.trim() && value.trim() !== '_';
+    const raw = Array.isArray(image.liensSon) ? image.liensSon : [];
+    const href = isUsable(raw[0]) ? raw[0].trim() : '';
+    const file = isUsable(image.fichierSon) ? image.fichierSon.trim() : '';
+    const external = String(image.provenanceExterne || '').trim().toLowerCase() === 'yes';
+    return {
+      links: href ? [{ href, label: isUsable(raw[1]) ? raw[1].trim() : href }] : [],
+      soundSrc: file ? `${SOUND_PREFIX}${encodeURIComponent(file)}` : '',
+      soundExternal: external,
+      soundDetails: external && isUsable(image.detailsProvenanceExterne) ? image.detailsProvenanceExterne.trim() : ''
+    };
+  }
+
   function normalizeEntries(images) {
     return images.map((image, index) => ({
       id: `species-${index}`,
@@ -860,9 +969,31 @@
       title: getPreferredText(image.name, 'Observation'),
       scientific: getScientificName(image.name),
       thumb: image.jpeg && image.jpeg !== '_' ? `${MEDIA_PREFIX}${image.jpeg}` : '',
-      links: Array.isArray(image.liensSon) ? image.liensSon.filter((link) => typeof link === 'string' && link && link !== '_') : [],
+      ...parseSoundInfo(image),
       variants: normalizeVariants(image)
     }));
+  }
+
+  function updateSpeciesSoundButton() {
+    const strings = getStrings();
+    const audioPlaying = !speciesAudio.paused && !speciesAudio.ended;
+    const playing = audioPlaying && speciesAudioEntryId === selectedId;
+    speciesSoundBtn.classList.toggle('active', playing);
+    speciesSoundBtn.setAttribute('aria-pressed', String(playing));
+    speciesSoundBtn.setAttribute('aria-label', playing ? strings.soundStop : strings.soundPlay);
+    document.querySelectorAll('.card-sound-btn').forEach((btn) => {
+      const active = audioPlaying && btn.dataset.entryId === speciesAudioEntryId;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', String(active));
+      btn.setAttribute('aria-label', active ? strings.soundStop : strings.soundPlay);
+    });
+  }
+
+  function stopSpeciesSound() {
+    speciesAudio.pause();
+    speciesAudio.removeAttribute('src');
+    speciesAudio.load();
+    updateSpeciesSoundButton();
   }
 
   function formatDate(value) {
@@ -992,9 +1123,22 @@
       action.textContent = strings.viewAction;
       action.addEventListener('click', () => selectEntry(entry.id));
 
+      const actions = document.createElement('div');
+      actions.className = 'species-actions';
+      if (entry.soundSrc) {
+        const soundBtn = document.createElement('button');
+        soundBtn.type = 'button';
+        soundBtn.className = 'card-sound-btn';
+        soundBtn.dataset.entryId = entry.id;
+        soundBtn.innerHTML = SPEAKER_ICON;
+        soundBtn.addEventListener('click', () => toggleSpeciesSound(entry));
+        actions.appendChild(soundBtn);
+      }
+      actions.appendChild(action);
+
       card.appendChild(thumb);
       card.appendChild(text);
-      card.appendChild(action);
+      card.appendChild(actions);
       speciesList.appendChild(card);
     });
 
@@ -1056,16 +1200,42 @@
 
     linksList.innerHTML = '';
     const mapLink = getMapLink(variant.latitude, variant.longitude);
-    const allLinks = mapLink ? [mapLink, ...entry.links] : entry.links.slice();
-    if (allLinks.length > 0) {
+    const allLinks = mapLink ? [{ href: mapLink, label: strings.openMapLabel }, ...entry.links] : entry.links.slice();
+
+    if (speciesAudioEntryId !== entry.id) {
+      stopSpeciesSound();
+      speciesAudioEntryId = null;
+    }
+    speciesSoundBtn.hidden = !entry.soundSrc;
+    updateSpeciesSoundButton();
+    soundSource.innerHTML = '';
+    soundSource.hidden = true;
+    if (entry.soundSrc) {
+      let sourceNode = null;
+      if (entry.soundExternal && entry.soundDetails) {
+        sourceNode = document.createElement('a');
+        sourceNode.href = entry.soundDetails;
+        sourceNode.target = '_blank';
+        sourceNode.rel = 'noopener noreferrer';
+        sourceNode.textContent = entry.soundDetails;
+      } else if (!entry.soundExternal) {
+        sourceNode = document.createTextNode(strings.soundOwnSource);
+      }
+      if (sourceNode) {
+        soundSource.append(`${strings.soundSourceLabel} `, sourceNode);
+        soundSource.hidden = false;
+      }
+    }
+
+    if (allLinks.length > 0 || entry.soundSrc) {
       linksBlock.hidden = false;
-      allLinks.forEach((href, index) => {
+      allLinks.forEach((link) => {
         const li = document.createElement('li');
         const a = document.createElement('a');
-        a.href = href;
+        a.href = link.href;
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
-        a.textContent = index === 0 && mapLink ? strings.openMapLabel : href;
+        a.textContent = link.label;
         li.appendChild(a);
         linksList.appendChild(li);
       });
@@ -1073,6 +1243,25 @@
       linksBlock.hidden = true;
     }
   }
+
+  function toggleSpeciesSound(entry) {
+    if (!entry || !entry.soundSrc) return;
+    if (!speciesAudio.paused && speciesAudioEntryId === entry.id) {
+      stopSpeciesSound();
+      speciesAudioEntryId = null;
+      updateSpeciesSoundButton();
+      return;
+    }
+    speciesAudioEntryId = entry.id;
+    speciesAudio.src = entry.soundSrc;
+    speciesAudio.play().catch((error) => console.warn('Impossible de démarrer le son de l\'espèce :', error));
+    updateSpeciesSoundButton();
+  }
+
+  speciesSoundBtn.addEventListener('click', () => {
+    toggleSpeciesSound(speciesEntries.find((item) => item.id === selectedId));
+  });
+  ['play', 'pause', 'ended'].forEach((name) => speciesAudio.addEventListener(name, updateSpeciesSoundButton));
 
   async function loadEntries() {
     const response = await fetch(DATA_PATH);
