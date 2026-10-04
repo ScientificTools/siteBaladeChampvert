@@ -996,6 +996,23 @@
     updateSpeciesSoundButton();
   }
 
+  function syncDiaporamaSpeciesSound() {
+    if (!diaporamaActive) return;
+
+    const entry = diaporamaEntries[activeDiaporamaEntryIndex];
+    if (!audioToggleBtn.classList.contains('active') || !entry?.soundSrc) {
+      stopSpeciesSound();
+      speciesAudioEntryId = null;
+      return;
+    }
+
+    speciesAudioEntryId = entry.soundEntryId || entry.id;
+    speciesAudio.src = entry.soundSrc;
+    speciesAudio.volume = backgroundAudio.volume;
+    speciesAudio.play().catch((error) => console.warn('Impossible de démarrer le son de l\'espèce :', error));
+    updateSpeciesSoundButton();
+  }
+
   function formatDate(value) {
     const strings = getStrings();
     if (!value || value === '_') return strings.noDate;
@@ -1310,8 +1327,10 @@
       backgroundAudio.play().catch((error) => {
         console.warn('Impossible de démarrer le son de fond :', error);
       });
+      syncDiaporamaSpeciesSound();
     } else {
       backgroundAudio.pause();
+      syncDiaporamaSpeciesSound();
     }
   }
 
@@ -1370,7 +1389,12 @@
     speciesEntries.forEach((entry) => {
       entry.variants.forEach((variant, variantIndex) => {
         if (variant.webm) {
-          entries.push({ id: `${entry.id}-${variantIndex}`, src: variant.webm });
+          entries.push({
+            id: `${entry.id}-${variantIndex}`,
+            src: variant.webm,
+            soundSrc: entry.soundSrc,
+            soundEntryId: entry.id
+          });
         }
       });
     });
@@ -1514,6 +1538,7 @@
         activeDiaporamaVideoIndex = 0;
       }
       activeDiaporamaEntryIndex = entryIndex;
+      syncDiaporamaSpeciesSound();
     } catch (error) {
       console.error('Impossible d\'activer le fond du diaporama :', error);
     }

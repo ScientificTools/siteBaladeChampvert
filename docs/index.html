@@ -1661,7 +1661,7 @@ Les deux univers parallèles, humain et sauvage, y cohabitent chacun à son ryth
 Pour bien ressentir la nature, il faut s'y promener lentement, en prenant le temps de voir et d'écouter, profiter de toutes les saisons et essayer différents moments de la journée, être patients et reconnaissants lorsqu’une rencontre se produit.
 A cette condition, la nature se révèle entièrement avec une richesse insoupçonnée.
 En arrivant sur cette page, n'espérez pas trouver un "inventaire" savant et encyclopédique. La ligne directrice a été plutôt de mettre en avant des "impressions", des "sensations", des "émotions".
-Les images animées et les sons, tous captés ici, donnent vie et relief à des petites scènes éphémères, zoomées à l'instant spontané de rencontres de hasard.
+Les images animées, toutes captées ici (longue-vue stabilisée Kite APC 60 et smartphone en digiscopie), donnent vie et relief à des petites scènes éphémères, zoomées à l'instant spontané de rencontres de hasard. La majorité des sons provient de [https://xeno-canto.org](https://xeno-canto.org), formidable base de données internationale de sons naturels. Les chants sont importants pour reconnaître un oiseau pas toujours facile à voir. Les liens vers xeno-canto, sur chaque son, vous permettront d'avoir beaucoup d'autres échantillons, d'autant qu'un même oiseau ne se satisfait pas d'une seule vocalise.
 Depuis l'ordinateur, l'expérience se veut immersive, nos hôtes se déplacent, on ne les voit pas toujours au même emplacement, ils se méritent. Cliquez pour essayer, utilisez la molette, soyez curieux, tout n’est pas expliqué, partez à la découverte.
 Le site, sur mobile, est plus adapté à la taille de l’écran, il vous aidera à apprendre à reconnaître les espèces locales.
 Pour un moment de détente et de méditation, n'hésitez pas à venir ici décompresser un moment. Activez le son, ouvrez le diaporama, en plein écran idéalement, et laissez-vous emporter, avec la promesse de venir profiter prochainement du lieu dans la vraie vie, ou ailleurs avec la même démarche.
@@ -1704,7 +1704,7 @@ The two parallel worlds, human and wild, coexist here, each with its own rhythms
 To truly feel close to nature, you need to walk slowly, taking the time to look and listen, enjoying every season and trying different times of day, and being patient and grateful when an encounter happens.
 Only then does nature fully reveal its unsuspected richness.
 When you arrive on this page, do not expect a scholarly, encyclopedic "inventory." The guiding idea has instead been to bring out "impressions," "sensations" and "emotions."
-The animated images and sounds, all captured here, bring life and depth to fleeting little scenes, zooming in on the spontaneous moment of a chance encounter.
+The animated images, all captured here with a stabilized Kite APC 60 spotting scope and a smartphone using digiscoping, bring life and depth to fleeting little scenes, zoomed in on the spontaneous moment of a chance encounter. Most of the sounds come from [https://xeno-canto.org](https://xeno-canto.org), a wonderful international database of natural sounds. Birdsong is important for recognizing a bird that is not always easy to see. The links to xeno-canto on each sound will let you explore many more recordings, especially since any given bird has more than one vocalization.
 On a computer, the experience is designed to be immersive. Our guests move around; you will not always see them in the same place, and finding them takes a little effort. Click to try things out, use the scroll wheel, be curious. Not everything is explained: set off and explore.
 On mobile, the site is adapted to the screen size and will help you learn to recognize local species.
 For a moment of relaxation and meditation, feel free to come here and unwind. Turn on the sound, open the slideshow, ideally in full screen, and let yourself drift away, with a promise to come and enjoy the place in real life soon, or to explore somewhere else in the same spirit.
@@ -4162,7 +4162,9 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       .filter(Boolean)
       .map((line) => `<p>${escapeHtml(line).replace(
         /\[([^\]]+)\]\(((?:https:\/\/|mailto:)[^\s)]+)\)/g,
-        '<a href="$2">$1</a>'
+        (match, label, href) => href.startsWith('https://xeno-canto.org')
+          ? `<a href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`
+          : `<a href="${href}">${label}</a>`
       )}</p>`)
       .join('');
     infoTooltip.innerHTML = paragraphs;
