@@ -1679,7 +1679,10 @@
       learnMoreLabel: 'Pour aller plus loin :',
       speciesSoundOn: 'Désactiver le son de l\'espèce',
       speciesSoundOff: 'Activer le son de l\'espèce',
-      soundSourceLabel: 'Enregistrement :',
+      soundSourceLabel: 'Source du son utilisée ici :',
+      soundSamplesLabel: 'Échantillons de son de l\'espèce',
+      imageLabel: 'Image Balade de Champvert',
+      openMapLabel: 'Voir la carte',
       soundOwnSource: 'Balade de Champvert',
       diaLabel: 'Diaporama',
       infoButtonLabel: 'Maison des curiosités',
@@ -1722,7 +1725,10 @@ Contact : [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       learnMoreLabel: 'To go further:',
       speciesSoundOn: 'Turn off the species sound',
       speciesSoundOff: 'Turn on the species sound',
-      soundSourceLabel: 'Recording:',
+      soundSourceLabel: 'Source of the sound used here:',
+      soundSamplesLabel: 'Sound samples of the species',
+      imageLabel: 'Balade de Champvert image',
+      openMapLabel: 'View map',
       soundOwnSource: 'Balade de Champvert',
       diaLabel: 'Slideshow',
       infoButtonLabel: 'Cabinet of Curiosities',
@@ -1982,14 +1988,20 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     return fallbackText;
   }
 
+  function getMapLink(latitude, longitude) {
+    if (!latitude || !longitude || latitude === '_' || longitude === '_') return '';
+    return `https://www.openstreetmap.org/?mlat=${encodeURIComponent(latitude)}&mlon=${encodeURIComponent(longitude)}#map=18/${encodeURIComponent(latitude)}/${encodeURIComponent(longitude)}`;
+  }
+
   function getActiveVariantInfo() {
     const variant = activeVariants[activeVariantIndex] || {};
     const poetic = getVariantText(variant.poeticText, activePointData?.poetic || '', '');
     const scientific = getVariantText(variant.scientificText, activePointData?.scientific || '', '');
+    const mapLink = getMapLink(variant.latitude, variant.longitude);
     return {
       poetic,
       scientific,
-      html: buildInfoHtml(poetic, scientific, activePointData?.links || [], activePointData?.sound || null)
+      html: buildInfoHtml(poetic, scientific, activePointData?.links || [], activePointData?.sound || null, mapLink)
     };
   }
 
@@ -2061,7 +2073,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       .replace(/'/g, '&#39;');
   }
 
-  function buildInfoHtml(poetic, scientific, links, sound = null) {
+  function buildInfoHtml(poetic, scientific, links, sound = null, mapLink = '') {
     const strings = localeStrings[currentLocale] || localeStrings.FR;
     const htmlParts = [];
     if (poetic) {
@@ -2071,12 +2083,13 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       htmlParts.push(`<section class="info-section"><span class="info-section-label">${escapeHtml(strings.scientificLabel)}</span><p>${escapeHtml(scientific)}</p></section>`);
     }
     const hasLinks = Array.isArray(links) && links.length > 0;
-    if (hasLinks || sound) {
+    {
       const label = strings.learnMoreLabel;
-      const linkItems = (hasLinks ? links : [])
+      const imageItem = `<li>${escapeHtml(strings.imageLabel)}${mapLink ? ` : <a href="${escapeHtml(mapLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(strings.openMapLabel)}</a>` : ''}</li>`;
+      const linkItems = imageItem + (hasLinks ? links : [])
         .map((link) => {
           const safeHref = escapeHtml(link.href);
-          return `<li><a href="${safeHref}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label || link.href)}</a></li>`;
+          return `<li>${escapeHtml(strings.soundSamplesLabel)} : <a href="${safeHref}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label || link.href)}</a></li>`;
         })
         .join('');
       let soundButton = '';
@@ -5002,9 +5015,11 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       linksLabel: 'Pour aller plus loin',
       soundPlay: 'Écouter le son de l\'espèce',
       soundStop: 'Arrêter le son de l\'espèce',
-      soundSourceLabel: 'Enregistrement :',
+      soundSourceLabel: 'Source du son utilisée ici :',
       soundOwnSource: 'Balade de Champvert',
-      openMapLabel: 'Voir sur la carte',
+      imageLabel: 'Image Balade de Champvert',
+      soundSamplesLabel: 'Échantillons de son de l\'espèce',
+      openMapLabel: 'Voir la carte',
       noDate: 'Date non renseignée',
       noLocation: 'Position non renseignée',
       noPoetic: 'Texte sensible à venir.',
@@ -5038,9 +5053,11 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       linksLabel: 'To go further',
       soundPlay: 'Listen to the species sound',
       soundStop: 'Stop the species sound',
-      soundSourceLabel: 'Recording:',
+      soundSourceLabel: 'Source of the sound used here:',
       soundOwnSource: 'Balade de Champvert',
-      openMapLabel: 'View on map',
+      imageLabel: 'Balade de Champvert image',
+      soundSamplesLabel: 'Sound samples of the species',
+      openMapLabel: 'View map',
       noDate: 'Date not provided',
       noLocation: 'Position not provided',
       noPoetic: 'Sensitive text coming soon.',
@@ -5434,7 +5451,6 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
 
     linksList.innerHTML = '';
     const mapLink = getMapLink(variant.latitude, variant.longitude);
-    const allLinks = mapLink ? [{ href: mapLink, label: strings.openMapLabel }, ...entry.links] : entry.links.slice();
 
     if (speciesAudioEntryId !== entry.id) {
       stopSpeciesSound();
@@ -5461,21 +5477,28 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       }
     }
 
-    if (allLinks.length > 0 || entry.soundSrc) {
-      linksBlock.hidden = false;
-      allLinks.forEach((link) => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = link.href;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        a.textContent = link.label;
-        li.appendChild(a);
-        linksList.appendChild(li);
-      });
-    } else {
-      linksBlock.hidden = true;
+    // La ligne "image" est toujours présente ; le lien carte n'apparaît que si des coordonnées existent
+    linksBlock.hidden = false;
+    const imageItem = document.createElement('li');
+    imageItem.append(strings.imageLabel);
+    if (mapLink) {
+      imageItem.append(' : ', createExternalLink(mapLink, strings.openMapLabel));
     }
+    linksList.appendChild(imageItem);
+    entry.links.forEach((link) => {
+      const li = document.createElement('li');
+      li.append(`${strings.soundSamplesLabel} : `, createExternalLink(link.href, link.label));
+      linksList.appendChild(li);
+    });
+  }
+
+  function createExternalLink(href, label) {
+    const a = document.createElement('a');
+    a.href = href;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = label;
+    return a;
   }
 
   function toggleSpeciesSound(entry) {
