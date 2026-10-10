@@ -31,6 +31,52 @@
   l'ajouter à la liste "modes" et à la fonction detectMode().
 -->
 <script>
+  // Texte de la Maison des curiosités, partagé par les modes desktop et mobile
+  const SITE_INFO_TEXT = {
+    FR: `Bienvenue dans le quartier de Champvert, Lyon, France
+La Nature et la biodiversité y sont bien présentes et appréciées des promeneurs, en plein milieu urbain.
+Les oiseaux, parfois de passage, souvent bien installés, cohabitent avec l'homme, dans un certain équilibre sauvage, au milieu d'une végétation et d'une microfaune bienvenue en pleine ville.
+Sur la carte, la bande verte laisse imaginer un profil d'oiseau, de rouge gorge je dirais, rebondi, noble et équilibré.
+La voie verte dessine son dos et sa queue. Le parc de la garde, son arrière-train. N’hésitez pas à traverser un petit bout de ville, le sympathique quartier de point du jour, pour retrouver le parc de la mairie prolongé du parc de la passerelle qui dessine son torse puis son bec. Tous reliés, ils réalisent la promesse d’une balade verte, calme, ponctuée du chant des oiseaux, au sein d'une végétation riche de feuillus et résineux, d’arbres spectaculaires et de petits bassins biologiques, abreuvoirs appréciés et zones de biodiversité.
+Les deux univers parallèles, humain et sauvage, y cohabitent chacun à son rythme, et ses rites. On y vit, on s'y croise, parfois sans faire attention l'un à l'autre.
+Pour bien ressentir la nature, il faut s'y promener lentement, en prenant le temps de voir et d'écouter, profiter de toutes les saisons et essayer différents moments de la journée, être patients et reconnaissants lorsqu’une rencontre se produit.
+A cette condition, la nature se révèle entièrement avec une richesse insoupçonnée.
+En arrivant sur cette page, n'espérez pas trouver un "inventaire" savant et encyclopédique. La ligne directrice a été plutôt de mettre en avant des "impressions", des "sensations", des "émotions".
+Les images animées, toutes captées ici (longue-vue stabilisée Kite APC 60 et smartphone en digiscopie), donnent vie et relief à des petites scènes éphémères, zoomées à l'instant spontané de rencontres de hasard. La majorité des sons provient de [https://xeno-canto.org](https://xeno-canto.org), formidable base de données internationale de sons naturels. Les chants sont importants pour reconnaître un oiseau pas toujours facile à voir. Les liens vers xeno-canto, sur chaque son, vous permettront d'avoir beaucoup d'autres échantillons, d'autant qu'un même oiseau ne se satisfait pas d'une seule vocalise.
+Depuis l'ordinateur, l'expérience se veut immersive, nos hôtes se déplacent, on ne les voit pas toujours au même emplacement, ils se méritent. Cliquez pour essayer, utilisez la molette, soyez curieux, tout n’est pas expliqué, partez à la découverte.
+Le site, sur mobile, est plus adapté à la taille de l’écran, il vous aidera à apprendre à reconnaître les espèces locales.
+Pour un moment de détente et de méditation, n'hésitez pas à venir ici décompresser un moment. Activez le son, ouvrez le diaporama, en plein écran idéalement, et laissez-vous emporter, avec la promesse de venir profiter prochainement du lieu dans la vraie vie, ou ailleurs avec la même démarche.
+Le site a été conçu avec une attention d'éco-responsabilité numérique. L'écoindex A de la page ne dépasse pas D si vous visualisez l'intégralité des contenus animés. Le site écoindex est intéressant à consulter pour comprendre les enjeux de l’éco-conception (cliquez sur le lien en bas de page).
+Les images animées ont été travaillées avec un outil développé spécifiquement à cet effet (en libre accès) pour alléger au maximum leur poids, tout en gardant leur pertinence esthétique.
+(les techniciens et photographes curieux pourront approfondir le sujet ici : [https://github.com/ScientificTools/MotionPhotoWorkbench/wiki](https://github.com/ScientificTools/MotionPhotoWorkbench/wiki))
+La page s’enrichit régulièrement de nouveaux contenus, au fil du temps, tout en gardant son âme et cœur de montrer que la nature est belle, étonnante et revigorante.
+Dans ces pages, pas de publicité, pas de cookies, pas de score, pas de nombre de vues, pas de vente, pas de médias lourds, pas d'avis, pas de news.
+Vous êtes ici chez vous dans le plus strict respect de votre vie privée. J'espère que vous prendrez plaisir à le visiter.
+Avec curiosité,
+Contact : [albouille69@gmail.com](mailto:albouille69@gmail.com)`,
+    US: `Welcome to the Champvert neighborhood, Lyon, France
+Nature and biodiversity are very much present here, appreciated by walkers right in the heart of the city.
+The birds, sometimes passing through, often well settled, live alongside people in a kind of wild balance, amid vegetation and tiny creatures that are a welcome presence in the city.
+On the map, the green strip suggests the profile of a bird, a robin, I would say: plump, noble and well proportioned.
+The greenway traces its back and tail. The Parc de la Garde forms its rear. Feel free to cross a little stretch of the city, through the friendly Point du Jour neighborhood, to reach the Parc de la Mairie, which continues into the Parc de la Passerelle, tracing its chest and then its beak. All connected, they fulfill the promise of a peaceful green walk, punctuated by birdsong, amid a rich mix of deciduous trees and conifers, spectacular trees and small wildlife ponds, much appreciated drinking spots and havens of biodiversity.
+The two parallel worlds, human and wild, coexist here, each with its own rhythms and rituals. Lives unfold and paths cross, sometimes without either noticing the other.
+To truly feel close to nature, you need to walk slowly, taking the time to look and listen, enjoying every season and trying different times of day, and being patient and grateful when an encounter happens.
+Only then does nature fully reveal its unsuspected richness.
+When you arrive on this page, do not expect a scholarly, encyclopedic "inventory." The guiding idea has instead been to bring out "impressions," "sensations" and "emotions."
+The animated images, all captured here with a stabilized Kite APC 60 spotting scope and a smartphone using digiscoping, bring life and depth to fleeting little scenes, zoomed in on the spontaneous moment of a chance encounter. Most of the sounds come from [https://xeno-canto.org](https://xeno-canto.org), a wonderful international database of natural sounds. Birdsong is important for recognizing a bird that is not always easy to see. The links to xeno-canto on each sound will let you explore many more recordings, especially since any given bird has more than one vocalization.
+On a computer, the experience is designed to be immersive. Our guests move around; you will not always see them in the same place, and finding them takes a little effort. Click to try things out, use the scroll wheel, be curious. Not everything is explained: set off and explore.
+On mobile, the site is adapted to the screen size and will help you learn to recognize local species.
+For a moment of relaxation and meditation, feel free to come here and unwind. Turn on the sound, open the slideshow, ideally in full screen, and let yourself drift away, with a promise to come and enjoy the place in real life soon, or to explore somewhere else in the same spirit.
+The site was designed with digital environmental responsibility in mind. The page's EcoIndex rating starts at A and goes no lower than D if you view all the animated content. The EcoIndex website is worth visiting to understand the issues involved in eco-design (click the link at the bottom of the page).
+The animated images were processed using a freely available tool developed specifically for this purpose, to make their file sizes as small as possible while preserving their aesthetic value.
+(Curious photographers and technically minded visitors can explore the subject further here: [https://github.com/ScientificTools/MotionPhotoWorkbench/wiki](https://github.com/ScientificTools/MotionPhotoWorkbench/wiki))
+New content is regularly added to the page over time, while it keeps its heart and soul: showing that nature is beautiful, surprising and invigorating.
+On these pages, there are no ads, no cookies, no scores, no view counts, nothing for sale, no heavy media files, no reviews and no news.
+Make yourself at home here, with the utmost respect for your privacy. I hope you will enjoy visiting.
+With curiosity,
+Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
+  };
+
   (function () {
     const prefKey = 'siteBaladeChampvertPreferredView';
     const modes = ['desktop', 'mobile'];
@@ -1691,27 +1737,7 @@
       diaLabel: 'Diaporama',
       infoButtonLabel: 'Maison des curiosités',
       infoButtonAriaLabel: 'Ouvrir la Maison des curiosités',
-      infoTooltipText: `Bienvenue dans le quartier de Champvert, Lyon, France
-La Nature et la biodiversité y sont bien présentes et appréciées des promeneurs, en plein milieu urbain.
-Les oiseaux, parfois de passage, souvent bien installés, cohabitent avec l'homme, dans un certain équilibre sauvage, au milieu d'une végétation et d'une microfaune bienvenue en pleine ville.
-Sur la carte, la bande verte laisse imaginer un profil d'oiseau, de rouge gorge je dirais, rebondi, noble et équilibré.
-La voie verte dessine son dos et sa queue. Le parc de la garde, son arrière-train. N’hésitez pas à traverser un petit bout de ville, le sympathique quartier de point du jour, pour retrouver le parc de la mairie prolongé du parc de la passerelle qui dessine son torse puis son bec. Tous reliés, ils réalisent la promesse d’une balade verte, calme, ponctuée du chant des oiseaux, au sein d'une végétation riche de feuillus et résineux, d’arbres spectaculaires et de petits bassins biologiques, abreuvoirs appréciés et zones de biodiversité.
-Les deux univers parallèles, humain et sauvage, y cohabitent chacun à son rythme, et ses rites. On y vit, on s'y croise, parfois sans faire attention l'un à l'autre.
-Pour bien ressentir la nature, il faut s'y promener lentement, en prenant le temps de voir et d'écouter, profiter de toutes les saisons et essayer différents moments de la journée, être patients et reconnaissants lorsqu’une rencontre se produit.
-A cette condition, la nature se révèle entièrement avec une richesse insoupçonnée.
-En arrivant sur cette page, n'espérez pas trouver un "inventaire" savant et encyclopédique. La ligne directrice a été plutôt de mettre en avant des "impressions", des "sensations", des "émotions".
-Les images animées, toutes captées ici (longue-vue stabilisée Kite APC 60 et smartphone en digiscopie), donnent vie et relief à des petites scènes éphémères, zoomées à l'instant spontané de rencontres de hasard. La majorité des sons provient de [https://xeno-canto.org](https://xeno-canto.org), formidable base de données internationale de sons naturels. Les chants sont importants pour reconnaître un oiseau pas toujours facile à voir. Les liens vers xeno-canto, sur chaque son, vous permettront d'avoir beaucoup d'autres échantillons, d'autant qu'un même oiseau ne se satisfait pas d'une seule vocalise.
-Depuis l'ordinateur, l'expérience se veut immersive, nos hôtes se déplacent, on ne les voit pas toujours au même emplacement, ils se méritent. Cliquez pour essayer, utilisez la molette, soyez curieux, tout n’est pas expliqué, partez à la découverte.
-Le site, sur mobile, est plus adapté à la taille de l’écran, il vous aidera à apprendre à reconnaître les espèces locales.
-Pour un moment de détente et de méditation, n'hésitez pas à venir ici décompresser un moment. Activez le son, ouvrez le diaporama, en plein écran idéalement, et laissez-vous emporter, avec la promesse de venir profiter prochainement du lieu dans la vraie vie, ou ailleurs avec la même démarche.
-Le site a été conçu avec une attention d'éco-responsabilité numérique. L'écoindex A de la page ne dépasse pas D si vous visualisez l'intégralité des contenus animés. Le site écoindex est intéressant à consulter pour comprendre les enjeux de l’éco-conception (cliquez sur le lien en bas de page).
-Les images animées ont été travaillées avec un outil développé spécifiquement à cet effet (en libre accès) pour alléger au maximum leur poids, tout en gardant leur pertinence esthétique.
-(les techniciens et photographes curieux pourront approfondir le sujet ici : [https://github.com/ScientificTools/MotionPhotoWorkbench/wiki](https://github.com/ScientificTools/MotionPhotoWorkbench/wiki))
-La page s’enrichit régulièrement de nouveaux contenus, au fil du temps, tout en gardant son âme et cœur de montrer que la nature est belle, étonnante et revigorante.
-Dans ces pages, pas de publicité, pas de cookies, pas de score, pas de nombre de vues, pas de vente, pas de médias lourds, pas d'avis, pas de news.
-Vous êtes ici chez vous dans le plus strict respect de votre vie privée. J'espère que vous prendrez plaisir à le visiter.
-Avec curiosité,
-Contact : [albouille69@gmail.com](mailto:albouille69@gmail.com)`
+      infoTooltipText: SITE_INFO_TEXT.FR
     },
     US: {
       toggleMapLabel: 'Map',
@@ -1737,27 +1763,7 @@ Contact : [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       diaLabel: 'Slideshow',
       infoButtonLabel: 'Cabinet of Curiosities',
       infoButtonAriaLabel: 'Open the Cabinet of Curiosities',
-      infoTooltipText: `Welcome to the Champvert neighborhood, Lyon, France
-Nature and biodiversity are very much present here, appreciated by walkers right in the heart of the city.
-The birds, sometimes passing through, often well settled, live alongside people in a kind of wild balance, amid vegetation and tiny creatures that are a welcome presence in the city.
-On the map, the green strip suggests the profile of a bird, a robin, I would say: plump, noble and well proportioned.
-The greenway traces its back and tail. The Parc de la Garde forms its rear. Feel free to cross a little stretch of the city, through the friendly Point du Jour neighborhood, to reach the Parc de la Mairie, which continues into the Parc de la Passerelle, tracing its chest and then its beak. All connected, they fulfill the promise of a peaceful green walk, punctuated by birdsong, amid a rich mix of deciduous trees and conifers, spectacular trees and small wildlife ponds, much appreciated drinking spots and havens of biodiversity.
-The two parallel worlds, human and wild, coexist here, each with its own rhythms and rituals. Lives unfold and paths cross, sometimes without either noticing the other.
-To truly feel close to nature, you need to walk slowly, taking the time to look and listen, enjoying every season and trying different times of day, and being patient and grateful when an encounter happens.
-Only then does nature fully reveal its unsuspected richness.
-When you arrive on this page, do not expect a scholarly, encyclopedic "inventory." The guiding idea has instead been to bring out "impressions," "sensations" and "emotions."
-The animated images, all captured here with a stabilized Kite APC 60 spotting scope and a smartphone using digiscoping, bring life and depth to fleeting little scenes, zoomed in on the spontaneous moment of a chance encounter. Most of the sounds come from [https://xeno-canto.org](https://xeno-canto.org), a wonderful international database of natural sounds. Birdsong is important for recognizing a bird that is not always easy to see. The links to xeno-canto on each sound will let you explore many more recordings, especially since any given bird has more than one vocalization.
-On a computer, the experience is designed to be immersive. Our guests move around; you will not always see them in the same place, and finding them takes a little effort. Click to try things out, use the scroll wheel, be curious. Not everything is explained: set off and explore.
-On mobile, the site is adapted to the screen size and will help you learn to recognize local species.
-For a moment of relaxation and meditation, feel free to come here and unwind. Turn on the sound, open the slideshow, ideally in full screen, and let yourself drift away, with a promise to come and enjoy the place in real life soon, or to explore somewhere else in the same spirit.
-The site was designed with digital environmental responsibility in mind. The page's EcoIndex rating starts at A and goes no lower than D if you view all the animated content. The EcoIndex website is worth visiting to understand the issues involved in eco-design (click the link at the bottom of the page).
-The animated images were processed using a freely available tool developed specifically for this purpose, to make their file sizes as small as possible while preserving their aesthetic value.
-(Curious photographers and technically minded visitors can explore the subject further here: [https://github.com/ScientificTools/MotionPhotoWorkbench/wiki](https://github.com/ScientificTools/MotionPhotoWorkbench/wiki))
-New content is regularly added to the page over time, while it keeps its heart and soul: showing that nature is beautiful, surprising and invigorating.
-On these pages, there are no ads, no cookies, no scores, no view counts, nothing for sale, no heavy media files, no reviews and no news.
-Make yourself at home here, with the utmost respect for your privacy. I hope you will enjoy visiting.
-With curiosity,
-Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
+      infoTooltipText: SITE_INFO_TEXT.US
     }
   };
 
@@ -4879,6 +4885,132 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   .diaporama-video.is-active {
     opacity: 1;
   }
+
+  .map-meta-tools {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .info-open-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 6px 12px 6px 9px;
+    border: 1px solid rgba(77, 106, 74, 0.22);
+    border-radius: 999px;
+    background: rgba(247, 250, 244, 0.9);
+    color: #354d32;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .info-open-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: #64845b;
+  }
+
+  .info-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .info-modal[hidden] {
+    display: none;
+  }
+
+  .info-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 30, 18, 0.55);
+    animation: info-fade 200ms ease-out;
+  }
+
+  .info-modal-sheet {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(100%, 720px);
+    max-height: 90vh;
+    max-height: 90dvh;
+    background: var(--panel-strong);
+    border-radius: 22px 22px 0 0;
+    box-shadow: 0 -12px 40px rgba(20, 30, 18, 0.3);
+    animation: info-slide-up 240ms ease-out;
+  }
+
+  .info-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 14px 10px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .info-modal-head h2 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .info-modal-close {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--text);
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .info-modal-body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 20px calc(24px + env(safe-area-inset-bottom));
+    line-height: 1.55;
+    font-size: 0.96rem;
+  }
+
+  .info-modal-body p {
+    margin: 0 0 0.9em;
+  }
+
+  .info-modal-body a {
+    overflow-wrap: anywhere;
+  }
+
+  body.info-modal-open {
+    overflow: hidden;
+  }
+
+  @keyframes info-slide-up {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  @keyframes info-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .info-modal-backdrop,
+    .info-modal-sheet {
+      animation: none;
+    }
+  }
 </style></template>
 
 <template id="mobile-body">
@@ -4921,7 +5053,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
 
     <section class="panel map-card">
       <h2 class="section-title" id="mapTitle">Carte pratique</h2>
-      <p class="section-subtitle" id="mapText">La carte réelle du secteur pour vous orienter sur place.</p>
+      <p class="section-subtitle" id="mapText">Cliquez sur la carte pour ouvrir OpenStreetMap.</p>
       <a class="map-visual" href="https://www.openstreetmap.org/?mlat=45.76216111111111&amp;mlon=4.788633333333333#map=17/45.759919/4.796627&amp;layers=S" target="_blank" rel="noopener noreferrer">
         <img src="openStreetViewcarte.jpg" alt="Carte du secteur de Champvert" id="mapImage" />
         <svg class="map-outline" viewBox="0 0 2118 1328" aria-hidden="true">
@@ -4929,7 +5061,13 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
         </svg>
       </a>
       <div class="map-meta">
-        <div id="ecoindex-badge" data-theme="dark"></div>
+        <div class="map-meta-tools">
+          <div id="ecoindex-badge" data-theme="dark"></div>
+          <button id="infoOpenBtn" class="info-open-btn" type="button" aria-haspopup="dialog" aria-controls="infoModal">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.8 3.7C13.3 3.8 7.2 6.3 5.1 11.1c-1.2 2.8-.4 5.4 1.4 7c2.1-4.7 5.8-7.7 9.8-9.7c-3.4 2.6-6.1 5.8-7.7 9.4c2.2.8 4.8.2 6.5-1.8c3.1-3.6 3.9-8.4 4.7-12.3Z" /></svg>
+            <span id="infoOpenLabel">Maison des curiosités</span>
+          </button>
+        </div>
         <span id="mapMetaLabel">Fond de carte © OpenStreetMap contributors</span>
         <a class="map-link" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" id="mapMetaLink">Licence</a>
       </div>
@@ -4987,6 +5125,17 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     </section>
   </main>
 
+
+<div id="infoModal" class="info-modal" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle" aria-hidden="true" hidden>
+  <div class="info-modal-backdrop" data-info-close></div>
+  <div class="info-modal-sheet">
+    <header class="info-modal-head">
+      <h2 id="infoModalTitle">Maison des curiosités</h2>
+      <button id="infoCloseBtn" class="info-modal-close" type="button" aria-label="Fermer" data-info-close>&times;</button>
+    </header>
+    <div id="infoModalBody" class="info-modal-body" tabindex="0"></div>
+  </div>
+</div>
 </template>
 
 <template id="mobile-script"><script>
@@ -4996,10 +5145,13 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       introTitle: 'En balade',
       introText: 'Repérez le lieu sur la carte, puis consultez rapidement les espèces observées et leurs images animées.',
       mapTitle: 'Carte pratique',
-      mapText: 'La carte réelle du secteur pour vous orienter sur place.',
+      mapText: 'Cliquez sur la carte pour ouvrir OpenStreetMap.',
       mapImageAlt: 'Carte du secteur de Champvert',
       mapMetaLabel: 'Fond de carte © OpenStreetMap contributors',
       mapMetaLink: 'Licence',
+      infoButtonLabel: 'Maison des curiosités',
+      infoCloseLabel: 'Fermer',
+      infoText: SITE_INFO_TEXT.FR,
       listTitle: 'Espèces observées',
       listText: 'Choisissez un oiseau pour ouvrir sa fiche, puis faites défiler ses images et vidéos.',
       searchPlaceholder: 'Rechercher une espèce',
@@ -5034,10 +5186,13 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       introTitle: 'On the walk',
       introText: 'Find the place on the map, then quickly browse the observed species and their moving images.',
       mapTitle: 'Practical map',
-      mapText: 'The real map of the area to help you orient yourself on site.',
+      mapText: 'Click the map to open OpenStreetMap.',
       mapImageAlt: 'Map of the Champvert area',
       mapMetaLabel: 'Map data © OpenStreetMap contributors',
       mapMetaLink: 'License',
+      infoButtonLabel: 'Cabinet of Curiosities',
+      infoCloseLabel: 'Close',
+      infoText: SITE_INFO_TEXT.US,
       listTitle: 'Observed species',
       listText: 'Choose a bird to open its card, then browse its images and videos.',
       searchPlaceholder: 'Search a species',
@@ -5272,6 +5427,10 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     document.getElementById('mapImage').alt = strings.mapImageAlt;
     document.getElementById('mapMetaLabel').textContent = strings.mapMetaLabel;
     document.getElementById('mapMetaLink').textContent = strings.mapMetaLink;
+    document.getElementById('infoOpenLabel').textContent = strings.infoButtonLabel;
+    document.getElementById('infoModalTitle').textContent = strings.infoButtonLabel;
+    document.getElementById('infoCloseBtn').setAttribute('aria-label', strings.infoCloseLabel);
+    renderInfoText();
     document.getElementById('listTitle').textContent = strings.listTitle;
     document.getElementById('listText').textContent = strings.listText;
     document.getElementById('desktopNote').textContent = strings.desktopNote;
@@ -5886,6 +6045,59 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     }
   }
 
+  const infoModal = document.getElementById('infoModal');
+  const infoModalBody = document.getElementById('infoModalBody');
+  const infoOpenBtn = document.getElementById('infoOpenBtn');
+  const infoCloseBtn = document.getElementById('infoCloseBtn');
+
+  function escapeText(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Une ligne = un paragraphe ; [libellé](https://… ou mailto:…) devient un lien
+  function renderInfoText() {
+    infoModalBody.innerHTML = getStrings().infoText
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((line) => `<p>${escapeText(line).replace(
+        /\[([^\]]+)\]\(((?:https:\/\/|mailto:)[^\s)]+)\)/g,
+        (match, label, href) => href.startsWith('mailto:')
+          ? `<a href="${href}">${label}</a>`
+          : `<a href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`
+      )}</p>`)
+      .join('');
+  }
+
+  function openInfoModal() {
+    renderInfoText();
+    infoModal.hidden = false;
+    infoModal.setAttribute('aria-hidden', 'false');
+    body.classList.add('info-modal-open');
+    infoModalBody.scrollTop = 0;
+    infoCloseBtn.focus();
+  }
+
+  function closeInfoModal() {
+    if (infoModal.hidden) return;
+    infoModal.hidden = true;
+    infoModal.setAttribute('aria-hidden', 'true');
+    body.classList.remove('info-modal-open');
+    infoOpenBtn.focus();
+  }
+
+  infoOpenBtn.addEventListener('click', openInfoModal);
+  infoModal.addEventListener('click', (event) => {
+    if (event.target.closest('[data-info-close]')) closeInfoModal();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeInfoModal();
+  });
   langFrBtn.addEventListener('click', () => {
     currentLocale = 'FR';
     applyStaticStrings();
