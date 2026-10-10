@@ -67,6 +67,10 @@
       const script = document.createElement('script');
       script.textContent = tpl('script').content.textContent;
       document.body.appendChild(script);
+      // Chargé après l'injection : le badge cherche #ecoindex-badge au chargement du script
+      const badge = document.createElement('script');
+      badge.src = 'https://cdn.jsdelivr.net/gh/cnumr/ecoindex_badge@3/assets/js/ecoindex-badge.js';
+      document.body.appendChild(badge);
       document.documentElement.dataset.mode = mode;
     }
 
@@ -4925,6 +4929,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
         </svg>
       </a>
       <div class="map-meta">
+        <div id="ecoindex-badge" data-theme="dark"></div>
         <span id="mapMetaLabel">Fond de carte © OpenStreetMap contributors</span>
         <a class="map-link" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" id="mapMetaLink">Licence</a>
       </div>
@@ -4979,9 +4984,6 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
 
     <section class="panel desktop-note">
       <p id="desktopNote">Pour une expérience immersive de balade, visitez le site depuis votre ordinateur.</p>
-      <div class="ecoindex-note">
-        <div id="ecoindex-badge" data-theme="dark"></div>
-      </div>
     </section>
   </main>
 
@@ -5939,6 +5941,5 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   initialize();
 </script></template>
 
-<script src="https://cdn.jsdelivr.net/gh/cnumr/ecoindex_badge@3/assets/js/ecoindex-badge.js" defer></script>
 </body>
 </html>
