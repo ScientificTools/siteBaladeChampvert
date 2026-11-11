@@ -1251,8 +1251,23 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   #infoBubble .info-label-row {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 6px;
+  }
+
+  #infoBubble .info-sample-type,
+  #infoBubble .info-sample-select {
+    font-size: 0.8rem;
+    color: #486544;
+  }
+
+  #infoBubble .info-sample-select {
+    max-width: 9rem;
+    background: transparent;
+    border: 1px solid rgba(85, 113, 80, 0.45);
+    border-radius: 6px;
+    padding: 2px 4px;
   }
 
   #infoBubble .info-label-row .info-section-label {
@@ -1290,7 +1305,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   }
 
   #infoBubble .info-sound-source {
-    margin: 8px 0 0;
+    margin: 0;
     font-size: 0.78rem;
   }
 
@@ -1729,8 +1744,8 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       learnMoreLabel: 'Pour aller plus loin :',
       speciesSoundOn: 'Désactiver le son de l\'espèce',
       speciesSoundOff: 'Activer le son de l\'espèce',
-      soundSourceLabel: 'Source du son utilisée ici :',
-      soundSamplesLabel: 'Échantillons de son de l\'espèce',
+      soundSourceLabel: 'Source :',
+      soundSamplesLabel: 'Autres exemples de son pour',
       imageLabel: 'Image Balade de Champvert',
       openMapLabel: 'Voir la carte',
       soundOwnSource: 'Balade de Champvert',
@@ -1755,8 +1770,8 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       learnMoreLabel: 'To go further:',
       speciesSoundOn: 'Turn off the species sound',
       speciesSoundOff: 'Turn on the species sound',
-      soundSourceLabel: 'Source of the sound used here:',
-      soundSamplesLabel: 'Sound samples of the species',
+      soundSourceLabel: 'Source:',
+      soundSamplesLabel: 'Other sound examples for',
       imageLabel: 'Balade de Champvert image',
       openMapLabel: 'View map',
       soundOwnSource: 'Balade de Champvert',
@@ -1934,15 +1949,60 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     const raw = Array.isArray(image.liensSon) ? image.liensSon : [];
     const href = isUsable(raw[0]) ? raw[0].trim() : '';
     const label = isUsable(raw[1]) ? raw[1].trim() : href;
-    const file = isUsable(image.fichierSon) ? image.fichierSon.trim() : '';
-    const external = String(image.provenanceExterne || '').trim().toLowerCase() === 'yes';
+    const samples = (Array.isArray(image.samples) ? image.samples : [])
+      .map((sample) => {
+        const file = isUsable(sample?.fichierSon) ? sample.fichierSon.trim() : '';
+        if (!file) return null;
+        const external = String(sample.provenanceExterne || '').trim().toLowerCase() === 'yes';
+        return {
+          type: isUsable(sample.sampleType) ? sample.sampleType.trim() : '',
+          file,
+          src: `${speciesSoundPathPrefix}${encodeURIComponent(file)}`,
+          external,
+          details: external && isUsable(sample.detailsProvenanceExterne) ? sample.detailsProvenanceExterne.trim() : ''
+        };
+      })
+      .filter(Boolean);
     return {
-      links: href ? [{ href, label }] : [],
-      file,
-      src: file ? `${speciesSoundPathPrefix}${encodeURIComponent(file)}` : '',
-      external,
-      details: external && isUsable(image.detailsProvenanceExterne) ? image.detailsProvenanceExterne.trim() : ''
+      links: href ? [{ href, label, name: image.name }] : [],
+      samples,
+      key: `${image.latitude}|${image.longitude}|${getTextByLocale(image.name, 'SC')}`
     };
+  }
+
+  const speciesSampleChoices = new Map();
+
+  function getSampleIndex(key, count) {
+    if (!count) return 0;
+    if (!speciesSampleChoices.has(key)) {
+      speciesSampleChoices.set(key, Math.floor(Math.random() * count));
+    }
+    return Math.min(speciesSampleChoices.get(key), count - 1);
+  }
+
+  function getSelectedSample(sound) {
+    if (!sound || !Array.isArray(sound.samples) || !sound.samples.length) return null;
+    return sound.samples[getSampleIndex(sound.key, sound.samples.length)];
+  }
+
+  // Cycle aléatoire non répétitif des échantillons, par espèce, pour le diaporama
+  const diaporamaSampleCycles = new Map();
+
+  function pickDiaporamaSample(entry) {
+    const samples = entry?.samples || [];
+    if (!samples.length) return '';
+    if (samples.length === 1) return samples[0];
+    let cycle = diaporamaSampleCycles.get(entry.soundKey);
+    if (!cycle) {
+      cycle = { order: [], last: null };
+      diaporamaSampleCycles.set(entry.soundKey, cycle);
+    }
+    if (!cycle.order.length) {
+      cycle.order = shuffleIndices(samples.length);
+      if (cycle.order[0] === cycle.last) cycle.order.push(cycle.order.shift());
+    }
+    cycle.last = cycle.order.shift();
+    return samples[cycle.last];
   }
 
   function normalizeVariants(image) {
@@ -2099,24 +2159,37 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       const linkItems = imageItem + (hasLinks ? links : [])
         .map((link) => {
           const safeHref = escapeHtml(link.href);
-          return `<li>${escapeHtml(strings.soundSamplesLabel)} : <a href="${safeHref}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label || link.href)}</a></li>`;
+          return `<li>${escapeHtml(strings.soundSamplesLabel)} "${escapeHtml(getPreferredText(link.name, ''))}" : <a href="${safeHref}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label || link.href)}</a></li>`;
         })
         .join('');
       let soundButton = '';
       let sourceHtml = '';
-      if (sound) {
+      if (sound && Array.isArray(sound.samples) && sound.samples.length) {
         const active = speciesSoundActive;
         soundButton = `<button type="button" class="species-sound-btn${active ? ' active' : ''}" aria-pressed="${active}" aria-label="${escapeHtml(active ? strings.speciesSoundOn : strings.speciesSoundOff)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg></button>`;
-        const sourceValue = sound.external && sound.details
-          ? `<a href="${escapeHtml(sound.details)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sound.details)}</a>`
-          : (sound.external ? '' : escapeHtml(strings.soundOwnSource));
-        if (sourceValue) {
-          sourceHtml = `<p class="info-sound-source">${escapeHtml(strings.soundSourceLabel)} ${sourceValue}</p>`;
+        const selectedIndex = getSampleIndex(sound.key, sound.samples.length);
+        if (sound.samples.length > 1) {
+          const options = sound.samples
+            .map((sample, index) => `<option value="${index}"${index === selectedIndex ? ' selected' : ''}>${escapeHtml(sample.type || String(index + 1))}</option>`)
+            .join('');
+          soundButton += `<select class="info-sample-select" aria-label="Sample type">${options}</select>`;
+        } else if (sound.samples[0].type) {
+          soundButton += `<span class="info-sample-type">${escapeHtml(sound.samples[0].type)}</span>`;
         }
+        sourceHtml = `<span class="info-sound-source">${buildSampleSourceHtml(sound.samples[selectedIndex])}</span>`;
       }
-      htmlParts.push(`<section class="info-section"><div class="info-label-row"><span class="info-section-label">${escapeHtml(label)}</span>${soundButton}</div>${linkItems ? `<ul class="info-links">${linkItems}</ul>` : ''}${sourceHtml}</section>`);
+      htmlParts.push(`<section class="info-section"><div class="info-label-row"><span class="info-section-label">${escapeHtml(label)}</span>${soundButton}${sourceHtml}</div>${linkItems ? `<ul class="info-links">${linkItems}</ul>` : ''}</section>`);
     }
     return htmlParts.join('');
+  }
+
+  function buildSampleSourceHtml(sample) {
+    const strings = localeStrings[currentLocale] || localeStrings.FR;
+    if (!sample) return '';
+    const sourceValue = sample.external && sample.details
+      ? `<a href="${escapeHtml(sample.details)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sample.details)}</a>`
+      : (sample.external ? '' : escapeHtml(strings.soundOwnSource));
+    return sourceValue ? `${escapeHtml(strings.soundSourceLabel)} ${sourceValue}` : '';
   }
 
   function getPointData(pointEl) {
@@ -2710,7 +2783,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     pointGroup.dataset.text = getPreferredText(image.poeticText, getPreferredText(image.scientificText, 'Texte à venir.'));
     const soundInfo = parseSoundInfo(image);
     pointGroup.dataset.links = JSON.stringify(soundInfo.links);
-    pointGroup.dataset.sound = JSON.stringify(soundInfo.file ? { src: soundInfo.src, external: soundInfo.external, details: soundInfo.details } : null);
+    pointGroup.dataset.sound = JSON.stringify(soundInfo.samples.length ? { samples: soundInfo.samples, key: soundInfo.key } : null);
     pointGroup.dataset.regions = JSON.stringify([]);
     pointVariants.set(pointGroup, normalizeVariants(image));
     pointGroup.appendChild(pulse);
@@ -2936,6 +3009,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
         activeBackgroundVideoIndex = 0;
       }
       activeBackgroundEntryIndex = entryIndex;
+      if (diaporamaActive) entry.sound = pickDiaporamaSample(entry);
       if (diaporamaActive && entry.sound && isGlobalAudioActive()) {
         playSpeciesSound(entry.sound);
       } else if (!isOpen) {
@@ -3015,10 +3089,11 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   function buildDiaporamaEntries() {
     const entries = backgroundEntries.slice();
     rawImages.forEach((image, imageIndex) => {
-      const soundSrc = parseSoundInfo(image).src;
+      const soundInfo = parseSoundInfo(image);
+      const samples = soundInfo.samples.map((sample) => sample.src);
       normalizeVariants(image).forEach((variant, variantIndex) => {
         if (variant.webm && variant.webm !== '_') {
-          entries.push({ id: `data-${imageIndex}-${variantIndex}`, src: variant.webm, sound: soundSrc });
+          entries.push({ id: `data-${imageIndex}-${variantIndex}`, src: variant.webm, samples, soundKey: soundInfo.key, sound: '' });
         }
       });
     });
@@ -4122,7 +4197,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
 
   function applySpeciesSoundForActivePoint() {
     speciesSoundActive = speciesSoundUserChoice !== null ? speciesSoundUserChoice : isGlobalAudioActive();
-    const sound = activePointData?.sound;
+    const sound = getSelectedSample(activePointData?.sound);
     if (sound && speciesSoundActive) {
       playSpeciesSound(sound.src);
     } else {
@@ -4130,6 +4205,18 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     }
     refreshSpeciesSoundButtons();
   }
+
+  infoBubble.addEventListener('change', (event) => {
+    const select = event.target.closest('.info-sample-select');
+    const sound = activePointData?.sound;
+    if (!select || !sound) return;
+    const index = Number(select.value);
+    if (!Number.isInteger(index) || !sound.samples[index]) return;
+    speciesSampleChoices.set(sound.key, index);
+    const sourceNode = select.parentElement?.querySelector('.info-sound-source');
+    if (sourceNode) sourceNode.innerHTML = buildSampleSourceHtml(sound.samples[index]);
+    applySpeciesSoundForActivePoint();
+  });
 
   infoBubble.addEventListener('click', (event) => {
     const btn = event.target.closest('.species-sound-btn');
@@ -4719,6 +4806,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   .info-label-row {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 6px;
   }
@@ -4756,8 +4844,22 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   }
 
   .sound-source {
-    margin-top: 8px;
+    margin: 0;
     font-size: 0.82rem;
+  }
+
+  .sample-type-label,
+  .sample-type-select {
+    font-size: 0.82rem;
+    color: var(--accent);
+  }
+
+  .sample-type-select {
+    max-width: 8rem;
+    background: transparent;
+    border: 1px solid currentColor;
+    border-radius: 6px;
+    padding: 2px 4px;
   }
 
   .map-link {
@@ -5113,9 +5215,10 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
           <button id="speciesSoundBtn" class="species-sound-btn" type="button" aria-pressed="false" hidden>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg>
           </button>
+          <span id="sampleTypeHost"></span>
+          <span class="sound-source" id="soundSource" hidden></span>
         </div>
         <ul id="linksList"></ul>
-        <p class="sound-source" id="soundSource" hidden></p>
         <audio id="speciesAudio" preload="none"></audio>
       </div>
     </section>
@@ -5169,10 +5272,10 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       linksLabel: 'Pour aller plus loin',
       soundPlay: 'Écouter le son de l\'espèce',
       soundStop: 'Arrêter le son de l\'espèce',
-      soundSourceLabel: 'Source du son utilisée ici :',
+      soundSourceLabel: 'Source :',
       soundOwnSource: 'Balade de Champvert',
       imageLabel: 'Image Balade de Champvert',
-      soundSamplesLabel: 'Échantillons de son de l\'espèce',
+      soundSamplesLabel: 'Autres exemples de son pour',
       openMapLabel: 'Voir la carte',
       noDate: 'Date non renseignée',
       noLocation: 'Position non renseignée',
@@ -5210,10 +5313,10 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       linksLabel: 'To go further',
       soundPlay: 'Listen to the species sound',
       soundStop: 'Stop the species sound',
-      soundSourceLabel: 'Source of the sound used here:',
+      soundSourceLabel: 'Source:',
       soundOwnSource: 'Balade de Champvert',
       imageLabel: 'Balade de Champvert image',
-      soundSamplesLabel: 'Sound samples of the species',
+      soundSamplesLabel: 'Other sound examples for',
       openMapLabel: 'View map',
       noDate: 'Date not provided',
       noLocation: 'Position not provided',
@@ -5255,6 +5358,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   const linksList = document.getElementById('linksList');
   const speciesSoundBtn = document.getElementById('speciesSoundBtn');
   const soundSource = document.getElementById('soundSource');
+  const sampleTypeHost = document.getElementById('sampleTypeHost');
   const speciesAudio = document.getElementById('speciesAudio');
   const audioToggleBtn = document.getElementById('audioToggleBtn');
   const audioVolumeControl = document.getElementById('audioVolumeControl');
@@ -5343,15 +5447,77 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     const isUsable = (value) => typeof value === 'string' && value.trim() && value.trim() !== '_';
     const raw = Array.isArray(image.liensSon) ? image.liensSon : [];
     const href = isUsable(raw[0]) ? raw[0].trim() : '';
-    const file = isUsable(image.fichierSon) ? image.fichierSon.trim() : '';
-    const external = String(image.provenanceExterne || '').trim().toLowerCase() === 'yes';
+    const samples = (Array.isArray(image.samples) ? image.samples : [])
+      .map((sample) => {
+        const file = isUsable(sample?.fichierSon) ? sample.fichierSon.trim() : '';
+        if (!file) return null;
+        const external = String(sample.provenanceExterne || '').trim().toLowerCase() === 'yes';
+        return {
+          type: isUsable(sample.sampleType) ? sample.sampleType.trim() : '',
+          src: `${SOUND_PREFIX}${encodeURIComponent(file)}`,
+          external,
+          details: external && isUsable(sample.detailsProvenanceExterne) ? sample.detailsProvenanceExterne.trim() : ''
+        };
+      })
+      .filter(Boolean);
     return {
-      links: href ? [{ href, label: isUsable(raw[1]) ? raw[1].trim() : href }] : [],
-      soundSrc: file ? `${SOUND_PREFIX}${encodeURIComponent(file)}` : '',
-      soundExternal: external,
-      soundDetails: external && isUsable(image.detailsProvenanceExterne) ? image.detailsProvenanceExterne.trim() : ''
+      links: href ? [{ href, label: isUsable(raw[1]) ? raw[1].trim() : href, name: image.name }] : [],
+      samples,
+      // Échantillon initial tiré au hasard à chaque chargement de la page
+      sampleIndex: samples.length ? Math.floor(Math.random() * samples.length) : 0
     };
   }
+
+  function getCurrentSample(entry) {
+    return entry?.samples?.[entry.sampleIndex] || null;
+  }
+
+  // Cycle aléatoire non répétitif des échantillons, par espèce, pour le diaporama
+  const diaporamaSampleCycles = new Map();
+
+  function pickDiaporamaSample(entry) {
+    const samples = entry?.samples || [];
+    if (!samples.length) return '';
+    if (samples.length === 1) return samples[0];
+    let cycle = diaporamaSampleCycles.get(entry.soundEntryId);
+    if (!cycle) {
+      cycle = { order: [], last: null };
+      diaporamaSampleCycles.set(entry.soundEntryId, cycle);
+    }
+    if (!cycle.order.length) {
+      cycle.order = shuffleIndices(samples.length);
+      if (cycle.order[0] === cycle.last) cycle.order.push(cycle.order.shift());
+    }
+    cycle.last = cycle.order.shift();
+    return samples[cycle.last];
+  }
+
+  function createSampleSelector(entry, className, onChange) {
+    if (!entry.samples || !entry.samples.length) return null;
+    if (entry.samples.length === 1) {
+      if (!entry.samples[0].type) return null;
+      const label = document.createElement('span');
+      label.className = `${className} sample-type-label`;
+      label.textContent = entry.samples[0].type;
+      return label;
+    }
+    const select = document.createElement('select');
+    select.className = `${className} sample-type-select`;
+    select.setAttribute('aria-label', 'Sample type');
+    entry.samples.forEach((sample, index) => {
+      const option = document.createElement('option');
+      option.value = String(index);
+      option.textContent = sample.type || String(index + 1);
+      select.appendChild(option);
+    });
+    select.value = String(entry.sampleIndex);
+    select.addEventListener('change', () => {
+      entry.sampleIndex = Number(select.value);
+      onChange();
+    });
+    return select;
+  }
+
 
   function normalizeEntries(images) {
     return images.map((image, index) => ({
@@ -5537,7 +5703,12 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
 
       const actions = document.createElement('div');
       actions.className = 'species-actions';
-      if (entry.soundSrc) {
+      if (entry.samples.length) {
+        const selector = createSampleSelector(entry, 'card-sample', () => handleSampleChange(entry));
+        if (selector) {
+          selector.dataset.entryId = entry.id;
+          actions.appendChild(selector);
+        }
         const soundBtn = document.createElement('button');
         soundBtn.type = 'button';
         soundBtn.className = 'card-sound-btn';
@@ -5617,26 +5788,9 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       stopSpeciesSound();
       speciesAudioEntryId = null;
     }
-    speciesSoundBtn.hidden = !entry.soundSrc;
+    speciesSoundBtn.hidden = !entry.samples.length;
     updateSpeciesSoundButton();
-    soundSource.innerHTML = '';
-    soundSource.hidden = true;
-    if (entry.soundSrc) {
-      let sourceNode = null;
-      if (entry.soundExternal && entry.soundDetails) {
-        sourceNode = document.createElement('a');
-        sourceNode.href = entry.soundDetails;
-        sourceNode.target = '_blank';
-        sourceNode.rel = 'noopener noreferrer';
-        sourceNode.textContent = entry.soundDetails;
-      } else if (!entry.soundExternal) {
-        sourceNode = document.createTextNode(strings.soundOwnSource);
-      }
-      if (sourceNode) {
-        soundSource.append(`${strings.soundSourceLabel} `, sourceNode);
-        soundSource.hidden = false;
-      }
-    }
+    renderViewerSound(entry);
 
     // La ligne "image" est toujours présente ; le lien carte n'apparaît que si des coordonnées existent
     linksBlock.hidden = false;
@@ -5648,9 +5802,45 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     linksList.appendChild(imageItem);
     entry.links.forEach((link) => {
       const li = document.createElement('li');
-      li.append(`${strings.soundSamplesLabel} : `, createExternalLink(link.href, link.label));
+      li.append(`${strings.soundSamplesLabel} "${getPreferredText(link.name, '')}" : `, createExternalLink(link.href, link.label));
       linksList.appendChild(li);
     });
+  }
+
+  function renderViewerSound(entry) {
+    const strings = getStrings();
+    sampleTypeHost.innerHTML = '';
+    soundSource.innerHTML = '';
+    soundSource.hidden = true;
+    const sample = getCurrentSample(entry);
+    if (!sample) return;
+    const selector = createSampleSelector(entry, 'viewer-sample', () => handleSampleChange(entry));
+    if (selector) sampleTypeHost.appendChild(selector);
+    let sourceNode = null;
+    if (sample.external && sample.details) {
+      sourceNode = createExternalLink(sample.details, sample.details);
+    } else if (!sample.external) {
+      sourceNode = document.createTextNode(strings.soundOwnSource);
+    }
+    if (sourceNode) {
+      soundSource.append(`${strings.soundSourceLabel} `, sourceNode);
+      soundSource.hidden = false;
+    }
+  }
+
+  function handleSampleChange(entry) {
+    const sample = getCurrentSample(entry);
+    if (!sample) return;
+    const wasPlaying = !speciesAudio.paused && !speciesAudio.ended && speciesAudioEntryId === entry.id;
+    document.querySelectorAll('.card-sample.sample-type-select').forEach((select) => {
+      if (select.dataset.entryId === entry.id) select.value = String(entry.sampleIndex);
+    });
+    if (entry.id === selectedId) renderViewerSound(entry);
+    if (wasPlaying) {
+      speciesAudio.src = sample.src;
+      speciesAudio.play().catch((error) => console.warn('Impossible de démarrer le son de l\'espèce :', error));
+    }
+    updateSpeciesSoundButton();
   }
 
   function createExternalLink(href, label) {
@@ -5663,7 +5853,9 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   }
 
   function toggleSpeciesSound(entry) {
-    if (!entry || !entry.soundSrc) return;
+    if (!entry) return;
+    const sample = getCurrentSample(entry);
+    if (!sample) return;
     if (!speciesAudio.paused && speciesAudioEntryId === entry.id) {
       stopSpeciesSound();
       speciesAudioEntryId = null;
@@ -5671,7 +5863,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       return;
     }
     speciesAudioEntryId = entry.id;
-    speciesAudio.src = entry.soundSrc;
+    speciesAudio.src = sample.src;
     speciesAudio.play().catch((error) => console.warn('Impossible de démarrer le son de l\'espèce :', error));
     updateSpeciesSoundButton();
   }
@@ -5793,7 +5985,8 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
           entries.push({
             id: `${entry.id}-${variantIndex}`,
             src: variant.webm,
-            soundSrc: entry.soundSrc,
+            soundSrc: '',
+            samples: entry.samples.map((sample) => sample.src),
             soundEntryId: entry.id
           });
         }
@@ -5939,6 +6132,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
         activeDiaporamaVideoIndex = 0;
       }
       activeDiaporamaEntryIndex = entryIndex;
+      if (entry.samples) entry.soundSrc = pickDiaporamaSample(entry);
       syncDiaporamaSpeciesSound();
     } catch (error) {
       console.error('Impossible d\'activer le fond du diaporama :', error);
