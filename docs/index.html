@@ -44,7 +44,7 @@ A cette condition, la nature se révèle entièrement avec une richesse insoupç
 En arrivant sur cette page, n'espérez pas trouver un "inventaire" savant et encyclopédique. La ligne directrice a été plutôt de mettre en avant des "impressions", des "sensations", des "émotions".
 Les images animées, toutes captées ici (longue-vue stabilisée Kite APC 60 et smartphone en digiscopie), donnent vie et relief à des petites scènes éphémères, zoomées à l'instant spontané de rencontres de hasard. La majorité des sons provient de [https://xeno-canto.org](https://xeno-canto.org), formidable base de données internationale de sons naturels. Les chants sont importants pour reconnaître un oiseau pas toujours facile à voir. Les liens vers xeno-canto, sur chaque son, vous permettront d'avoir beaucoup d'autres échantillons, d'autant qu'un même oiseau ne se satisfait pas d'une seule vocalise.
 Depuis l'ordinateur, l'expérience se veut immersive, nos hôtes se déplacent, on ne les voit pas toujours au même emplacement, ils se méritent. Cliquez pour essayer, utilisez la molette, soyez curieux, tout n’est pas expliqué, partez à la découverte.
-Sur ordinateur, activez le Jeu des chants pour activer aussi le son d'ambiance, survolez un point et choisissez l'image qui correspond au son. Le type du son apparaît sur le point et les autres points attendent la fin de la question en cours. Les points sans son fonctionnent normalement et ouvrent directement leur image au clic.
+Sur ordinateur, activez le Jeu des chants pour lancer une première question et le son d'ambiance. Survolez les images pour trouver l'oiseau correspondant, puis cliquez dessus pour ouvrir sa vidéo. Cliquez à l'extérieur pour fermer la question, ou survolez un autre point pour continuer à jouer. Les points sans son ouvrent directement leur image au clic.
 Le site, sur mobile, est plus adapté à la taille de l’écran, il vous aidera à apprendre à reconnaître les espèces locales.
 Pour un moment de détente et de méditation, n'hésitez pas à venir ici décompresser un moment. Activez le son, ouvrez le diaporama, en plein écran idéalement, et laissez-vous emporter, avec la promesse de venir profiter prochainement du lieu dans la vraie vie, ou ailleurs avec la même démarche.
 Le site a été conçu avec une attention d'éco-responsabilité numérique. L'écoindex A de la page ne dépasse pas D si vous visualisez l'intégralité des contenus animés. Le site écoindex est intéressant à consulter pour comprendre les enjeux de l’éco-conception (cliquez sur le lien en bas de page).
@@ -65,7 +65,7 @@ To truly feel close to nature, you need to walk slowly, taking the time to look 
 Only then does nature fully reveal its unsuspected richness.
 When you arrive on this page, do not expect a scholarly, encyclopedic "inventory." The guiding idea has instead been to bring out "impressions," "sensations" and "emotions."
 The animated images, all captured here with a stabilized Kite APC 60 spotting scope and a smartphone using digiscoping, bring life and depth to fleeting little scenes, zoomed in on the spontaneous moment of a chance encounter. Most of the sounds come from [https://xeno-canto.org](https://xeno-canto.org), a wonderful international database of natural sounds. Birdsong is important for recognizing a bird that is not always easy to see. The links to xeno-canto on each sound will let you explore many more recordings, especially since any given bird has more than one vocalization.
-On a computer, turn on the Birdsong game to also enable ambient sound, hover over a point and choose the image matching the sound. The sound type appears on the point, and other points wait until the current question ends. Points without a sound work normally and open their image directly when clicked.
+On a computer, turn on the Birdsong game to start a first question and enable ambient sound. Hover over the images to find the matching bird, then click it to open its video. Click outside to close the question, or hover over another point to keep playing. Points without a sound open their image directly when clicked.
 On a computer, the experience is designed to be immersive. Our guests move around; you will not always see them in the same place, and finding them takes a little effort. Click to try things out, use the scroll wheel, be curious. Not everything is explained: set off and explore.
 On mobile, the site is adapted to the screen size and will help you learn to recognize local species.
 For a moment of relaxation and meditation, feel free to come here and unwind. Turn on the sound, open the slideshow, ideally in full screen, and let yourself drift away, with a promise to come and enjoy the place in real life soon, or to explore somewhere else in the same spirit.
@@ -171,6 +171,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   body:not(.intro-complete) .map-toggle,
   body:not(.intro-complete) .map-controls,
   body:not(.intro-complete) .map-control--game,
+  body:not(.intro-complete) #diaToggleBtn,
   body:not(.intro-complete) .map-hint,
   body:not(.intro-complete) .caption {
     opacity: 0;
@@ -242,6 +243,8 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     display: flex;
     align-items: center;
     gap: 10px;
+    max-width: 100%;
+    flex-wrap: wrap;
   }
 
   @media (max-width: 1100px) {
@@ -707,7 +710,8 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   }
 
   body.video-open .map-controls-zoom,
-  body.video-open .map-control--game {
+  body.video-open .map-control--game,
+  body.video-open #diaToggleBtn {
     display: none;
   }
 
@@ -818,8 +822,14 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     animation: song-game-wrong 250ms linear 4;
   }
 
-  .song-game-choice.correct {
-    animation: song-game-correct 250ms linear 4;
+  .song-game-choice[data-answer="wrong"]:hover,
+  .song-game-choice[data-answer="wrong"]:focus-visible {
+    animation: song-game-wrong 250ms linear infinite;
+  }
+
+  .song-game-choice[data-answer="correct"]:hover,
+  .song-game-choice[data-answer="correct"]:focus-visible {
+    animation: song-game-correct 250ms linear infinite;
   }
 
   @keyframes song-game-wrong {
@@ -848,6 +858,19 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
 
   .song-game-status:empty {
     display: none;
+  }
+
+  .song-game-instructions {
+    position: absolute;
+    width: min(210px, calc(100vw - 16px));
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: white;
+    background: rgba(20, 24, 16, 0.9);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    font-size: 0.85rem;
+    text-align: center;
   }
 
   body.diaporama-active .top-left-controls,
@@ -1701,7 +1724,8 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
         <audio id="speciesAudio" loop preload="none"></audio>
         <audio id="songGameAudio" loop preload="none"></audio>
       </div>
-      <button id="songGameToggleBtn" class="map-control map-control--dia map-control--game" type="button" aria-pressed="false" title="Cliques pour activer le jeu : pointe, écoute et devine qui possède ce chant">Jeu des chants</button>
+      <button id="songGameToggleBtn" class="map-control map-control--dia map-control--game" type="button" aria-pressed="false" title="Clique pour activer le jeu : écoute et devine qui possède ce chant" disabled>Jeu des chants</button>
+      <button id="diaToggleBtn" class="map-control map-control--dia" type="button" aria-label="Lancer le diaporama" title="Diaporama">Diaporama</button>
     </div>
   </div>
 
@@ -1714,12 +1738,12 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       <button id="zoomInBtn" class="map-control" type="button" aria-label="Zoomer">+</button>
       <button id="zoomOutBtn" class="map-control" type="button" aria-label="Dézoomer">−</button>
       <button id="resetViewBtn" class="map-control" type="button" aria-label="Réinitialiser la vue">↺</button>
-      <button id="diaToggleBtn" class="map-control map-control--dia" type="button" aria-label="Lancer le diaporama" title="Diaporama">Diaporama</button>
     </div>
   </div>
 
   <div id="songGame" class="song-game" role="group" aria-label="Jeu des chants" hidden>
     <div id="songGameStatus" class="song-game-status" role="status"></div>
+    <div id="songGameInstructions" class="song-game-instructions" role="status" hidden></div>
   </div>
 
   <div id="mapHint" class="map-hint" aria-hidden="true">
@@ -1781,6 +1805,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   const songGameToggleBtn = document.getElementById('songGameToggleBtn');
   const songGame = document.getElementById('songGame');
   const songGameStatus = document.getElementById('songGameStatus');
+  const songGameInstructions = document.getElementById('songGameInstructions');
   const songGameAudio = document.getElementById('songGameAudio');
   const viewer = document.getElementById('viewer');
   const backdrop = document.getElementById('backdrop');
@@ -1868,7 +1893,8 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       diaLabel: 'Diaporama',
       backgroundAudioHint: "Active le son d'ambiance : un printemps à l'aube",
       songGameLabel: 'Jeu des chants',
-      songGameHint: 'Cliques pour activer le jeu : pointe, écoute et devine qui possède ce chant',
+      songGameHint: 'Clique pour activer le jeu : écoute et devine qui possède ce chant',
+      songGameInstructions: 'Écoutes le chant et devine à qui il appartient. Cliques en dehors pour interrompre. Touche un autre point pour une nouvelle devinette.',
       songGameUnavailable: 'Aucun son ou image disponible pour ce point.',
       songGameAudioError: 'Lecture du son impossible : vérifiez le format et les autorisations du navigateur.',
       infoButtonLabel: 'Maison des curiosités',
@@ -1900,6 +1926,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       backgroundAudioHint: 'Turn on the ambient sound: a spring morning at dawn',
       songGameLabel: 'Birdsong game',
       songGameHint: 'Click to start the game: point, listen and guess who makes this sound',
+      songGameInstructions: 'Listen to the song and guess which bird it belongs to. Click outside to stop. Touch another point for a new riddle.',
       songGameUnavailable: 'No sound or image is available for this point.',
       songGameAudioError: 'Unable to play the sound: check the format and browser permissions.',
       infoButtonLabel: 'Cabinet of Curiosities',
@@ -1953,10 +1980,11 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   let autoStartDiaporamaAttempted = false;
   let songGameEnabled = false;
   let songGamePoint = null;
+  let songGameIntroController = null;
   let songGameHideTimer = null;
   let songGameFadeFrame = null;
   let songGameFadeTimer = null;
-  let songGameWinTimer = null;
+  let songGameInstructionsTimer = null;
   let songGameAudioToken = 0;
   let songGameSampleType = '';
   let songGamePointer = null;
@@ -2206,7 +2234,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     return {
       poetic,
       scientific,
-      html: buildInfoHtml(poetic, scientific, activePointData?.links || [], activePointData?.sound || null, mapLink)
+      html: buildInfoHtml(poetic, scientific, activePointData?.links || [], activePointData?.sound || null, mapLink, variant.date)
     };
   }
 
@@ -2248,6 +2276,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     songGameToggleBtn.textContent = strings.songGameLabel;
     songGameToggleBtn.title = strings.songGameHint;
     songGame.setAttribute('aria-label', strings.songGameLabel);
+    songGameInstructions.textContent = strings.songGameInstructions;
   }
 
   function hideMapHint() {
@@ -2282,7 +2311,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       .replace(/'/g, '&#39;');
   }
 
-  function buildInfoHtml(poetic, scientific, links, sound = null, mapLink = '') {
+  function buildInfoHtml(poetic, scientific, links, sound = null, mapLink = '', date = '') {
     const strings = localeStrings[currentLocale] || localeStrings.FR;
     const htmlParts = [];
     if (poetic) {
@@ -2294,7 +2323,8 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     const hasLinks = Array.isArray(links) && links.length > 0;
     {
       const label = strings.learnMoreLabel;
-      const imageItem = `<li>${escapeHtml(strings.imageLabel)}${mapLink ? ` : <a href="${escapeHtml(mapLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(strings.openMapLabel)}</a>` : ''}</li>`;
+      const imageDate = typeof date === 'string' && date.trim() !== '_' ? date.trim() : '';
+      const imageItem = `<li>${escapeHtml(strings.imageLabel)}${imageDate ? ` (${escapeHtml(imageDate)})` : ''}${mapLink ? ` : <a href="${escapeHtml(mapLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(strings.openMapLabel)}</a>` : ''}</li>`;
       const linkItems = imageItem + (hasLinks ? links : [])
         .map((link) => {
           const safeHref = escapeHtml(link.href);
@@ -2487,6 +2517,9 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       bindPoiInteractions(point);
     });
 
+    songGameToggleBtn.disabled = !points.some((point, index) =>
+      pointSounds.get(point).length && songGameImages(rawImages[index]).length
+    );
     attemptIdlePoiHighlight();
     syncPoiMotionLifecycle();
   }
@@ -2564,6 +2597,17 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       choice.style.left = `${half + Math.cos(angle) * size * 0.34 - diameter / 2}px`;
       choice.style.top = `${half + Math.sin(angle) * size * 0.34 - diameter / 2}px`;
     });
+    if (!songGameInstructions.hidden) {
+      const instructionWidth = songGameInstructions.offsetWidth;
+      const instructionHeight = songGameInstructions.offsetHeight;
+      const right = centerX + half + 12;
+      const left = right + instructionWidth <= width - 8
+        ? right
+        : Math.max(8, centerX - half - instructionWidth - 12);
+      const top = Math.max(8, Math.min(height - instructionHeight - 8, centerY - instructionHeight / 2));
+      songGameInstructions.style.left = `${left - (centerX - half)}px`;
+      songGameInstructions.style.top = `${top - (centerY - half)}px`;
+    }
   }
 
   function cancelSongGameFade() {
@@ -2578,10 +2622,19 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   }
 
   function closeSongGame(resumeMotion = true) {
-    if (!songGamePoint) return;
+    const hadIntro = !!songGameIntroController;
+    if (songGameIntroController) {
+      songGameIntroController.abort();
+      songGameIntroController = null;
+    }
+    if (!songGamePoint) {
+      if (hadIntro && resumeMotion && !isOpen && !openingPoint && !document.hidden) resumePoiMotion();
+      return;
+    }
     songGamePoint = null;
-    window.clearTimeout(songGameWinTimer);
-    songGameWinTimer = null;
+    window.clearTimeout(songGameInstructionsTimer);
+    songGameInstructionsTimer = null;
+    songGameInstructions.hidden = true;
     cancelSongGameFade();
     songGameAudioToken += 1;
     songGameAudio.pause();
@@ -2596,7 +2649,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   }
 
   function scheduleSongGameHide() {
-    if (!songGamePoint || songGameWinTimer || songGameHideTimer || songGameFadeTimer) return;
+    if (!songGamePoint || songGameHideTimer || songGameFadeTimer || !songGameInstructions.hidden) return;
     songGameHideTimer = window.setTimeout(() => {
       songGameHideTimer = null;
       songGame.classList.add('fading');
@@ -2625,7 +2678,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   }
 
   function startSongGame(point) {
-    if (!songGameEnabled || isOpen || openingPoint || diaporamaActive || songGameWinTimer) return;
+    if (!songGameEnabled || songGameIntroController || isOpen || openingPoint || diaporamaActive) return;
     if (songGamePoint === point) {
       cancelSongGameFade();
       return;
@@ -2664,6 +2717,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       const name = getPreferredNameWithScientific(option.image.name, 'Observation');
       button.type = 'button';
       button.className = 'song-game-choice';
+      button.dataset.answer = option.correct ? 'correct' : 'wrong';
       button.title = name;
       button.setAttribute('aria-label', name);
       photo.src = `${poiMediaPathPrefix}${option.photos[Math.floor(Math.random() * option.photos.length)]}`;
@@ -2674,16 +2728,9 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       button.addEventListener('focus', cancelSongGameFade);
       button.addEventListener('blur', scheduleSongGameHide);
       button.addEventListener('click', () => {
-        if (songGameWinTimer) return;
         if (option.correct) {
-          cancelSongGameFade();
-          button.classList.remove('wrong');
-          button.classList.add('correct');
-          songGameWinTimer = window.setTimeout(() => {
-            songGameWinTimer = null;
-            closeSongGame(false);
-            openVideo(point);
-          }, 1000);
+          closeSongGame(false);
+          openVideo(point);
         } else {
           button.classList.remove('wrong');
           void button.offsetWidth;
@@ -3794,17 +3841,75 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     });
   }
 
+  async function startSongGameIntro(point, startPosition) {
+    const controller = new AbortController();
+    songGameIntroController = controller;
+    pausePoiMotion();
+    try {
+      const completed = await playPointLaunch(point, null, startPosition, controller.signal);
+      if (!completed || songGameIntroController !== controller) return;
+      songGameIntroController = null;
+      startSongGame(point);
+      if (songGamePoint !== point) {
+        if (!isOpen && !openingPoint && !document.hidden) resumePoiMotion();
+        return;
+      }
+      songGameInstructions.hidden = false;
+      positionSongGame();
+      songGameInstructionsTimer = window.setTimeout(() => {
+        songGameInstructions.hidden = true;
+        songGameInstructionsTimer = null;
+        if (!songGame.querySelector('.song-game-choice:hover, .song-game-choice:focus-visible') &&
+            !songGamePoint?.matches(':hover')) scheduleSongGameHide();
+      }, 5000);
+    } catch (error) {
+      console.error('Impossible de lancer l’introduction du jeu des chants :', error);
+      if (songGameIntroController === controller || songGamePoint === point) {
+        closeSongGame();
+      } else if (!songGameIntroController && !songGamePoint && !isOpen && !openingPoint && !document.hidden) {
+        resumePoiMotion();
+      }
+    }
+  }
+
   songGameToggleBtn.addEventListener('click', () => {
+    const startPosition = rectCenter(songGameToggleBtn.getBoundingClientRect());
     songGameEnabled = !songGameEnabled;
     songGameToggleBtn.classList.toggle('active', songGameEnabled);
     songGameToggleBtn.setAttribute('aria-pressed', String(songGameEnabled));
     hidePoiTooltip();
     if (songGameEnabled) {
       if (!isGlobalAudioActive()) setBackgroundAudioEnabled(true);
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const eligible = points.map((point, index) => {
+        const rect = getPoiAnchorElement(point).getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        return { point, index, x, y, distance: Math.hypot(x - centerX, y - centerY) };
+      }).filter(({ point, index }) => pointSounds.get(point).length && songGameImages(rawImages[index]).length)
+        .sort((a, b) => a.distance - b.distance);
+      const visible = eligible.filter(({ x, y }) =>
+        x >= 0 && x <= window.innerWidth && y >= 0 && y <= window.innerHeight
+      );
+      const candidates = (visible.length ? visible : eligible).slice(0, 6);
+      if (candidates.length) {
+        startSongGameIntro(candidates[Math.floor(Math.random() * candidates.length)].point, startPosition);
+      } else {
+        console.warn('Aucun point avec son et image disponible pour démarrer le jeu des chants.');
+      }
     } else {
       closeSongGame();
     }
   });
+
+  document.addEventListener('click', (event) => {
+    if ((!songGamePoint && !songGameIntroController) || event.target.closest('.song-game-choice, #songGameToggleBtn')) return;
+    const point = event.target.closest('.poi-item');
+    if (point && point === songGamePoint) return;
+    closeSongGame();
+    if (point && pointSounds.get(point)?.length) event.stopPropagation();
+  }, true);
 
   document.addEventListener('mousemove', (event) => {
     if (songGameEnabled) {
@@ -4008,21 +4113,37 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     el.style.height = rect.height + 'px';
   }
 
-  function animateZoneElement(drawFrame, duration) {
+  function animateZoneElement(drawFrame, duration, signal = null) {
     return new Promise((resolve) => {
       const start = performance.now();
+      let frame = null;
+
+      function finish(completed) {
+        window.cancelAnimationFrame(frame);
+        signal?.removeEventListener('abort', onAbort);
+        resolve(completed);
+      }
+
+      function onAbort() {
+        finish(false);
+      }
 
       function step(now) {
         const progress = Math.min(1, (now - start) / duration);
         drawFrame(progress);
         if (progress < 1) {
-          requestAnimationFrame(step);
+          frame = requestAnimationFrame(step);
           return;
         }
-        resolve();
+        finish(true);
       }
 
-      requestAnimationFrame(step);
+      if (signal?.aborted) {
+        finish(false);
+        return;
+      }
+      signal?.addEventListener('abort', onAbort, { once: true });
+      frame = requestAnimationFrame(step);
     });
   }
 
@@ -4064,7 +4185,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     };
   }
 
-  async function playPointLaunch(pointEl, pointer = null) {
+  async function playPointLaunch(pointEl, pointer = null, startPosition = null, signal = null) {
     const zoneRect = layerSvg.getBoundingClientRect();
     const targetRect = pointToRect(pointEl);
     const targetCenterX = pointer?.clientX ?? (targetRect.left + (targetRect.width / 2));
@@ -4078,44 +4199,47 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     let startTranslateX = 0;
     let startTranslateY = 0;
 
-    if (lastActivatedPoint) {
-      const previousPointCenter = rectCenter(pointToRect(lastActivatedPoint));
-      startCenterX = previousPointCenter.x;
-      startCenterY = previousPointCenter.y;
-      startTranslateX = startCenterX - centroidX;
-      startTranslateY = startCenterY - centroidY;
-      zoneFlight.style.transform = `translate(${startTranslateX}px, ${startTranslateY}px) scale(${finalScale})`;
-      zoneFlight.style.opacity = '0.82';
-    } else {
-      await animateZoneElement((progress) => {
-        const eased = easeInOutCubic(progress);
-        const scale = 1 + ((finalScale - 1) * eased);
-        zoneFlight.style.transform = `translate(0px, 0px) scale(${scale})`;
-        zoneFlight.style.opacity = `${0.92 - (0.1 * eased)}`;
-      }, 500);
-      startTranslateX = 0;
-      startTranslateY = 0;
+    try {
+      if (startPosition || lastActivatedPoint) {
+        const previousPointCenter = startPosition || rectCenter(pointToRect(lastActivatedPoint));
+        startCenterX = previousPointCenter.x;
+        startCenterY = previousPointCenter.y;
+        startTranslateX = startCenterX - centroidX;
+        startTranslateY = startCenterY - centroidY;
+        zoneFlight.style.transform = `translate(${startTranslateX}px, ${startTranslateY}px) scale(${finalScale})`;
+        zoneFlight.style.opacity = '0.82';
+      } else {
+        const completed = await animateZoneElement((progress) => {
+          const eased = easeInOutCubic(progress);
+          const scale = 1 + ((finalScale - 1) * eased);
+          zoneFlight.style.transform = `translate(0px, 0px) scale(${scale})`;
+          zoneFlight.style.opacity = `${0.92 - (0.1 * eased)}`;
+        }, 500, signal);
+        if (!completed) return false;
+        startTranslateX = 0;
+        startTranslateY = 0;
+      }
+
+      const deltaX = targetCenterX - startCenterX;
+      const deltaY = targetCenterY - startCenterY;
+      const lift = Math.max(70, Math.min(220, (Math.abs(deltaX) * 0.18) + 40));
+      const controlX = deltaX * 0.5;
+      const controlY = (deltaY * 0.5) - lift;
+
+      return await animateZoneElement((progress) => {
+        const eased = easeOutQuad(progress);
+        const inverse = 1 - eased;
+        const curveX = (inverse * inverse * 0) + (2 * inverse * eased * controlX) + (eased * eased * deltaX);
+        const curveY = (inverse * inverse * 0) + (2 * inverse * eased * controlY) + (eased * eased * deltaY);
+        const translateX = startTranslateX + curveX;
+        const translateY = startTranslateY + curveY;
+
+        zoneFlight.style.transform = `translate(${translateX}px, ${translateY}px) scale(${finalScale})`;
+        zoneFlight.style.opacity = `${0.82 - (0.26 * eased)}`;
+      }, 500, signal);
+    } finally {
+      zoneFlight.remove();
     }
-
-    const deltaX = targetCenterX - startCenterX;
-    const deltaY = targetCenterY - startCenterY;
-    const lift = Math.max(70, Math.min(220, (Math.abs(deltaX) * 0.18) + 40));
-    const controlX = deltaX * 0.5;
-    const controlY = (deltaY * 0.5) - lift;
-
-    await animateZoneElement((progress) => {
-      const eased = easeOutQuad(progress);
-      const inverse = 1 - eased;
-      const curveX = (inverse * inverse * 0) + (2 * inverse * eased * controlX) + (eased * eased * deltaX);
-      const curveY = (inverse * inverse * 0) + (2 * inverse * eased * controlY) + (eased * eased * deltaY);
-      const translateX = startTranslateX + curveX;
-      const translateY = startTranslateY + curveY;
-
-      zoneFlight.style.transform = `translate(${translateX}px, ${translateY}px) scale(${finalScale})`;
-      zoneFlight.style.opacity = `${0.82 - (0.26 * eased)}`;
-    }, 500);
-
-    zoneFlight.remove();
   }
 
   function randomBetween(min, max) {

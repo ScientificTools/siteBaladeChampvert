@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Balade de Champvert</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #edf1e7;
+      color: #263323;
+      font: 1rem "Segoe UI", Arial, sans-serif;
+    }
+    main {
+      width: min(100%, 1200px);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+    video, img {
+      display: block;
+      max-width: 100%;
+      max-height: 75vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 0.5rem;
+      background: #20271e;
+    }
+    [hidden] { display: none !important; }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+    }
+    button, select {
+      padding: 0.5rem 0.8rem;
+      border: 1px solid #72896c;
+      border-radius: 0.4rem;
+      background: #fff;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+    button:disabled, select:disabled { opacity: 0.55; cursor: not-allowed; }
+    button:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid #54724d; outline-offset: 2px; }
+    label { display: inline-flex; align-items: center; gap: 0.4rem; }
+    input { accent-color: #54724d; }
+    #messages { color: #963b2b; padding-left: 1.3rem; }
+    #messages:empty { display: none; }
+    footer { max-width: 100%; text-align: center; font-size: 0.9rem; }
+    a { color: #315d2e; }
+    @media (max-width: 600px) {
+      .controls { gap: 0.35rem; }
+      .controls select { max-width: 25vw; }
+      #soundBtn { padding: 0.5rem 0.4rem; }
+      #volume { width: 14vw; }
+      #soundLabel, #volumeLabel {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <video id="video" controls loop muted autoplay playsinline hidden></video>
+    <img id="image" alt="" hidden>
+    <div class="controls">
+      <label id="loopControl" hidden><input id="loop" type="checkbox" checked> <span id="loopLabel">Boucle</span></label>
+      <label for="soundSelect"><span id="soundLabel">Son</span>
+        <select id="soundSelect" disabled><option value="">Choisir un son</option></select>
+      </label>
+      <button id="soundBtn" type="button" aria-pressed="false" aria-label="Activer le son" title="Aucun son demandé" disabled>🔇</button>
+      <label for="volume"><span id="volumeLabel">Volume</span> <input id="volume" type="range" min="0" max="1" step="0.01" value="0.55" disabled></label>
+    </div>
+    <ul id="messages" role="status" aria-live="polite"></ul>
+  </main>
+  <footer id="credit"></footer>
+  <audio id="audio" loop preload="none"></audio>
+  <script>
+    const video = document.getElementById('video');
+    const image = document.getElementById('image');
+    const soundSelect = document.getElementById('soundSelect');
+    const soundBtn = document.getElementById('soundBtn');
+    const volume = document.getElementById('volume');
+    const audio = document.getElementById('audio');
+    const messages = document.getElementById('messages');
+    const credit = document.getElementById('credit');
+    const params = new URLSearchParams(window.location.search);
+    const filename = params.get('img');
+    const requestedLanguage = (params.get('lang') ?? 'fr').trim().toLowerCase();
+    const language = requestedLanguage === 'en' ? 'en' : 'fr';
+    const texts = {
+      fr: {
+        loop: 'Boucle', sound: 'Son', volume: 'Volume', choose: 'Choisir un son',
+        noSound: 'Aucun son disponible', otherSound: 'Autre son',
+        soundOn: 'Activer le son', soundOff: 'Désactiver le son',
+        videoError: 'Impossible de charger ou de lire la vidéo.',
+        imageError: "Impossible de charger l'image.",
+        audioError: 'Impossible de lire le son sélectionné.',
+        audioLoadError: 'Impossible de charger le son sélectionné.',
+        parameterError: 'Indiquez un nom de fichier valide avec le paramètre img, par exemple ?img=corneille.webm.',
+        metadataError: 'Impossible de charger les informations sur cette observation.',
+        noObservation: 'Aucune observation ne correspond à cette image dans les données du site.',
+        noMatchingSound: 'Aucun son disponible pour le type demandé.',
+        invalidLanguage: 'Langue inconnue : utilisez lang=fr ou lang=en.',
+        sourceError: 'La source du son sélectionné est invalide ou absente.',
+        imageCredit: 'Image issue de ', localSound: ' Son issu de Balade de Champvert.',
+        externalSound: ' Son provenant de ', noSource: ' Source du son non renseignée.',
+        observation: 'Observation de Champvert'
+      },
+      en: {
+        loop: 'Loop', sound: 'Sound', volume: 'Volume', choose: 'Choose a sound',
+        noSound: 'No sounds available', otherSound: 'Other sound',
+        soundOn: 'Turn on sound', soundOff: 'Turn off sound',
+        videoError: 'Unable to load or play the video.',
+        imageError: 'Unable to load the image.',
+        audioError: 'Unable to play the selected sound.',
+        audioLoadError: 'Unable to load the selected sound.',
+        parameterError: 'Provide a valid filename using the img parameter, for example ?img=corneille.webm.',
+        metadataError: 'Unable to load information about this observation.',
+        noObservation: 'No observation matches this image in the site data.',
+        noMatchingSound: 'No sound is available for the requested type.',
+        invalidLanguage: 'Unknown language: use lang=fr or lang=en.',
+        sourceError: 'The source of the selected sound is invalid or missing.',
+        imageCredit: 'Image from ', localSound: ' Sound from Balade de Champvert.',
+        externalSound: ' Sound from ', noSource: ' Sound source not provided.',
+        observation: 'Champvert observation'
+      }
+    };
+    const strings = texts[language];
+    const englishSoundTypes = {
+      'ailes': 'Wings', 'alarme': 'Alarm', 'appel': 'Call',
+      'appel chant': 'Call and song', 'appel en vol': 'Flight call',
+      'autre chant': 'Other song', 'chant': 'Song', "chant de l'aube": 'Dawn song',
+      'immitation': 'Imitation', 'interactions': 'Interactions',
+      'tambourinement': 'Drumming', 'tok': 'Tok'
+    };
+    let soundToken = 0;
+    document.documentElement.lang = language;
+    document.getElementById('loopLabel').textContent = strings.loop;
+    document.getElementById('soundLabel').textContent = strings.sound;
+    document.getElementById('volumeLabel').textContent = strings.volume;
+    soundSelect.options[0].textContent = strings.choose;
+    soundBtn.setAttribute('aria-label', strings.soundOn);
+    soundBtn.title = strings.choose;
+
+    function showMessage(key, text) {
+      let item = messages.querySelector(`[data-message="${key}"]`);
+      if (!item) {
+        item = document.createElement('li');
+        item.dataset.message = key;
+        messages.appendChild(item);
+      }
+      item.textContent = text;
+    }
+
+    function clearMessage(key) {
+      messages.querySelector(`[data-message="${key}"]`)?.remove();
+    }
+
+    function isFilename(value) {
+      return typeof value === 'string' && value.trim() !== '' && value.trim() !== '_' && value !== '.' && value !== '..' &&
+        !/[\\/\x00-\x1f\x7f]/.test(value);
+    }
+
+    function sizeMedia(element, width, height) {
+      if (width && height) element.style.width = `min(100%, ${75 * width / height}vh)`;
+    }
+
+    document.getElementById('loop').addEventListener('change', (event) => {
+      video.loop = event.target.checked;
+    });
+
+    video.addEventListener('loadedmetadata', () => {
+      sizeMedia(video, video.videoWidth, video.videoHeight);
+    });
+    video.addEventListener('error', () => showMessage('media', strings.videoError));
+    image.addEventListener('load', () => sizeMedia(image, image.naturalWidth, image.naturalHeight));
+    image.addEventListener('error', () => showMessage('media', strings.imageError));
+
+    function setSoundActive(active) {
+      soundBtn.setAttribute('aria-pressed', String(active));
+      soundBtn.setAttribute('aria-label', active ? strings.soundOff : strings.soundOn);
+      soundBtn.title = active ? strings.soundOff : strings.soundOn;
+      soundBtn.textContent = active ? '🔊' : '🔇';
+    }
+
+    async function playSound() {
+      const token = ++soundToken;
+      clearMessage('audio');
+      setSoundActive(true);
+      try {
+        await audio.play();
+      } catch (error) {
+        if (token !== soundToken) return;
+        setSoundActive(false);
+        console.error('Impossible de lire le son :', error);
+        showMessage('audio', strings.audioError);
+      }
+    }
+
+    soundBtn.addEventListener('click', () => {
+      if (soundBtn.getAttribute('aria-pressed') === 'true') {
+        soundToken += 1;
+        audio.pause();
+        setSoundActive(false);
+      } else {
+        playSound();
+      }
+    });
+    audio.addEventListener('error', () => {
+      soundToken += 1;
+      setSoundActive(false);
+      showMessage('audio', strings.audioLoadError);
+    });
+    volume.addEventListener('input', () => { audio.volume = Number(volume.value); });
+    audio.volume = Number(volume.value);
+
+    function addLink(parent, href, text) {
+      const link = document.createElement('a');
+      link.href = href;
+      link.textContent = text;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      parent.appendChild(link);
+    }
+
+    function renderCredit(bird, sample) {
+      credit.replaceChildren();
+      clearMessage('source');
+      const names = ['SC', language === 'en' ? 'US' : 'FR']
+        .map((language) => bird?.name?.find((name) => name[language])?.[language])
+        .filter((name) => name && name !== '_');
+      if (names.length) credit.append(`${names.join(' - ')}. `);
+      credit.append(strings.imageCredit);
+      addLink(credit, 'https://www.baladechampvert.fr/', 'baladechampvert.fr');
+      credit.append('.');
+      if (!sample) return;
+      if (String(sample.provenanceExterne || '').toLowerCase() !== 'yes') {
+        credit.append(strings.localSound);
+        return;
+      }
+      const source = sample.detailsProvenanceExterne;
+      try {
+        const url = new URL(source);
+        if (url.protocol !== 'https:') throw new Error('URL non sécurisée');
+        credit.append(strings.externalSound);
+        addLink(credit, url.href, url.hostname === 'xeno-canto.org' ? 'xeno-canto' : url.hostname);
+        credit.append('.');
+      } catch (error) {
+        console.error('Source du son invalide :', error);
+        credit.append(strings.noSource);
+        showMessage('source', strings.sourceError);
+      }
+    }
+
+    async function loadBird() {
+      if (requestedLanguage !== 'fr' && requestedLanguage !== 'en') {
+        showMessage('language', strings.invalidLanguage);
+      }
+      if (!isFilename(filename)) {
+        showMessage('parameter', strings.parameterError);
+        return;
+      }
+
+      const mediaPath = `data/${encodeURIComponent(filename)}`;
+      if (/\.webm$/i.test(filename)) {
+        video.src = mediaPath;
+        video.hidden = false;
+        document.getElementById('loopControl').hidden = false;
+      } else {
+        image.src = mediaPath;
+        image.hidden = false;
+      }
+      renderCredit(null, null);
+
+      try {
+        const response = await fetch('data/data.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        if (!Array.isArray(data.images)) throw new Error('Liste des observations absente');
+        const bird = data.images.find((entry) =>
+          [entry, ...(Array.isArray(entry.otherImage) ? entry.otherImage : [])]
+            .some((variant) => variant && (variant.webm === filename || variant.jpeg === filename))
+        );
+        if (!bird) {
+          showMessage('metadata', strings.noObservation);
+          return;
+        }
+        const nameLanguage = language === 'en' ? 'US' : 'FR';
+        image.alt = bird.name?.find((name) => name[nameLanguage])?.[nameLanguage] || strings.observation;
+        const samples = (Array.isArray(bird.samples) ? bird.samples : [])
+          .filter((entry) => entry && isFilename(entry.fichierSon));
+        const groups = new Map();
+        samples.forEach((sample) => {
+          const type = String(sample.sampleType || '').trim();
+          const key = type && type !== '_' ? type.toLocaleLowerCase('fr') : '__unknown__';
+          if (!groups.has(key)) {
+            groups.set(key, []);
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = key === '__unknown__' ? strings.otherSound
+              : (language === 'en' ? (englishSoundTypes[key] || type) : type);
+            soundSelect.appendChild(option);
+          }
+          groups.get(key).push(sample);
+        });
+        soundSelect.disabled = !groups.size;
+        if (!groups.size) soundSelect.options[0].textContent = strings.noSound;
+
+        function selectSample(sample) {
+          const wasActive = soundBtn.getAttribute('aria-pressed') === 'true';
+          soundToken += 1;
+          audio.pause();
+          clearMessage('audio');
+          clearMessage('sound');
+          if (sample) {
+            audio.src = `Sounds/${encodeURIComponent(sample.fichierSon)}`;
+            soundBtn.disabled = false;
+            volume.disabled = false;
+            setSoundActive(false);
+          } else {
+            audio.removeAttribute('src');
+            audio.load();
+            soundBtn.disabled = true;
+            volume.disabled = true;
+            setSoundActive(false);
+            soundBtn.title = strings.choose;
+          }
+          renderCredit(bird, sample);
+          if (sample && wasActive) playSound();
+        }
+
+        soundSelect.addEventListener('change', () => {
+          const matches = groups.get(soundSelect.value) || [];
+          selectSample(matches.length ? matches[Math.floor(Math.random() * matches.length)] : null);
+        });
+
+        if (params.has('sound')) {
+          const requested = params.get('sound').trim().toLocaleLowerCase('fr');
+          const matches = requested === 'random' ? samples : (groups.get(requested) || []);
+          if (!requested || !matches.length) {
+            showMessage('sound', strings.noMatchingSound);
+          } else {
+            const sample = matches[Math.floor(Math.random() * matches.length)];
+            const type = String(sample.sampleType || '').trim();
+            soundSelect.value = type && type !== '_' ? type.toLocaleLowerCase('fr') : '__unknown__';
+            selectSample(sample);
+          }
+        }
+        if (!soundSelect.value) renderCredit(bird, null);
+      } catch (error) {
+        console.error('Impossible de charger les données des observations :', error);
+        showMessage('metadata', strings.metadataError);
+      }
+    }
+
+    loadBird();
+  </script>
+</body>
+</html>
