@@ -104,8 +104,9 @@
     const messages = document.getElementById('messages');
     const credit = document.getElementById('credit');
     const params = new URLSearchParams(window.location.search);
+    const hasBackground = params.has('fond');
     const filename = params.get('img');
-    const requestedLanguage = (params.get('lang') ?? 'fr').trim().toLowerCase();
+    const requestedLanguage = hasBackground ? 'fr' : (params.get('lang') ?? 'fr').trim().toLowerCase();
     const language = requestedLanguage === 'en' ? 'en' : 'fr';
     const texts = {
       fr: {
@@ -117,6 +118,7 @@
         audioError: 'Impossible de lire le son sélectionné.',
         audioLoadError: 'Impossible de charger le son sélectionné.',
         parameterError: 'Indiquez un nom de fichier valide avec le paramètre img, par exemple ?img=corneille.webm.',
+        backgroundParameterError: 'Indiquez un nom de fichier WEBM valide avec le paramètre fond, par exemple ?fond=fond17.webm.',
         metadataError: 'Impossible de charger les informations sur cette observation.',
         noObservation: 'Aucune observation ne correspond à cette image dans les données du site.',
         noMatchingSound: 'Aucun son disponible pour le type demandé.',
@@ -135,6 +137,7 @@
         audioError: 'Unable to play the selected sound.',
         audioLoadError: 'Unable to load the selected sound.',
         parameterError: 'Provide a valid filename using the img parameter, for example ?img=corneille.webm.',
+        backgroundParameterError: 'Provide a valid WEBM filename using the fond parameter, for example ?fond=fond17.webm.',
         metadataError: 'Unable to load information about this observation.',
         noObservation: 'No observation matches this image in the site data.',
         noMatchingSound: 'No sound is available for the requested type.',
@@ -273,6 +276,21 @@
     }
 
     async function loadBird() {
+      if (hasBackground) {
+        soundSelect.parentElement.hidden = true;
+        soundBtn.hidden = true;
+        volume.parentElement.hidden = true;
+        const background = params.get('fond');
+        if (!isFilename(background) || !/\.webm$/i.test(background)) {
+          showMessage('parameter', strings.backgroundParameterError);
+          return;
+        }
+        video.src = `background/${encodeURIComponent(background)}`;
+        video.hidden = false;
+        document.getElementById('loopControl').hidden = false;
+        renderCredit(null, null);
+        return;
+      }
       if (requestedLanguage !== 'fr' && requestedLanguage !== 'en') {
         showMessage('language', strings.invalidLanguage);
       }
