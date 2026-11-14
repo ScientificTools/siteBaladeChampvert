@@ -32,6 +32,15 @@
           ]
         },
         {
+          "latitude": "45.76176666666667",
+          "longitude": "4.792797222222222",
+          "date": "2026-11-14",
+          "webm": "corneille4.webm",
+          "jpeg": "corneille4.jpg",
+          "game": ""
+          
+        },
+        {
           "latitude": "45.760469444444446",
           "longitude": "4.804311111111111",
           "date": "2026-05-23",
@@ -165,6 +174,15 @@
             {"FR": "Le Rouge gorge familier entretient souvent un dialogue territorial nuancé avec ses congénères. Chacun répond par de longues phrases musicales, en alternance, sans se couper, ce qui limite l’escalade du conflit tout en affirmant sa présence."},
             {"US": "The European robin often maintains a nuanced territorial dialogue with its own kind. Each bird answers with long musical phrases in turn, without interrupting, which helps limit conflict while still asserting its presence."}
           ]
+        },
+        {
+          "latitude": "45.762925",
+          "longitude": "4.787733333333334",
+          "date": "2026-11-14",
+          "webm": "rougeGorge4.webm",
+          "jpeg": "rougeGorge4.jpg",
+          "game": ""
+          
         },
         {
           "latitude": "45.761561111111114",
@@ -710,6 +728,50 @@
       "samples": [
         {"sampleType": "appel", "provenanceExterne": "yes", "fichierSon": "XC1165266 - Faucon crécerelle - Falco tinnunculus - appel.m4a", "detailsProvenanceExterne": "https://xeno-canto.org/1165266"},
         {"sampleType": "alarme", "provenanceExterne": "yes", "fichierSon": "XC1146010 - Faucon crécerelle - Falco tinnunculus - alarme.m4a", "detailsProvenanceExterne": "https://xeno-canto.org/1146010"}
+      ]
+    },
+    {
+      "name": [
+        {"FR": "Grimpereau des jardins"},
+        {"US": "Short-toed treecreeper"},
+        {"SC": "Certhia brachydactyla"}
+      ],
+      "latitude": "45.76240555555555",
+      "longitude": "4.788886111111111",
+      "date": "2026-11-14",
+      "category": "oiseau",
+      "webm": "grimpereau2.webm",
+      "jpeg": "grimpereau2.jpg",
+      "game": "",
+      "otherImage": [
+        {
+          "latitude": "45.76240555555555",
+          "longitude": "4.788886111111111",
+          "date": "2026-11-14",
+          "jpeg": "grimpereau1.jpg",
+          "game": ""
+        },
+        {
+          "latitude": "45.76240555555555",
+          "longitude": "4.788886111111111",
+          "date": "2026-11-14",
+          "webm": "grimpereau1.webm",
+          "jpeg": "grimpereau1.jpg",
+          "game": ""
+        }
+      ],
+      "poeticText": [
+        {"FR": "Minuscule et vif, il glisse le long de l’écorce, si discret qu’un instant suffit pour le perdre de vue, comme une ombre animée sur le tronc."},
+        {"US": "Tiny and lively, it slips along the bark, so discreet that a moment is enough to lose sight of it, like a living shadow on the trunk."}
+      ],
+      "scientificText": [
+        {"FR": "Certhia brachydactyla appartient à la famille des Certhiidés, et non à celle des pics. Comme eux, il explore les troncs à la verticale, s’appuyant sur sa queue rigide et sondant les fissures de l’écorce avec son bec fin et recourbé à la recherche d’insectes et d’araignées."},
+        {"US": "Certhia brachydactyla belongs to the treecreeper family, not the woodpecker family. Like woodpeckers, it explores vertical trunks, bracing itself with its stiff tail and probing cracks in the bark with its slender curved bill for insects and spiders."}
+      ],
+      "liensSon": ["https://xeno-canto.org/species/Certhia-brachydactyla","xeno-canto"],
+      "samples": [
+        {"sampleType": "appel", "provenanceExterne": "yes", "fichierSon": "XC1142578 - Grimpereau des jardins - Certhia brachydactyla brachydactyla - appel.m4a", "detailsProvenanceExterne": "https://xeno-canto.org/1142578"},
+        {"sampleType": "chant", "provenanceExterne": "yes", "fichierSon": "XC1188514 - Grimpereau des jardins - Certhia brachydactyla - chant.m4a", "detailsProvenanceExterne": "https://xeno-canto.org/1188514"}
       ]
     }
   ]
