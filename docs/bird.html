@@ -92,7 +92,10 @@
     </div>
     <ul id="messages" role="status" aria-live="polite"></ul>
   </main>
-  <footer id="credit"></footer>
+  <footer>
+    <div id="credit"></div>
+    <div id="animationCredit"></div>
+  </footer>
   <audio id="audio" loop preload="none"></audio>
   <script src="sound-types.js"></script>
   <script>
@@ -127,6 +130,8 @@
         sourceError: 'La source du son sélectionné est invalide ou absente.',
         imageCredit: 'Image issue de ', localSound: ' Son issu de Balade de Champvert.',
         externalSound: ' Son provenant de ', noSource: ' Source du son non renseignée.',
+        animationCredit: 'Animation montée et stabilisée avec ',
+        animationSource: '. Source : photo animée (courte vidéo) avec smartphone en digiscopie.',
         observation: 'Observation de Champvert'
       },
       en: {
@@ -146,6 +151,8 @@
         sourceError: 'The source of the selected sound is invalid or missing.',
         imageCredit: 'Image from ', localSound: ' Sound from Balade de Champvert.',
         externalSound: ' Sound from ', noSource: ' Sound source not provided.',
+        animationCredit: 'Animation edited and stabilized with ',
+        animationSource: '. Source: motion photo (short video) captured with a smartphone using digiscoping.',
         observation: 'Champvert observation'
       }
     };
@@ -239,6 +246,11 @@
       link.rel = 'noopener noreferrer';
       parent.appendChild(link);
     }
+
+    const animationCredit = document.getElementById('animationCredit');
+    animationCredit.append(strings.animationCredit);
+    addLink(animationCredit, 'https://github.com/ScientificTools/MotionPhotoWorkbench', 'https://github.com/ScientificTools/MotionPhotoWorkbench');
+    animationCredit.append(strings.animationSource);
 
     function renderCredit(bird, sample) {
       credit.replaceChildren();
