@@ -30,6 +30,7 @@
   Pour ajouter un mode : 3 templates "<nom>-style/-body/-script", puis
   l'ajouter à la liste "modes" et à la fonction detectMode().
 -->
+<script src="sound-types.js"></script>
 <script>
   // Texte de la Maison des curiosités, partagé par les modes desktop et mobile
   const SITE_INFO_TEXT = {
@@ -45,7 +46,7 @@ En arrivant sur cette page, n'espérez pas trouver un "inventaire" savant et enc
 Les images animées, toutes captées ici (longue-vue stabilisée Kite APC 60 et smartphone en digiscopie), donnent vie et relief à des petites scènes éphémères, zoomées à l'instant spontané de rencontres de hasard. La majorité des sons provient de [https://xeno-canto.org](https://xeno-canto.org), formidable base de données internationale de sons naturels. Les chants sont importants pour reconnaître un oiseau pas toujours facile à voir. Les liens vers xeno-canto, sur chaque son, vous permettront d'avoir beaucoup d'autres échantillons, d'autant qu'un même oiseau ne se satisfait pas d'une seule vocalise.
 Depuis l'ordinateur, l'expérience se veut immersive, nos hôtes se déplacent, on ne les voit pas toujours au même emplacement, ils se méritent. Cliquez pour essayer, utilisez la molette, soyez curieux, tout n’est pas expliqué, partez à la découverte.
 Sur ordinateur, activez le Jeu des chants pour lancer une première question et le son d'ambiance. Survolez les images pour trouver l'oiseau correspondant, puis cliquez dessus pour ouvrir sa vidéo. Cliquez à l'extérieur pour fermer la question, ou survolez un autre point pour continuer à jouer. Les points sans son ouvrent directement leur image au clic.
-Le site, sur mobile, est plus adapté à la taille de l’écran, il vous aidera à apprendre à reconnaître les espèces locales.
+Le site, sur mobile, est plus adapté à la taille de l’écran, il vous aidera à apprendre à reconnaître les espèces locales. En haut de page ou dans la liste, « Jeu : Trouver le chanteur » lance un chant à identifier ; « Langue au chat... » révèle la réponse.
 Pour un moment de détente et de méditation, n'hésitez pas à venir ici décompresser un moment. Activez le son, ouvrez le diaporama, en plein écran idéalement, et laissez-vous emporter, avec la promesse de venir profiter prochainement du lieu dans la vraie vie, ou ailleurs avec la même démarche.
 Le site a été conçu avec une attention d'éco-responsabilité numérique. L'écoindex A de la page ne dépasse pas D si vous visualisez l'intégralité des contenus animés. Le site écoindex est intéressant à consulter pour comprendre les enjeux de l’éco-conception (cliquez sur le lien en bas de page).
 Les images animées ont été travaillées avec un outil développé spécifiquement à cet effet (en libre accès) pour alléger au maximum leur poids, tout en gardant leur pertinence esthétique.
@@ -67,7 +68,7 @@ When you arrive on this page, do not expect a scholarly, encyclopedic "inventory
 The animated images, all captured here with a stabilized Kite APC 60 spotting scope and a smartphone using digiscoping, bring life and depth to fleeting little scenes, zoomed in on the spontaneous moment of a chance encounter. Most of the sounds come from [https://xeno-canto.org](https://xeno-canto.org), a wonderful international database of natural sounds. Birdsong is important for recognizing a bird that is not always easy to see. The links to xeno-canto on each sound will let you explore many more recordings, especially since any given bird has more than one vocalization.
 On a computer, turn on the Birdsong game to start a first question and enable ambient sound. Hover over the images to find the matching bird, then click it to open its video. Click outside to close the question, or hover over another point to keep playing. Points without a sound open their image directly when clicked.
 On a computer, the experience is designed to be immersive. Our guests move around; you will not always see them in the same place, and finding them takes a little effort. Click to try things out, use the scroll wheel, be curious. Not everything is explained: set off and explore.
-On mobile, the site is adapted to the screen size and will help you learn to recognize local species.
+On mobile, the site is adapted to the screen size and will help you learn to recognize local species. At the top of the page or in the list, “Game: Find the singer” plays a sound to identify; “Give up...” reveals the answer.
 For a moment of relaxation and meditation, feel free to come here and unwind. Turn on the sound, open the slideshow, ideally in full screen, and let yourself drift away, with a promise to come and enjoy the place in real life soon, or to explore somewhere else in the same spirit.
 The site was designed with digital environmental responsibility in mind. The page's EcoIndex rating starts at A and goes no lower than D if you view all the animated content. The EcoIndex website is worth visiting to understand the issues involved in eco-design (click the link at the bottom of the page).
 The animated images were processed using a freely available tool developed specifically for this purpose, to make their file sizes as small as possible while preserving their aesthetic value.
@@ -2339,11 +2340,11 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
         const selectedIndex = getSampleIndex(sound.key, sound.samples.length);
         if (sound.samples.length > 1) {
           const options = sound.samples
-            .map((sample, index) => `<option value="${index}"${index === selectedIndex ? ' selected' : ''}>${escapeHtml(sample.type || String(index + 1))}</option>`)
+            .map((sample, index) => `<option value="${index}"${index === selectedIndex ? ' selected' : ''}>${escapeHtml(translateSoundType(sample.type, currentLocale) || String(index + 1))}</option>`)
             .join('');
           soundButton += `<select class="info-sample-select" aria-label="Sample type">${options}</select>`;
         } else if (sound.samples[0].type) {
-          soundButton += `<span class="info-sample-type">${escapeHtml(sound.samples[0].type)}</span>`;
+          soundButton += `<span class="info-sample-type">${escapeHtml(translateSoundType(sound.samples[0].type, currentLocale))}</span>`;
         }
         sourceHtml = `<span class="info-sound-source">${buildSampleSourceHtml(sound.samples[selectedIndex])}</span>`;
       }
@@ -2549,7 +2550,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
         }
         startSongGame(point);
         if (songGamePoint === point && songGameSampleType) {
-          showPoiTooltip(point, e, songGameSampleType);
+          showPoiTooltip(point, e, translateSoundType(songGameSampleType, currentLocale));
         }
       } else {
         showPoiTooltip(point, e);
@@ -2671,7 +2672,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
         }
         startSongGame(hovered);
         if (songGamePoint === hovered && songGameSampleType) {
-          showPoiTooltip(hovered, songGamePointer, songGameSampleType);
+          showPoiTooltip(hovered, songGamePointer, translateSoundType(songGameSampleType, currentLocale));
         }
       }, 2000);
     }, 2000);
@@ -5062,6 +5063,53 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     font-weight: 600;
   }
 
+  .chip-row .mobile-game-toggle {
+    margin-left: auto;
+    background: var(--accent-soft);
+    color: var(--text);
+  }
+
+  @media (max-width: 500px) {
+    .chip-row {
+      flex-wrap: nowrap;
+      gap: 3px;
+    }
+
+    .chip-row button {
+      padding: 10px 3px;
+      font-size: clamp(0.55rem, 2.7vw, 0.875rem);
+      white-space: nowrap;
+    }
+  }
+
+  .mobile-game-info {
+    margin-top: 12px;
+  }
+
+  .mobile-game-info[hidden] {
+    display: none;
+  }
+
+  .mobile-game-settings {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .mobile-game-settings input {
+    width: 100px;
+    min-width: 60px;
+  }
+
+  .mobile-game-info p {
+    margin: 8px 0 0;
+  }
+
+  .mobile-game-error {
+    color: #a32020;
+  }
+
   .search-input {
     width: 100%;
     margin-top: 12px;
@@ -5104,6 +5152,55 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   .species-card.active {
     border-color: rgba(87, 114, 75, 0.3);
     background: #f8fbf2;
+  }
+
+  .species-card.game-choice {
+    cursor: pointer;
+    touch-action: pan-y;
+  }
+
+  .species-card.game-choice:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .species-card.game-wrong {
+    border-color: #b32020;
+  }
+
+  .species-card.game-correct {
+    border-color: #21813a;
+  }
+
+  .species-card.game-flash-wrong {
+    animation: mobile-game-wrong 250ms linear 8;
+  }
+
+  .species-card.game-flash-correct {
+    animation: mobile-game-correct 250ms linear 8;
+  }
+
+  @keyframes mobile-game-wrong {
+    50% { border-color: transparent; }
+  }
+
+  @keyframes mobile-game-correct {
+    50% { border-color: transparent; }
+  }
+
+  .game-result {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .game-wrong .game-result { color: #b32020; }
+  .game-correct .game-result { color: #21813a; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .species-card.game-flash-wrong,
+    .species-card.game-flash-correct {
+      animation: none;
+    }
   }
 
   .species-thumb {
@@ -5433,6 +5530,44 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     cursor: pointer;
   }
 
+  .topbar-game {
+    margin-left: auto;
+  }
+
+  @media (max-width: 500px) {
+    .topbar-tools {
+      flex-wrap: nowrap;
+    }
+
+    .sound-control {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .sound-volume:not(.hidden) {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      z-index: 1;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-strong);
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+
+    #diaToggleBtn {
+      flex-shrink: 0;
+    }
+
+    .topbar-game {
+      min-width: 0;
+      padding: 0 7px;
+      font-size: clamp(0.65rem, 3vw, 0.8rem);
+      line-height: 1.1;
+    }
+  }
+
   .diaporama-stage {
     position: fixed;
     inset: 0;
@@ -5625,6 +5760,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
         <audio id="backgroundAudio" loop preload="none" src="song/fond.m4a"></audio>
       </div>
       <button id="diaToggleBtn" class="dia-btn" type="button" aria-label="Lancer le diaporama" title="Diaporama">Diaporama</button>
+      <button id="topGameToggleBtn" class="dia-btn topbar-game" type="button" aria-pressed="false" disabled>Jeu : Trouver le chanteur</button>
     </div>
 
     <section class="panel intro">
@@ -5658,6 +5794,16 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       <h2 class="section-title" id="listTitle">Espèces observées</h2>
       <p class="section-subtitle" id="listText">Choisissez un oiseau pour ouvrir sa fiche, puis faites défiler ses images et vidéos.</p>
       <div class="chip-row" id="filterChips" role="group" aria-label="Filtrer les espèces"></div>
+      <div id="mobileGameInfo" class="mobile-game-info" hidden>
+        <div class="mobile-game-settings">
+          <span><span id="mobileGameTypeLabel"></span> <strong id="mobileGameType"></strong></span>
+          <input id="mobileGameVolume" type="range" min="0" max="1" step="0.01" value="0.55" />
+        </div>
+        <p id="mobileGameInstructions"></p>
+        <p id="mobileGameError" class="mobile-game-error" role="alert" hidden></p>
+        <button id="mobileGameRetry" type="button" hidden></button>
+        <audio id="mobileGameAudio" loop preload="none"></audio>
+      </div>
       <input id="searchInput" class="search-input" type="search" placeholder="Rechercher une espèce" />
       <div id="speciesList" class="species-list" aria-live="polite"></div>
       <p id="emptyState" class="empty-state" hidden>Aucune espèce ne correspond à cette recherche.</p>
@@ -5745,6 +5891,16 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       filterAll: 'Tout',
       filterBirds: 'Oiseaux',
       filterMammals: 'Mammifères',
+      gameStart: 'Jeu : Trouver le chanteur',
+      gameGiveUp: 'Langue au chat...',
+      gameType: 'Type du chant à deviner :',
+      gameUnknownType: 'non précisé',
+      gameInstructions: 'Désignez le chanteur parmi la liste ci-dessous.',
+      gameVolume: 'Volume du chant',
+      gameWrong: 'Pas moi',
+      gameCorrect: 'Bravo !',
+      gameAudioError: 'Lecture du chant impossible. Vérifiez le son et les autorisations du navigateur.',
+      gameRetry: 'Réessayer la lecture',
       viewAction: 'Voir',
       poeticLabel: 'Regard sensible',
       scientificLabel: 'Repère naturaliste',
@@ -5786,6 +5942,16 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       filterAll: 'All',
       filterBirds: 'Birds',
       filterMammals: 'Mammals',
+      gameStart: 'Game: Find the singer',
+      gameGiveUp: 'Give up...',
+      gameType: 'Sound to identify:',
+      gameUnknownType: 'unspecified',
+      gameInstructions: 'Choose the singer from the list below.',
+      gameVolume: 'Sound volume',
+      gameWrong: 'Not me',
+      gameCorrect: 'Well done!',
+      gameAudioError: 'Unable to play the sound. Check your sound and browser permissions.',
+      gameRetry: 'Retry playback',
       viewAction: 'Open',
       poeticLabel: 'Sensitive view',
       scientificLabel: 'Naturalist note',
@@ -5816,6 +5982,15 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   const langFrBtn = document.getElementById('langFrBtn');
   const langEnBtn = document.getElementById('langEnBtn');
   const filterChips = document.getElementById('filterChips');
+  const topGameToggleBtn = document.getElementById('topGameToggleBtn');
+  const mobileGameInfo = document.getElementById('mobileGameInfo');
+  const mobileGameTypeLabel = document.getElementById('mobileGameTypeLabel');
+  const mobileGameType = document.getElementById('mobileGameType');
+  const mobileGameInstructions = document.getElementById('mobileGameInstructions');
+  const mobileGameVolume = document.getElementById('mobileGameVolume');
+  const mobileGameAudio = document.getElementById('mobileGameAudio');
+  const mobileGameError = document.getElementById('mobileGameError');
+  const mobileGameRetry = document.getElementById('mobileGameRetry');
   const searchInput = document.getElementById('searchInput');
   const speciesList = document.getElementById('speciesList');
   const emptyState = document.getElementById('emptyState');
@@ -5857,6 +6032,12 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   let speciesEntries = [];
   let selectedId = null;
   let activeVariantIndex = 0;
+  let mobileGame = null;
+  let mobileGameTimer = null;
+  let mobileGameAudioToken = 0;
+  let mobileGameAudioContext = null;
+  let mobileGameGain = null;
+  let speciesUsesGameAudio = false;
   let speciesAudioEntryId = null;
   let backgroundEntries = [];
   let diaporamaEntries = [];
@@ -5977,7 +6158,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       if (!entry.samples[0].type) return null;
       const label = document.createElement('span');
       label.className = `${className} sample-type-label`;
-      label.textContent = entry.samples[0].type;
+      label.textContent = translateSoundType(entry.samples[0].type, currentLocale);
       return label;
     }
     const select = document.createElement('select');
@@ -5986,7 +6167,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     entry.samples.forEach((sample, index) => {
       const option = document.createElement('option');
       option.value = String(index);
-      option.textContent = sample.type || String(index + 1);
+      option.textContent = translateSoundType(sample.type, currentLocale) || String(index + 1);
       select.appendChild(option);
     });
     select.value = String(entry.sampleIndex);
@@ -6012,7 +6193,8 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
 
   function updateSpeciesSoundButton() {
     const strings = getStrings();
-    const audioPlaying = !speciesAudio.paused && !speciesAudio.ended;
+    const audio = speciesUsesGameAudio ? mobileGameAudio : speciesAudio;
+    const audioPlaying = !audio.paused && !audio.ended;
     const playing = audioPlaying && speciesAudioEntryId === selectedId;
     speciesSoundBtn.classList.toggle('active', playing);
     speciesSoundBtn.setAttribute('aria-pressed', String(playing));
@@ -6029,6 +6211,12 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     speciesAudio.pause();
     speciesAudio.removeAttribute('src');
     speciesAudio.load();
+    if (speciesUsesGameAudio) {
+      mobileGameAudio.pause();
+      mobileGameAudio.removeAttribute('src');
+      mobileGameAudio.load();
+      speciesUsesGameAudio = false;
+    }
     updateSpeciesSoundButton();
   }
 
@@ -6109,6 +6297,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       button.type = 'button';
       button.textContent = filter.label;
       button.classList.toggle('active', activeFilter === filter.id);
+      button.disabled = !!mobileGame;
       button.addEventListener('click', () => {
         activeFilter = filter.id;
         renderFilters();
@@ -6116,7 +6305,152 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       });
       filterChips.appendChild(button);
     });
+    const gameButton = document.createElement('button');
+    gameButton.type = 'button';
+    gameButton.className = 'mobile-game-toggle';
+    [gameButton, topGameToggleBtn].forEach((button) => {
+      button.textContent = mobileGame ? strings.gameGiveUp : strings.gameStart;
+      button.disabled = !mobileGame && !speciesEntries.some((entry) => entry.category === 'oiseau' && entry.samples.length);
+      button.setAttribute('aria-pressed', String(!!mobileGame));
+    });
+    gameButton.addEventListener('click', toggleMobileGame);
+    filterChips.appendChild(gameButton);
   }
+
+  function toggleMobileGame() {
+    if (mobileGame) {
+      finishMobileGame();
+    } else {
+      startMobileGame();
+    }
+  }
+
+  topGameToggleBtn.addEventListener('click', () => {
+    const wasPlaying = !!mobileGame;
+    toggleMobileGame();
+    if (!wasPlaying && mobileGame) {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      filterChips.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    }
+  });
+
+  function renderMobileGameInfo() {
+    const strings = getStrings();
+    mobileGameInfo.hidden = !mobileGame;
+    mobileGameTypeLabel.textContent = strings.gameType;
+    mobileGameType.textContent = translateSoundType(mobileGame?.sample.type, currentLocale) || strings.gameUnknownType;
+    mobileGameInstructions.textContent = strings.gameInstructions;
+    mobileGameVolume.setAttribute('aria-label', strings.gameVolume);
+    mobileGameError.textContent = strings.gameAudioError;
+    mobileGameRetry.textContent = strings.gameRetry;
+  }
+
+  function playMobileGameAudio() {
+    const token = ++mobileGameAudioToken;
+    mobileGameError.hidden = true;
+    mobileGameRetry.hidden = true;
+    const showError = (error) => {
+      if (token !== mobileGameAudioToken || !mobileGame) return;
+      console.warn('Impossible de démarrer le son du jeu des chants :', error);
+      mobileGameError.hidden = false;
+      mobileGameRetry.hidden = false;
+    };
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext && !mobileGameAudioContext) {
+        mobileGameAudioContext = new AudioContext();
+        const source = mobileGameAudioContext.createMediaElementSource(mobileGameAudio);
+        mobileGameGain = mobileGameAudioContext.createGain();
+        source.connect(mobileGameGain);
+        mobileGameGain.connect(mobileGameAudioContext.destination);
+      }
+      updateMobileGameVolume();
+      const playback = mobileGameAudio.play();
+      const resume = mobileGameAudioContext ? mobileGameAudioContext.resume() : Promise.resolve();
+      Promise.all([playback, resume]).catch(showError);
+    } catch (error) {
+      showError(error);
+    }
+  }
+
+  function updateMobileGameVolume() {
+    const volume = Number(mobileGameVolume.value);
+    if (mobileGameGain) {
+      mobileGameAudio.volume = 1;
+      mobileGameGain.gain.value = volume;
+    } else {
+      mobileGameAudio.volume = volume;
+    }
+  }
+
+  function startMobileGame() {
+    const candidates = speciesEntries.filter((entry) => entry.category === 'oiseau' && entry.samples.length);
+    if (!candidates.length) return;
+    const entry = candidates[Math.floor(Math.random() * candidates.length)];
+    const sample = entry.samples[Math.floor(Math.random() * entry.samples.length)];
+    mobileGame = { entryId: entry.id, sample, wrong: new Set(), solved: false };
+    activeFilter = 'oiseau';
+    searchInput.value = '';
+    stopSpeciesSound();
+    speciesAudioEntryId = null;
+    viewerVideo.pause();
+    viewer.classList.add('hidden');
+    diaToggleBtn.disabled = true;
+    mobileGameAudio.loop = true;
+    mobileGameAudio.src = sample.src;
+    renderFilters();
+    renderMobileGameInfo();
+    renderSpeciesList();
+    playMobileGameAudio();
+  }
+
+  function finishMobileGame() {
+    if (!mobileGame) return;
+    const entryId = mobileGame.entryId;
+    const sampleSrc = mobileGame.sample.src;
+    const entry = speciesEntries.find((item) => item.id === entryId);
+    const sampleIndex = entry?.samples.findIndex((sample) => sample.src === sampleSrc) ?? -1;
+    if (sampleIndex < 0) {
+      console.error('Impossible de retrouver le chant du jeu pour cette espèce.');
+      return;
+    }
+    entry.sampleIndex = sampleIndex;
+    window.clearTimeout(mobileGameTimer);
+    mobileGameTimer = null;
+    mobileGame = null;
+    mobileGameAudioToken += 1;
+    speciesAudioEntryId = entryId;
+    speciesUsesGameAudio = true;
+    mobileGameError.hidden = true;
+    mobileGameRetry.hidden = true;
+    searchInput.value = '';
+    activeFilter = 'oiseau';
+    diaToggleBtn.disabled = false;
+    renderFilters();
+    renderMobileGameInfo();
+    selectEntry(entryId);
+  }
+
+  function chooseMobileGameEntry(entry, card) {
+    if (!mobileGame || mobileGame.solved) return;
+    const correct = entry.id === mobileGame.entryId;
+    if (correct) {
+      mobileGame.solved = true;
+      card.classList.remove('game-wrong', 'game-flash-wrong');
+      card.classList.add('game-correct', 'game-flash-correct');
+    } else {
+      mobileGame.wrong.add(entry.id);
+      card.classList.add('game-wrong');
+      card.classList.remove('game-flash-wrong');
+      void card.offsetWidth;
+      card.classList.add('game-flash-wrong');
+    }
+    card.querySelector('.game-result').textContent = correct ? getStrings().gameCorrect : getStrings().gameWrong;
+    if (correct) mobileGameTimer = window.setTimeout(finishMobileGame, 2000);
+  }
+
+  mobileGameVolume.addEventListener('input', updateMobileGameVolume);
+  mobileGameRetry.addEventListener('click', playMobileGameAudio);
 
   function getFilteredEntries() {
     const query = searchInput.value.trim().toLowerCase();
@@ -6155,7 +6489,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     entries.forEach((entry) => {
       const card = document.createElement('article');
       card.className = 'species-card';
-      if (entry.id === selectedId) {
+      if (!mobileGame && entry.id === selectedId) {
         card.classList.add('active');
       }
 
@@ -6165,7 +6499,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       thumbImg.src = entry.thumb || 'openStreetViewcarte.jpg';
       thumbImg.alt = entry.title;
       thumb.appendChild(thumbImg);
-      thumb.addEventListener('click', () => selectEntry(entry.id));
+      if (!mobileGame) thumb.addEventListener('click', () => selectEntry(entry.id));
 
       const text = document.createElement('div');
       const title = document.createElement('h3');
@@ -6174,6 +6508,47 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       meta.textContent = entry.scientific || entry.category;
       text.appendChild(title);
       text.appendChild(meta);
+
+      if (mobileGame) {
+        card.classList.add('game-choice');
+        card.setAttribute('role', 'button');
+        card.tabIndex = 0;
+        thumbImg.alt = '';
+        meta.remove();
+        const result = document.createElement('span');
+        result.className = 'game-result';
+        if (mobileGame.wrong.has(entry.id)) {
+          card.classList.add('game-wrong');
+          result.textContent = strings.gameWrong;
+        }
+        if (mobileGame.solved && entry.id === mobileGame.entryId) {
+          card.classList.add('game-correct', 'game-flash-correct');
+          result.textContent = strings.gameCorrect;
+        }
+        card.append(thumb, text, result);
+        let pointerStart = null;
+        let dragged = false;
+        card.addEventListener('pointerdown', (event) => {
+          pointerStart = { x: event.clientX, y: event.clientY };
+          dragged = false;
+        });
+        card.addEventListener('pointermove', (event) => {
+          if (pointerStart && Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 10) dragged = true;
+        });
+        card.addEventListener('pointercancel', () => { dragged = true; pointerStart = null; });
+        card.addEventListener('click', (event) => {
+          if (event.detail === 0 || !dragged) chooseMobileGameEntry(entry, card);
+          pointerStart = null;
+        });
+        card.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            chooseMobileGameEntry(entry, card);
+          }
+        });
+        speciesList.appendChild(card);
+        return;
+      }
 
       const action = document.createElement('button');
       action.type = 'button';
@@ -6203,6 +6578,8 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       card.appendChild(actions);
       speciesList.appendChild(card);
     });
+
+    if (mobileGame) return;
 
     if (!selectedId && entries.length > 0) {
       selectedId = entries[0].id;
@@ -6310,14 +6687,16 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   function handleSampleChange(entry) {
     const sample = getCurrentSample(entry);
     if (!sample) return;
-    const wasPlaying = !speciesAudio.paused && !speciesAudio.ended && speciesAudioEntryId === entry.id;
+    const audio = speciesUsesGameAudio ? mobileGameAudio : speciesAudio;
+    const wasPlaying = !audio.paused && !audio.ended && speciesAudioEntryId === entry.id;
     document.querySelectorAll('.card-sample.sample-type-select').forEach((select) => {
       if (select.dataset.entryId === entry.id) select.value = String(entry.sampleIndex);
     });
     if (entry.id === selectedId) renderViewerSound(entry);
     if (wasPlaying) {
-      speciesAudio.src = sample.src;
-      speciesAudio.play().catch((error) => console.warn('Impossible de démarrer le son de l\'espèce :', error));
+      audio.loop = false;
+      audio.src = sample.src;
+      audio.play().catch((error) => console.warn('Impossible de démarrer le son de l\'espèce :', error));
     }
     updateSpeciesSoundButton();
   }
@@ -6335,12 +6714,14 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     if (!entry) return;
     const sample = getCurrentSample(entry);
     if (!sample) return;
-    if (!speciesAudio.paused && speciesAudioEntryId === entry.id) {
+    const audio = speciesUsesGameAudio ? mobileGameAudio : speciesAudio;
+    if (!audio.paused && speciesAudioEntryId === entry.id) {
       stopSpeciesSound();
       speciesAudioEntryId = null;
       updateSpeciesSoundButton();
       return;
     }
+    if (speciesUsesGameAudio) stopSpeciesSound();
     speciesAudioEntryId = entry.id;
     speciesAudio.src = sample.src;
     speciesAudio.play().catch((error) => console.warn('Impossible de démarrer le son de l\'espèce :', error));
@@ -6351,6 +6732,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     toggleSpeciesSound(speciesEntries.find((item) => item.id === selectedId));
   });
   ['play', 'pause', 'ended'].forEach((name) => speciesAudio.addEventListener(name, updateSpeciesSoundButton));
+  ['play', 'pause', 'ended'].forEach((name) => mobileGameAudio.addEventListener(name, updateSpeciesSoundButton));
 
   async function loadEntries() {
     const response = await fetch(DATA_PATH);
@@ -6360,6 +6742,13 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     const payload = await response.json();
     const images = Array.isArray(payload.images) ? payload.images : [];
     speciesEntries = normalizeEntries(images);
+    const activeGameEntryId = mobileGame?.entryId || (speciesUsesGameAudio ? speciesAudioEntryId : null);
+    const activeGameSampleSrc = mobileGame?.sample.src || (speciesUsesGameAudio ? mobileGameAudio.getAttribute('src') : null);
+    const activeGameEntry = speciesEntries.find((entry) => entry.id === activeGameEntryId);
+    if (activeGameEntry && activeGameSampleSrc) {
+      const sampleIndex = activeGameEntry.samples.findIndex((sample) => sample.src === activeGameSampleSrc);
+      if (sampleIndex >= 0) activeGameEntry.sampleIndex = sampleIndex;
+    }
     speciesEntries.sort((a, b) => a.title.localeCompare(b.title, currentLocale === 'FR' ? 'fr' : 'en'));
   }
 
@@ -6678,6 +7067,10 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     diaporamaEntries = buildDiaporamaEntries();
     if (!diaporamaEntries.length) return;
 
+    if (speciesUsesGameAudio) {
+      stopSpeciesSound();
+      speciesAudioEntryId = null;
+    }
     diaporamaActive = true;
     body.classList.add('diaporama-active');
     startDiaporamaPlayback().catch((error) => {
@@ -6707,6 +7100,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
 
     try {
       await loadEntries();
+      renderFilters();
       renderSpeciesList();
     } catch (error) {
       loadingState.hidden = true;
@@ -6775,24 +7169,23 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
     currentLocale = 'FR';
     applyStaticStrings();
     renderFilters();
-    const savedSelectedId = selectedId;
-    initializeFromCurrentData(savedSelectedId);
+    renderMobileGameInfo();
+    initializeFromCurrentData();
   });
 
   langEnBtn.addEventListener('click', () => {
     currentLocale = 'US';
     applyStaticStrings();
     renderFilters();
-    const savedSelectedId = selectedId;
-    initializeFromCurrentData(savedSelectedId);
+    renderMobileGameInfo();
+    initializeFromCurrentData();
   });
 
-  function initializeFromCurrentData(savedSelectedId = null) {
+  function initializeFromCurrentData() {
     loadEntries()
       .then(() => {
-        selectedId = savedSelectedId && speciesEntries.some((entry) => entry.id === savedSelectedId)
-          ? savedSelectedId
-          : null;
+        if (selectedId && !speciesEntries.some((entry) => entry.id === selectedId)) selectedId = null;
+        renderFilters();
         renderSpeciesList();
       })
       .catch((error) => console.error(error));

@@ -94,6 +94,7 @@
   </main>
   <footer id="credit"></footer>
   <audio id="audio" loop preload="none"></audio>
+  <script src="sound-types.js"></script>
   <script>
     const video = document.getElementById('video');
     const image = document.getElementById('image');
@@ -149,13 +150,6 @@
       }
     };
     const strings = texts[language];
-    const englishSoundTypes = {
-      'ailes': 'Wings', 'alarme': 'Alarm', 'appel': 'Call',
-      'appel chant': 'Call and song', 'appel en vol': 'Flight call',
-      'autre chant': 'Other song', 'chant': 'Song', "chant de l'aube": 'Dawn song',
-      'immitation': 'Imitation', 'interactions': 'Interactions',
-      'tambourinement': 'Drumming', 'tok': 'Tok'
-    };
     let soundToken = 0;
     document.documentElement.lang = language;
     document.getElementById('loopLabel').textContent = strings.loop;
@@ -336,7 +330,7 @@
             const option = document.createElement('option');
             option.value = key;
             option.textContent = key === '__unknown__' ? strings.otherSound
-              : (language === 'en' ? (englishSoundTypes[key] || type) : type);
+              : translateSoundType(type, language);
             soundSelect.appendChild(option);
           }
           groups.get(key).push(sample);
