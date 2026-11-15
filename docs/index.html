@@ -46,7 +46,7 @@ En arrivant sur cette page, n'espérez pas trouver un "inventaire" savant et enc
 Les images animées, toutes captées ici (longue-vue stabilisée Kite APC 60 et smartphone en digiscopie), donnent vie et relief à des petites scènes éphémères, zoomées à l'instant spontané de rencontres de hasard. La majorité des sons provient de [https://xeno-canto.org](https://xeno-canto.org), formidable base de données internationale de sons naturels. Les chants sont importants pour reconnaître un oiseau pas toujours facile à voir. Les liens vers xeno-canto, sur chaque son, vous permettront d'avoir beaucoup d'autres échantillons, d'autant qu'un même oiseau ne se satisfait pas d'une seule vocalise.
 Depuis l'ordinateur, l'expérience se veut immersive, nos hôtes se déplacent, on ne les voit pas toujours au même emplacement, ils se méritent. Cliquez pour essayer, utilisez la molette, soyez curieux, tout n’est pas expliqué, partez à la découverte.
 Sur ordinateur, activez le Jeu des chants pour lancer une première question et le son d'ambiance. Survolez les images pour trouver l'oiseau correspondant, puis cliquez dessus pour ouvrir sa vidéo. Cliquez à l'extérieur pour fermer la question, ou survolez un autre point pour continuer à jouer. Les points sans son ouvrent directement leur image au clic.
-Le site, sur mobile, est plus adapté à la taille de l’écran, il vous aidera à apprendre à reconnaître les espèces locales. En haut de page ou dans la liste, « Jeu : Trouver le chanteur » lance un chant à identifier ; « Langue au chat... » révèle la réponse.
+Le site, sur mobile, est plus adapté à la taille de l’écran, il vous aidera à apprendre à reconnaître les espèces locales. En haut de page ou dans la liste, « Jeu : devinez qui chante ? » lance un chant à identifier parmi six oiseaux ; « Langue au chat... » révèle la réponse.
 Pour un moment de détente et de méditation, n'hésitez pas à venir ici décompresser un moment. Activez le son, ouvrez le diaporama, en plein écran idéalement, et laissez-vous emporter, avec la promesse de venir profiter prochainement du lieu dans la vraie vie, ou ailleurs avec la même démarche.
 Le site a été conçu avec une attention d'éco-responsabilité numérique. L'écoindex A de la page ne dépasse pas D si vous visualisez l'intégralité des contenus animés. Le site écoindex est intéressant à consulter pour comprendre les enjeux de l’éco-conception (cliquez sur le lien en bas de page).
 Les images animées ont été travaillées avec un outil développé spécifiquement à cet effet (en libre accès) pour alléger au maximum leur poids, tout en gardant leur pertinence esthétique.
@@ -68,7 +68,7 @@ When you arrive on this page, do not expect a scholarly, encyclopedic "inventory
 The animated images, all captured here with a stabilized Kite APC 60 spotting scope and a smartphone using digiscoping, bring life and depth to fleeting little scenes, zoomed in on the spontaneous moment of a chance encounter. Most of the sounds come from [https://xeno-canto.org](https://xeno-canto.org), a wonderful international database of natural sounds. Birdsong is important for recognizing a bird that is not always easy to see. The links to xeno-canto on each sound will let you explore many more recordings, especially since any given bird has more than one vocalization.
 On a computer, turn on the Birdsong game to start a first question and enable ambient sound. Hover over the images to find the matching bird, then click it to open its video. Click outside to close the question, or hover over another point to keep playing. Points without a sound open their image directly when clicked.
 On a computer, the experience is designed to be immersive. Our guests move around; you will not always see them in the same place, and finding them takes a little effort. Click to try things out, use the scroll wheel, be curious. Not everything is explained: set off and explore.
-On mobile, the site is adapted to the screen size and will help you learn to recognize local species. At the top of the page or in the list, “Game: Find the singer” plays a sound to identify; “Give up...” reveals the answer.
+On mobile, the site is adapted to the screen size and will help you learn to recognize local species. At the top of the page or in the list, “Game: Guess who is singing?” plays a sound to identify among six birds; “Give up...” reveals the answer.
 For a moment of relaxation and meditation, feel free to come here and unwind. Turn on the sound, open the slideshow, ideally in full screen, and let yourself drift away, with a promise to come and enjoy the place in real life soon, or to explore somewhere else in the same spirit.
 The site was designed with digital environmental responsibility in mind. The page's EcoIndex rating starts at A and goes no lower than D if you view all the animated content. The EcoIndex website is worth visiting to understand the issues involved in eco-design (click the link at the bottom of the page).
 The animated images were processed using a freely available tool developed specifically for this purpose, to make their file sizes as small as possible while preserving their aesthetic value.
@@ -5760,7 +5760,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
         <audio id="backgroundAudio" loop preload="none" src="song/fond.m4a"></audio>
       </div>
       <button id="diaToggleBtn" class="dia-btn" type="button" aria-label="Lancer le diaporama" title="Diaporama">Diaporama</button>
-      <button id="topGameToggleBtn" class="dia-btn topbar-game" type="button" aria-pressed="false" disabled>Jeu : Trouver le chanteur</button>
+      <button id="topGameToggleBtn" class="dia-btn topbar-game" type="button" aria-pressed="false" disabled>Jeu : devinez qui chante ?</button>
     </div>
 
     <section class="panel intro">
@@ -5891,7 +5891,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       filterAll: 'Tout',
       filterBirds: 'Oiseaux',
       filterMammals: 'Mammifères',
-      gameStart: 'Jeu : Trouver le chanteur',
+      gameStart: 'Jeu : devinez qui chante ?',
       gameGiveUp: 'Langue au chat...',
       gameType: 'Type du chant à deviner :',
       gameUnknownType: 'non précisé',
@@ -5942,7 +5942,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
       filterAll: 'All',
       filterBirds: 'Birds',
       filterMammals: 'Mammals',
-      gameStart: 'Game: Find the singer',
+      gameStart: 'Game: Guess who is singing?',
       gameGiveUp: 'Give up...',
       gameType: 'Sound to identify:',
       gameUnknownType: 'unspecified',
@@ -6386,9 +6386,10 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   function startMobileGame() {
     const candidates = speciesEntries.filter((entry) => entry.category === 'oiseau' && entry.samples.length);
     if (!candidates.length) return;
-    const entry = candidates[Math.floor(Math.random() * candidates.length)];
+    const choices = shuffleIndices(candidates.length).slice(0, 6).map((index) => candidates[index]);
+    const entry = choices[0];
     const sample = entry.samples[Math.floor(Math.random() * entry.samples.length)];
-    mobileGame = { entryId: entry.id, sample, wrong: new Set(), solved: false };
+    mobileGame = { entryId: entry.id, candidateIds: new Set(choices.map((choice) => choice.id)), sample, wrong: new Set(), solved: false };
     activeFilter = 'oiseau';
     searchInput.value = '';
     stopSpeciesSound();
@@ -6455,6 +6456,7 @@ Contact: [albouille69@gmail.com](mailto:albouille69@gmail.com)`
   function getFilteredEntries() {
     const query = searchInput.value.trim().toLowerCase();
     return speciesEntries.filter((entry) => {
+      if (mobileGame && !mobileGame.candidateIds.has(entry.id)) return false;
       const categoryMatch = activeFilter === 'all' || entry.category === activeFilter;
       if (!categoryMatch) return false;
       if (!query) return true;
